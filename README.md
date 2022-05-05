@@ -1,2 +1,2 @@
 # rust-tutorial-project
-Rust tutorial website for beginner using react and spring-boot
+Rust tutorial website with react and spring-boot for beginner
