@@ -3,6 +3,9 @@ import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import LoginForm from "./Login/LoginForm";
 import {Container} from "react-bootstrap";
+import RegisterForm from "./Register/RegisterForm";
+import PwdForgot from "./Login/PwdForgot";
+import IdForgot from "./Login/IdForgot";
 
 //container -> 중앙으로 모아줌
 function App() {
@@ -11,7 +14,7 @@ function App() {
             <Header/>
             <main>
                 <Container>
-                <LoginForm/>
+                <PwdForgot/>
                 </Container>
             </main>
             <Footer/>
