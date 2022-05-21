@@ -7,7 +7,7 @@ function LoginForm() {
             <Container>
                 <h3 className="text-black mt-5 p-3 text-center rounded">로그인</h3>
                 <Row className="mt-5">
-                    <Col lg={5} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
+                    <Col lg={7} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
                         <Form>
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>아이디</Form.Label>

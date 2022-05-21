@@ -7,17 +7,25 @@ function RegisterForm() {
             <Container>
                 <h3 className="text-black mt-5 p-3 text-center rounded">회원가입</h3>
                 <Row className="mt-5">
-                    <Col lg={5} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
+                    <Col lg={7} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
                         <Form>
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>아이디</Form.Label>
                                 <Form.Control type="id" placeholder="아이디를 입력하세요" />
-                                <Form.Text>중복 여부</Form.Text>
+                                <Button variant="info" type="button" size="sm">
+                                    중복확인
+                                </Button>
+                                <Form.Text>&nbsp;&nbsp; 중복 여부</Form.Text>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>비밀번호</Form.Label>
                                 <Form.Control type="password" placeholder="비밀번호를 입력하세요" />
                                 <Form.Text>적합 여부</Form.Text>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Label>비밀번호 확인</Form.Label>
+                                <Form.Control type="password" placeholder="비밀번호 확인" />
+                                <Form.Text>일치 여부</Form.Text>
                             </Form.Group>
                             <FormGroup className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>이메일</Form.Label>
