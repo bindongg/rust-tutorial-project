@@ -26,7 +26,7 @@ function IdForgot() {
                                 <Form.Label>비밀번호</Form.Label>
                                 <Form.Control type="password" placeholder="비밀번호를 입력하세요" />
                                 <Form.Text className="text-muted">
-                                    <NavLink to="/">비밀번호 찾기</NavLink>
+                                    <NavLink href="/pwdForgot">비밀번호 찾기</NavLink>
                                 </Form.Text>
                             </Form.Group>
                             <Button variant="info" type="submit">

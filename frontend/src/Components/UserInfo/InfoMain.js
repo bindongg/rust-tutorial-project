@@ -19,7 +19,7 @@ function InfoMain() {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Text className="text-muted">
-                                    <NavLink to="/">비밀번호 변경</NavLink>
+                                    <NavLink href="/info/updatePwd">비밀번호 변경</NavLink>
                                 </Form.Text>
                             </Form.Group>
                         </Form>
