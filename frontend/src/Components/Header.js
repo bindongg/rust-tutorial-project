@@ -3,10 +3,10 @@ import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 
 function Header(){
     return (
-        <header>
+        <div>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href="/home">
+                    <Navbar.Brand href="/">
                         <img
                             src="/logo192.png"
                             width="30"
@@ -19,9 +19,9 @@ function Header(){
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
-                        <Nav.Link href="/tuto">Tutorial</Nav.Link>
-                        <Nav.Link href="/ref">Reference</Nav.Link>
-                        <Nav.Link href="/exer">Exercise</Nav.Link>
+                        <Nav.Link href="/tutorial">Tutorial</Nav.Link>
+                        <Nav.Link href="/reference">Reference</Nav.Link>
+                        <Nav.Link href="/exercise">Exercise</Nav.Link>
                         <Nav.Link href="/login">Login</Nav.Link>
                         <Nav.Link href="/register">Register</Nav.Link>
                         <NavDropdown title="information" id="basic-nav-dropdown">
@@ -34,7 +34,7 @@ function Header(){
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-        </header>
+        </div>
     );
 }
 

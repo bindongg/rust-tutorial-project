@@ -13,6 +13,8 @@ import PwdForgotEmailSentPage from "./IdPwdForgotPage/PwdForgotEmailSentPage";
 import InfoMainPage from "./UserInfoPage/InfoMainPage";
 import PwdUpdatePage from "./UserInfoPage/PwdUpdatePage";
 import SolvedExerPage from "./UserInfoPage/SolvedExerPage";
+import HomePage from "./HomePage/HomePage";
+import TutorialPage from "./TutorialPage/TutorialPage";
 
 //container -> 중앙으로 모아줌
 function App() {
@@ -22,7 +24,10 @@ function App() {
             <main>
                 <Container>
                     <Routes id="home">
-
+                        <Route path="/" exact={true} element={<HomePage/>}/>
+                    </Routes>
+                    <Routes id="tutorial">
+                        <Route path="/tutorial" exact={true} element={<TutorialPage/>}/>
                     </Routes>
                     <Routes id="login">
                         <Route path="/login" exact={true} element={<LoginPage/>}/>
