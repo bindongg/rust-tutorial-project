@@ -15,6 +15,7 @@ import PwdUpdatePage from "./UserInfoPage/PwdUpdatePage";
 import SolvedExerPage from "./UserInfoPage/SolvedExerPage";
 import HomePage from "./HomePage/HomePage";
 import TutorialPage from "./TutorialPage/TutorialPage";
+import TutorialDetailPage from "./TutorialPage/TutorialDetailPage";
 
 //container -> 중앙으로 모아줌
 function App() {
@@ -28,6 +29,7 @@ function App() {
                     </Routes>
                     <Routes id="tutorial">
                         <Route path="/tutorial" exact={true} element={<TutorialPage/>}/>
+                        <Route path="/tutorial/detail" exact={true} element={<TutorialDetailPage/>}/>
                     </Routes>
                     <Routes id="login">
                         <Route path="/login" exact={true} element={<LoginPage/>}/>

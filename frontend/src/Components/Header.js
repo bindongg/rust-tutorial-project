@@ -3,7 +3,7 @@ import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 
 function Header(){
     return (
-        <div>
+        <header>
             <Navbar bg="light" expand="lg">
                 <Container>
                     <Navbar.Brand href="/">
@@ -34,7 +34,7 @@ function Header(){
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-        </div>
+        </header>
     );
 }
 
