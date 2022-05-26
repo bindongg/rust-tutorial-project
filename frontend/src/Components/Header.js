@@ -3,8 +3,7 @@ import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 
 function Header(){
     return (
-        <header>
-            <Navbar bg="light" expand="lg">
+            <Navbar className="fixed-top" bg="light" expand="lg">
                 <Container>
                     <Navbar.Brand href="/">
                         <img
@@ -21,7 +20,11 @@ function Header(){
                     <Nav className="ms-auto">
                         <Nav.Link href="/tutorial">Tutorial</Nav.Link>
                         <Nav.Link href="/reference">Reference</Nav.Link>
-                        <Nav.Link href="/exercise">Exercise</Nav.Link>
+                        <NavDropdown title="Exercise" id="basic-nav-dropdown">
+                            <NavDropdown.Item href="/exercise">전체 문제</NavDropdown.Item>
+                            <NavDropdown.Item href="/exercise/tag">분류별 문제</NavDropdown.Item>
+                            <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
+                        </NavDropdown>
                         <Nav.Link href="/login">Login</Nav.Link>
                         <Nav.Link href="/register">Register</Nav.Link>
                         <NavDropdown title="information" id="basic-nav-dropdown">
@@ -34,7 +37,6 @@ function Header(){
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-        </header>
     );
 }
 

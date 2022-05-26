@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
-import {Container} from "react-bootstrap";
 import EmailCertification from "./Components/Register/EmailCertification";
 import {Route,Routes} from "react-router-dom";
 import LoginPage from "./LoginPage/LoginPage";
@@ -16,20 +15,31 @@ import SolvedExerPage from "./UserInfoPage/SolvedExerPage";
 import HomePage from "./HomePage/HomePage";
 import TutorialPage from "./TutorialPage/TutorialPage";
 import TutorialDetailPage from "./TutorialPage/TutorialDetailPage";
+import ReferencePage from "./ReferencePage/ReferencePage";
+import ExercisePage from "./ExercisePage/ExercisePage";
+import ExerciseByTagPage from "./ExercisePage/ExerciseByTagPage";
+
+
 
 //container -> 중앙으로 모아줌
 function App() {
     return (
         <>
             <Header/>
-            <main>
-                <Container>
+            <main className="pt-5">
                     <Routes id="home">
                         <Route path="/" exact={true} element={<HomePage/>}/>
                     </Routes>
                     <Routes id="tutorial">
                         <Route path="/tutorial" exact={true} element={<TutorialPage/>}/>
                         <Route path="/tutorial/detail" exact={true} element={<TutorialDetailPage/>}/>
+                    </Routes>
+                    <Routes id="reference">
+                        <Route path="/reference" exact={true} element={<ReferencePage/>}/>
+                    </Routes>
+                    <Routes id="exercise">
+                        <Route path="/exercise" exact={true} element={<ExercisePage/>}/>
+                        <Route path="/exercise/tag" exact={true} element={<ExerciseByTagPage/>}/>
                     </Routes>
                     <Routes id="login">
                         <Route path="/login" exact={true} element={<LoginPage/>}/>
@@ -49,9 +59,7 @@ function App() {
                         <Route path="/info/updatePwd" exact={true} element={<PwdUpdatePage/>}/>
                         <Route path="/info/solved" exact={true} element={<SolvedExerPage/>}/>
                     </Routes>
-                </Container>
             </main>
-            <Footer/>
         </>
     );
 }

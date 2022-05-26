@@ -5,7 +5,7 @@ import Accordion from "react-bootstrap/Accordion";
 function Tutorial() {
     return (
         <>
-            <div className="col-8 mx-auto">
+            <div className="col-8 mx-auto pt-5">
                 <Accordion defaultActiveKey={["0"]} alwaysOpen>
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>Accordion Item #1</Accordion.Header>
