@@ -17,8 +17,8 @@ function Home(){
                     Reference
                 </Button>
                 {""}
-                <Button variant="secondary" href="/practice" size="lg">
-                    Practice
+                <Button variant="secondary" href="/exercise" size="lg">
+                    Exercise
                 </Button>
                 {""}
             </div>
