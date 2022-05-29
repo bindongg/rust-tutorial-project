@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rust Online Compiler</title>
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+	<div class="header">Rust Online Compiler</div>
+	
+	<div class="editor" id="editor"></div>
+	<br>
+	<div class="stdIn" id="stdIn" ></div>		
+	<div class="button-container">			
+		<button class="btn" onclick="executeCode()">Run</button>
+	</div>
+	
+	<br>
+	<div class="output"></div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="js/lib/ace.js"></script>
+	<script src="js/lib/theme-monokai.js"></script>
+	<script src="js/ide.js"></script>
+</body>
+</html>
