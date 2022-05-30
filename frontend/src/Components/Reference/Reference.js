@@ -7,7 +7,7 @@ function Reference() {
         <>
             <div id="page-wrapper">
                 <div id="sidebar-wrapper">
-                    <ul class="sidebar-nav">
+                    <ul className="sidebar-nav">
                         <li><NavLink href="#">메뉴 1</NavLink></li>
                         <li><NavLink href="#">메뉴 1</NavLink></li>
                         <li><NavLink href="#">메뉴 1</NavLink></li>
@@ -18,7 +18,7 @@ function Reference() {
                 </div>
 
                 <div id="page-content-wrapper">
-                    <div class="container-fluid">
+                    <div className="container-fluid">
                         <h1>간단한 사이드바</h1>
                         <p>
                             hello<br/>
