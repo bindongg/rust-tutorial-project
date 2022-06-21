@@ -29,7 +29,7 @@ function Header(){
                         <Nav.Link href="/register">Register</Nav.Link>
                         <NavDropdown title="information" id="basic-nav-dropdown">
                             <NavDropdown.Item href="/info">사용자 정보</NavDropdown.Item>
-                            <NavDropdown.Item href="/info/solved">해결한 문제</NavDropdown.Item>
+                            <NavDropdown.Item href="/info/solved">시도한 문제</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>

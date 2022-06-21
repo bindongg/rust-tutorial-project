@@ -15,7 +15,7 @@ function ExerciseByTag() {
           </thead>
           <tbody>
             <tr>
-              <td><Link to="#">우선순위 큐</Link></td>
+              <td><Link to="/exercise">우선순위 큐</Link></td>
               <td>10</td>
             </tr>
             <tr>
