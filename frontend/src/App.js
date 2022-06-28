@@ -30,7 +30,7 @@ function App() {
             <Header/>
             <main className="pt-5">
                     <Routes id="home">
-                        <Route path="" exact={true} element={<HomePage/>}/>
+                        <Route path="home" exact={true} element={<HomePage/>}/>
                     </Routes>
                     <Routes id="tutorial">
                         <Route path="tutorial" exact={true} element={<TutorialPage/>}/>
