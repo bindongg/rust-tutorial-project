@@ -7,9 +7,9 @@ function Header(){
                 <Container>
                     <Navbar.Brand href="/">
                         <img
-                            src="/logo192.png"
-                            width="30"
-                            height="30"
+                            src="rust-logo-64blk.png"
+                            width="40"
+                            height="40"
                             className="d-inline-block align-top"
                             alt="React Bootstrap logo"
                         />
