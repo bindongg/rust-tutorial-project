@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, InputGroup, FormControl, FormGroup} from "react-bootstrap";
 import axios from "axios";
-import header from "../Header";
 
 
 function RegisterForm() {
@@ -33,16 +32,15 @@ function RegisterForm() {
 
     function checkIdDuplicate(){ //id 길이, 특수문자 check 하기
         let regEx = new RegExp(/^(?=.*?[A-Za-z]).{5,15}$/); //특수문자도 빼야되는데 일단 보류
-        alert(regEx.test(userId))
         if(regEx.test(userId))
         {
             axios.post("http://localhost:8080/user/duplicate", {id: userId}).then((Response) => {
                 if (Response.data === true) {
                     setCheckIdState(false);
-                    alert("이미 존재하는 아이디입니다" + checkIdState);
+                    alert("이미 존재하는 아이디입니다");
                 } else {
                     setCheckIdState(true);
-                    alert("사용 가능한 아이디입니다" + checkIdState);
+                    alert("사용 가능한 아이디입니다");
                 }
             }).catch((Error) => {
                 console.log(Error);
