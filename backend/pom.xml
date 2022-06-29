@@ -94,7 +94,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.rust.compile.DemoApplication</mainClass>
+                            <mainClass>com.rust.website.DemoApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
