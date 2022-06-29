@@ -1,7 +1,7 @@
 package com.rust.website.user.service;
 
-import com.rust.website.exersie.model.model.JudgeInputModel;
-import com.rust.website.exersie.model.model.JudgeOutputModel;
+import com.rust.website.exercise.model.model.JudgeInputModel;
+import com.rust.website.exercise.model.model.JudgeOutputModel;
 import org.springframework.stereotype.Service;
 
 import java.io.*;

@@ -17,8 +17,6 @@ public class UserService {
     @Transactional
     public int register(User user)
     {
-        user.setRole(UserRoleType.USER);
-        user.setAuthKey(UserAuthKey.INACTIVE);
         try{
             userRepository.save(user);
         }catch(Exception e)

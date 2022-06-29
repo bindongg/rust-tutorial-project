@@ -1,6 +1,6 @@
 package com.rust.website.user.model.entity;
 
-import com.rust.website.exersie.model.entity.ExerciseTry;
+import com.rust.website.exercise.model.entity.ExerciseTry;
 import com.rust.website.user.model.myEnum.UserAuthKey;
 import com.rust.website.user.model.myEnum.UserRoleType;
 import lombok.AllArgsConstructor;
