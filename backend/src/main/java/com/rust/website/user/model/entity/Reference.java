@@ -1,4 +1,4 @@
-package com.rust.website.user.model;
+package com.rust.website.user.model.entity;
 
 import java.sql.Timestamp;
 

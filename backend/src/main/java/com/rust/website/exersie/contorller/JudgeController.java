@@ -1,4 +1,4 @@
-package com.rust.website.user.controller;
+package com.rust.website.exersie.contorller;
 
 import com.rust.website.exersie.model.model.JudgeInputModel;
 import com.rust.website.exersie.model.model.JudgeOutputModel;
