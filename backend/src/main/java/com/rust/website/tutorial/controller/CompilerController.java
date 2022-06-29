@@ -1,4 +1,4 @@
-package com.rust.website.tutorial.contorller;
+package com.rust.website.tutorial.controller;
 
 import com.rust.website.tutorial.model.model.CompileInputModel;
 import com.rust.website.tutorial.model.model.CompileOutputModel;

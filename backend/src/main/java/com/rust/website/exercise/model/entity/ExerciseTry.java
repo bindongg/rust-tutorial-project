@@ -1,6 +1,6 @@
-package com.rust.website.exersie.model.entity;
+package com.rust.website.exercise.model.entity;
 
-import com.rust.website.exersie.model.myEnum.ExerciseSolved;
+import com.rust.website.exercise.model.myEnum.ExerciseSolved;
 import com.rust.website.user.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

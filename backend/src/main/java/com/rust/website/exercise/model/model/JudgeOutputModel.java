@@ -1,4 +1,4 @@
-package com.rust.website.exersie.model.model;
+package com.rust.website.exercise.model.model;
 
 public class JudgeOutputModel {
     private String stdOut;

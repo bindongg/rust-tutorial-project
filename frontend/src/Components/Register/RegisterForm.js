@@ -31,8 +31,9 @@ function RegisterForm() {
     }
 
     function checkIdDuplicate(){ //id 길이, 특수문자 check 하기
-        let regEx = new RegExp(/^(?=.*?[A-Za-z]).{5,15}$/); //특수문자도 빼야되는데 일단 보류
-        if(regEx.test(userId))
+        let idWordEx = new RegExp(/^(?=.*?[A-Za-z]).{3,15}$/);
+        let idSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
+        if(idWordEx.test(userId) && !(idSpecialEx.test(userId)))
         {
             axios.post("http://localhost:8080/user/duplicate", {id: userId}).then((Response) => {
                 if (Response.data === true) {
@@ -56,23 +57,42 @@ function RegisterForm() {
     {
         if(checkIdState === true)
         {
-            let pwdEx = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,20}$/);
-            let mailEx = new RegExp(/^(?=.*?[A-Za-z]).{5,50}$/);
+            let pwdEx = new RegExp(/^(?=.*?[A-Za-z#?!@$%^&*-]).{8,20}$/);
+
             if(pwdEx.test(userPassword))
             {
                 if(userPasswordCheck.toString() === userPassword.toString())
                 {
-                   if(mailEx.test(userEmail))
-                   {
-                       return 1;
-                   }
-                   else return -1;
+                    let mailEx = new RegExp(/^(?=.*?[A-Za-z]).{3,50}$/);
+                    let mailSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
+
+                    if(mailEx.test(userEmail) && !(mailSpecialEx.test(userEmail)))
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        alert("이메일이 올바른 형식이 아닙니다");
+                        return -1;
+                    }
                 }
-                else return -1;
+                else
+                {
+                    alert("비밀번호를 다시 확인해주세요");
+                    return -1;
+                }
             }
-            else return -1;
+            else
+            {
+                alert("비밀번호가 올바른 형식이 아닙니다");
+                return -1;
+            }
         }
-        else return -1;
+        else
+        {
+            alert("아이디 중복 체크를 해주세요");
+            return -1;
+        }
     }
 
     function register() //수정할것
@@ -80,12 +100,14 @@ function RegisterForm() {
         let check = checkInput();
         if(check === 1)
         {
-            alert("can register");
-            /*axios.post("http://localhost:8080/test/insert",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
-            console.log(Response.data);
+            axios.post("http://localhost:8080/test/insert",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
+            if(Response.data)
+            {
+                alert("registered");
+            }
             }).catch((Error)=>{
                 console.log(Error);
-            })*/
+            })
         }
         else
         {
