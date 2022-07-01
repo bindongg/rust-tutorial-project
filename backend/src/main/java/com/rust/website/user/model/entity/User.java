@@ -1,13 +1,15 @@
 package com.rust.website.user.model.entity;
 
 import com.rust.website.exercise.model.entity.ExerciseTry;
-import com.rust.website.user.model.myEnum.UserAuthKey;
+import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.model.myEnum.UserRoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -33,7 +35,7 @@ public class User {
     private UserRoleType role;
 
     @Enumerated(EnumType.STRING)
-    private UserAuthKey authKey;
+    private UserAuthState authState;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<ExerciseTry> exerciseTry;
@@ -43,4 +45,7 @@ public class User {
 
     @CreationTimestamp
     private Timestamp date;
+
+    //@LastModifiedDate
+    //private Timestamp updateDate;
 }

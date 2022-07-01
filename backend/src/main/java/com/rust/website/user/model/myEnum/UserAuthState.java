@@ -1,5 +1,5 @@
 package com.rust.website.user.model.myEnum;
 
-public enum UserAuthKey {
+public enum UserAuthState {
     ACTIVE, INACTIVE
 }
