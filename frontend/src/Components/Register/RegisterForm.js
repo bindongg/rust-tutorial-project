@@ -100,13 +100,10 @@ function RegisterForm() {
         let check = checkInput();
         if(check === 1)
         {
-            axios.post("http://localhost:8080/test/insert",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
-            if(Response.data)
-            {
+            axios.post("http://localhost:8080/user/register",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
                 alert("registered");
-            }
             }).catch((Error)=>{
-                console.log(Error);
+                alert("failed");
             })
         }
         else
