@@ -21,8 +21,9 @@ public class UserAuthService {
     }
 
     @Transactional
-    public void confirmAuth()
+    public Optional<UserAuth> confirmAuth(String authId)
     {
-        //todo
+        Optional<UserAuth> userAuth = userAuthRepository.findByIdAndExpirationTimeAfterAndUsed(authId, LocalDateTime.now(), false);
+        return userAuth;
     }
 }

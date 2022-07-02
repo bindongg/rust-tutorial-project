@@ -7,4 +7,5 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserAuthRepository extends JpaRepository<UserAuth, String> {
+    Optional<UserAuth> findByIdAndExpirationTimeAfterAndUsed(String confirmationTokenId, LocalDateTime now, boolean expired);
 }

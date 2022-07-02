@@ -5,7 +5,6 @@ import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.model.myEnum.UserRoleType;
-import com.rust.website.user.service.UserAuthService;
 import com.rust.website.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ public class UserController {
 
     private final UserService userService;
     private final MailService mailService;
-    private final UserAuthService userAuthService;
 
     @CrossOrigin("http://localhost:3000")
     @PostMapping({"/user/duplicate"})
@@ -36,16 +34,14 @@ public class UserController {
 
         UserAuth userAuth = new UserAuth(user.getId());
 
-        userService.register(user);
-        userAuthService.register(userAuth);
-        mailService.sendAuthMail(user.getEmail(), userAuth);
+        userService.register(user,userAuth);
+        mailService.sendAuthMail(user.getEmail(), userAuth.getId());
         return 1;
     }
 
     @GetMapping("/authConfirm/{authId}")
     void authConfirm(@PathVariable String authId)
     {
-        //여기서 해당 유저 정보 활성화
-        //userAuthService.confirmAuth
+        userService.confirmAuth(authId);
     }
 }
