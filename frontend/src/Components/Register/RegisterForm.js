@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, InputGroup, FormControl, FormGroup} from "react-bootstrap";
 import axios from "axios";
+import {useNavigate} from 'react-router-dom';
 
 
 function RegisterForm() {
@@ -10,6 +11,9 @@ function RegisterForm() {
     const [userEmail, setUserEmail] = useState("")
 
     const [checkIdState, setCheckIdState] = useState(false)
+
+    const navigate = useNavigate();
+
 
     function onChangeId(e){
         setUserId(e.target.value);
@@ -35,7 +39,7 @@ function RegisterForm() {
         let idSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
         if(idWordEx.test(userId) && !(idSpecialEx.test(userId)))
         {
-            axios.post("http://localhost:8080/user/duplicate", {id: userId}).then((Response) => {
+            axios.post("http://localhost:8080/user/duplicateId", {id: userId}).then((Response) => {
                 if (Response.data === true) {
                     setCheckIdState(false);
                     alert("이미 존재하는 아이디입니다");
@@ -97,18 +101,32 @@ function RegisterForm() {
 
     function register() //수정할것
     {
-        let check = checkInput();
-        if(check === 1)
+        let checkEmail = 1;
+        axios.post("http://localhost:8080/user/duplicateEmail",{email: userEmail}).then((Response)=>{
+            if(Response.data === true)
+            {
+                checkEmail = 0;
+                alert("이미 사용하고 있는 메일 주소입니다");
+            }
+            else
+            {}
+        }).catch((Error)=>{
+            alert("failed");
+        })
+
+        if(checkEmail === 1)
         {
-            axios.post("http://localhost:8080/user/register",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
-                alert("registered");
-            }).catch((Error)=>{
-                alert("failed");
-            })
-        }
-        else
-        {
-            alert("cannot register");
+            let check = checkInput();
+            if(check === 1)
+            {
+                axios.post("http://localhost:8080/user/register",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
+                    alert("입력하신 메일 주소로 인증 메일을 전송했습니다. 인증을 위해 메일로 전송한 링크를 클릭해주세요");
+                }).catch((Error)=>{
+                    alert("failed");
+                }).finally(()=>{navigate("/register/certification", {state: {id: userId, pwd: userPassword, email: userEmail}});})
+            }
+            else
+            {}
         }
     }
 
@@ -149,7 +167,7 @@ function RegisterForm() {
                                     <InputGroup.Text id="basic-addon2">@pusan.ac.kr</InputGroup.Text>
                                 </InputGroup>
                             </FormGroup>
-                            <Button variant="info" type="submit" onClick={register}>
+                            <Button variant="info" type="button" onClick={register}>
                                 회원가입
                             </Button>
                         </Form>
