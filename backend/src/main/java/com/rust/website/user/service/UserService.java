@@ -1,5 +1,6 @@
 package com.rust.website.user.service;
 
+import com.rust.website.mail.service.MailService;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.myEnum.UserAuthState;
@@ -16,29 +17,41 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final MailService mailService;
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
 
     @Transactional(readOnly = true)
-    public boolean checkDuplicate(String id) {
-        boolean check = userRepository.existsById(id);
-        return check;
+    public boolean checkDuplicateId(String id) {
+        return userRepository.existsById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkDuplicateEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Transactional
     public void register(User user, UserAuth userAuth) {
         userRepository.save(user);
         userAuthRepository.save(userAuth);
+        mailService.sendAuthMail(user.getEmail(),userAuth.getId());
     }
 
     @Transactional
-    public void confirmAuth(String authId)
+    public void confirmAuth(String authId) //구조 수정 -> exception을 던지게
     {
         Optional<UserAuth> optUserAuth = userAuthRepository.findByIdAndExpirationTimeAfterAndUsed(authId, LocalDateTime.now(), false);
-        UserAuth userToAuth = optUserAuth.get(); //isPresent 추가
-        Optional<User> optUser = userRepository.findById(userToAuth.getUserId());
-        userToAuth.setUsed(true);
-        User user = optUser.get();
-        user.setAuthState(UserAuthState.ACTIVE);
+        if(optUserAuth.isPresent())
+        {
+            UserAuth userToAuth = optUserAuth.get();
+            Optional<User> optUser = userRepository.findById(userToAuth.getUserId());
+            if(optUser.isPresent())
+            {
+                userToAuth.setUsed(true);
+                User user = optUser.get();
+                user.setAuthState(UserAuthState.ACTIVE);
+            }
+        }
     }
 }

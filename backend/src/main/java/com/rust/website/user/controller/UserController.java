@@ -14,19 +14,24 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final MailService mailService;
 
     @CrossOrigin("http://localhost:3000")
-    @PostMapping({"/user/duplicate"})
+    @PostMapping({"/user/duplicateId"})
     boolean checkDuplicateId(@RequestBody User user)
     {
-        boolean check = userService.checkDuplicate(user.getId());
-        return check;
+        return userService.checkDuplicateId(user.getId());
+    }
+
+    @CrossOrigin("http://localhost:3000")
+    @PostMapping({"/user/duplicateEmail"})
+    boolean checkDuplicateEmail(@RequestBody User user)
+    {
+        return userService.checkDuplicateEmail(user.getEmail());
     }
 
     @CrossOrigin("http://localhost:3000")
     @PostMapping({"/user/register"})
-    int addUser(@RequestBody User user)
+    void addUser(@RequestBody User user)
     {
         user.setRole(UserRoleType.USER);
         user.setAuthState(UserAuthState.INACTIVE);
@@ -35,8 +40,6 @@ public class UserController {
         UserAuth userAuth = new UserAuth(user.getId());
 
         userService.register(user,userAuth);
-        mailService.sendAuthMail(user.getEmail(), userAuth.getId());
-        return 1;
     }
 
     @GetMapping("/authConfirm/{authId}")

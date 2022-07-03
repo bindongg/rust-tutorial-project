@@ -1,7 +1,7 @@
 import React from "react";
 import {Row, Container, Col} from "react-bootstrap";
 
-function EmailCertification() {
+function AfterAuthEmailSent() {
     return (
         <>
             <Container>
@@ -16,4 +16,4 @@ function EmailCertification() {
     );
 }
 
-export default EmailCertification;
+export default AfterAuthEmailSent;
