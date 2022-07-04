@@ -12,8 +12,9 @@ function RegisterForm() {
 
     const [checkIdState, setCheckIdState] = useState(false)
 
-    const navigate = useNavigate();
+    const [btnState, setBtnState] = useState(false);
 
+    const navigate = useNavigate();
 
     function onChangeId(e){
         setUserId(e.target.value);
@@ -119,11 +120,12 @@ function RegisterForm() {
             let check = checkInput();
             if(check === 1)
             {
+                setBtnState(true);
                 axios.post("http://localhost:8080/user/register",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
                     alert("입력하신 메일 주소로 인증 메일을 전송했습니다. 인증을 위해 메일로 전송한 링크를 클릭해주세요");
                 }).catch((Error)=>{
                     alert("failed");
-                }).finally(()=>{navigate("/register/certification", {state: {id: userId, pwd: userPassword, email: userEmail}});})
+                })/*.finally(()=>{navigate("/register/certification", {state: {id: userId, pwd: userPassword, email: userEmail}});})*/
             }
             else
             {}
@@ -167,7 +169,7 @@ function RegisterForm() {
                                     <InputGroup.Text id="basic-addon2">@pusan.ac.kr</InputGroup.Text>
                                 </InputGroup>
                             </FormGroup>
-                            <Button variant="info" type="button" onClick={register}>
+                            <Button disabled={btnState} variant="info" type="button" onClick={register}>
                                 회원가입
                             </Button>
                         </Form>
