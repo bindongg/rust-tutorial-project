@@ -5,7 +5,7 @@ class ExerciseList extends Component{
     render() {
         const {data} = this.props;
         const list = data.map(
-            info => (<ExerciseInfo key = {info.id} info={info}/>)
+            info => (<ExerciseInfo key = {info.index} info={info}/>)
         )
         return (
             <tbody>

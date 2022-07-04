@@ -4,15 +4,15 @@ import {Link} from "react-router-dom";
 class ExerciseInfo extends Component{
     static defaultProps={
         info:{
-            id: 0,
+            index: 0,
             title: 'exercise title'
         }
     }
     render(){
-        const {id, title} = this.props.info;
+        const {index, title} = this.props.info;
         return(
             <tr>
-              <td><Link to="">{id}</Link></td>
+              <td><Link to="">{index}</Link></td>
               <td><Link to="/exercise/1">{title}</Link></td>
               <td>종류</td>
               <td>난이도</td>

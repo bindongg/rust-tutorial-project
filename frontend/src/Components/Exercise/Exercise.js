@@ -11,7 +11,7 @@ class Exercise extends Component{
   };
   getExercises = async () => {
     //TODO 실제 api 주소로 대체하기
-    const exercises = await axios.get("https://jsonplaceholder.typicode.com/albums");
+    const exercises = await axios.get("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise");
     // console.log(exercises.data); //점 연산자로 json 데이터 접근
     this.setState({exercises: exercises.data});
   }
