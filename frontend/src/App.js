@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+// import Footer from "./Components/Footer";
 import EmailCertification from "./Components/Register/EmailCertification";
 import {Route,Routes} from "react-router-dom";
 import LoginPage from "./LoginPage/LoginPage";
@@ -30,6 +30,7 @@ function App() {
             <Header/>
             <main className="pt-5">
                     <Routes id="home">
+                        <Route index element={<HomePage />} />
                         <Route path="home" exact={true} element={<HomePage/>}/>
                     </Routes>
                     <Routes id="tutorial">

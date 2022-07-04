@@ -1,13 +1,32 @@
-import React from "react";
+import React, {Component} from "react";
 import { Table } from "react-bootstrap";
 import {Link} from "react-router-dom";
+import axios from "axios";
+import ExerciseList from "./ExerciseList";
 
-function Exercise() {
-  return (
-    <>
-      <div className="col-10 mx-auto pt-5">
-        <Table striped bordered hover>
-          <thead>
+class Exercise extends Component{
+  state ={
+    isLoading: true,
+    exercises:[],
+  };
+  getExercises = async () => {
+    //TODO 실제 api 주소로 대체하기
+    const exercises = await axios.get("https://jsonplaceholder.typicode.com/albums");
+    // console.log(exercises.data); //점 연산자로 json 데이터 접근
+    this.setState({exercises: exercises.data});
+  }
+
+  componentDidMount() { //render() 를 호출하고난 다음에 호출됨
+    this.getExercises();
+  }
+
+
+  render() {
+    return (
+      <>
+        <div className="col-10 mx-auto pt-5">
+          <Table striped bordered hover>
+            <thead>
             <tr>
               <th>번호</th>
               <th>문제명</th>
@@ -15,41 +34,13 @@ function Exercise() {
               <th>난이도</th>
               <th>정보</th>
             </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><Link to="">1001</Link></td>
-              <td><Link to="/exercise/1">[기초-출력] 출력하기01(설명)</Link></td>
-              <td>종류</td>
-              <td>난이도</td>
-              <td>성공</td>
-            </tr>
-            <tr>
-              <td><Link to="">1001</Link></td>
-              <td><Link to="#">[기초-출력] 출력하기01(설명)</Link></td>
-              <td>종류</td>
-              <td>난이도</td>
-              <td>실패</td>
-            </tr>
-            <tr>
-              <td><Link to="">1001</Link></td>
-              <td><Link to="#">[기초-출력] 출력하기01(설명)</Link></td>
-              <td>종류</td>
-              <td>난이도</td>
-              <td>성공</td>
-            </tr>
-            <tr>
-              <td><Link to="">1001</Link></td>
-              <td><Link to="#">[기초-출력] 출력하기01(설명)</Link></td>
-              <td>종류</td>
-              <td>난이도</td>
-              <td>성공</td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
-    </>
+            </thead>
+            <ExerciseList data={this.state.exercises}/>
+          </Table>
+        </div>
+      </>
   );
+  }
 }
 
 export default Exercise;
