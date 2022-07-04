@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
-class ExerciseInfo extends Component{
+class ExerciseListInfo extends Component{
     static defaultProps={
         info:{
             index: 0,
@@ -21,4 +21,4 @@ class ExerciseInfo extends Component{
         )
     }
 }
-export default ExerciseInfo;
+export default ExerciseListInfo;

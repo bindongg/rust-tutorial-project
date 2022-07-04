@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import ExerciseInfo from "./ExerciseInfo";
+import ExerciseListInfo from "./ExerciseListInfo";
 
 class ExerciseList extends Component{
     render() {
         const {data} = this.props;
         const list = data.map(
-            info => (<ExerciseInfo key = {info.index} info={info}/>)
+            info => (<ExerciseListInfo key = {info.index} info={info}/>)
         )
         return (
             <tbody>
