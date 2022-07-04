@@ -35,7 +35,7 @@ public class UserService {
     public void register(User user, UserAuth userAuth) {
         userRepository.save(user);
         userAuthRepository.save(userAuth);
-        mailService.sendAuthMail(user.getEmail(),userAuth.getId());
+        //mailService.sendAuthMail(user.getEmail(),userAuth.getId());
     }
 
     @Transactional

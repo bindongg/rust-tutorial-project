@@ -42,7 +42,7 @@ public class UserController {
         userService.register(user,userAuth);
     }
 
-    @GetMapping("/authConfirm/{authId}")
+    @GetMapping ("/user/authConfirm/{authId}")
     void authConfirm(@PathVariable String authId)
     {
         userService.confirmAuth(authId);

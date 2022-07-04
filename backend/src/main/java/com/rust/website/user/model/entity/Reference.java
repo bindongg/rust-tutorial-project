@@ -10,5 +10,7 @@ public class Reference {
 
     private String content;
 
+    private int order;
+
     private Timestamp date;
 }
