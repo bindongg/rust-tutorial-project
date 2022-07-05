@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
-import EmailCertification from "./Components/Register/EmailCertification";
+import AfterAuthEmailSent from "./Components/Register/AfterAuthEmailSent";
 import {Route,Routes} from "react-router-dom";
 import LoginPage from "./LoginPage/LoginPage";
 import RegisterPage from "./RegisterPage/RegisterPage";
@@ -50,7 +50,7 @@ function App() {
                     </Routes>
                     <Routes id="register">
                         <Route path="register" exact={true} element={<RegisterPage/>}/>
-                        <Route path="register/certification" exact={true} element={<EmailCertification/>}/>
+                        <Route path="register/certification" exact={true} element={<AfterAuthEmailSent/>}/>
                     </Routes>
                     <Routes id="idPwdForgot">
                         <Route path="idForgot" exact={true} element={<IdForgotPage/>}/>
