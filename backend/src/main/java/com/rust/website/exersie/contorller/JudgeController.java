@@ -2,7 +2,7 @@ package com.rust.website.exersie.contorller;
 
 import com.rust.website.exersie.model.model.JudgeInputModel;
 import com.rust.website.exersie.model.model.JudgeOutputModel;
-import com.rust.website.user.service.JudgeService;
+import com.rust.website.exersie.service.JudgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

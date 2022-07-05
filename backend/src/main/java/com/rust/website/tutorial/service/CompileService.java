@@ -1,7 +1,7 @@
-package com.rust.website.user.service;
+package com.rust.website.tutorial.service;
 
-import com.rust.website.tutorial.model.model.CompileInputModel;
-import com.rust.website.tutorial.model.model.CompileOutputModel;
+import com.rust.website.tutorial.model.model.CompileInput;
+import com.rust.website.tutorial.model.model.CompileOutput;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -9,15 +9,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Service
-public class CompileServiceImpl implements CompileService {
+public class CompileService {
     private static final String CODE_PATH = ".\\online_compile\\";
     private static int processNumber = 0;
-    @Override
-    public CompileOutputModel onlineCompile(CompileInputModel compileInputModel) throws IOException {
+
+    public CompileOutput onlineCompile(CompileInput compileInputModel) throws IOException {
         processNumber = (processNumber + 1) % 100000;
         String fileName = new String("temp" + processNumber);
 
-        CompileOutputModel compileOutputModel = new CompileOutputModel();
+        CompileOutput compileOutputModel = new CompileOutput();
         try {
             FileWriter myWriter = new FileWriter(CODE_PATH + fileName + "_code.rs");
             myWriter.write(compileInputModel.getCode());

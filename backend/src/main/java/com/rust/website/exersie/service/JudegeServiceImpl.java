@@ -1,4 +1,4 @@
-package com.rust.website.user.service;
+package com.rust.website.exersie.service;
 
 import com.rust.website.exersie.model.model.JudgeInputModel;
 import com.rust.website.exersie.model.model.JudgeOutputModel;
