@@ -1,7 +1,9 @@
 import React from "react";
 import Header from "./Components/Header";
-// import Footer from "./Components/Footer";
-import EmailCertification from "./Components/Register/EmailCertification";
+
+import Footer from "./Components/Footer";
+import AfterAuthEmailSent from "./Components/Register/AfterAuthEmailSent";
+
 import {Route,Routes} from "react-router-dom";
 import LoginPage from "./LoginPage/LoginPage";
 import RegisterPage from "./RegisterPage/RegisterPage";
@@ -41,7 +43,9 @@ function App() {
                         <Route path="exercise/1" exact={true} element={<ExerciseDetailPage/>}/>
                         <Route path="login" exact={true} element={<LoginPage/>}/>
                         <Route path="register" exact={true} element={<RegisterPage/>}/>
-                        <Route path="register/certification" exact={true} element={<EmailCertification/>}/>
+                        <Route path="register/certification" exact={true} element={<AfterAuthEmailSent/>}/>
+                    </Routes>
+                    <Routes id="idPwdForgot">
                         <Route path="idForgot" exact={true} element={<IdForgotPage/>}/>
                         <Route path="idForgot/getId" exact={true} element={<IdForgotGetIdPage/>}/>
                         <Route path="pwdForgot" exact={true} element={<PwdForgotPage/>}/>

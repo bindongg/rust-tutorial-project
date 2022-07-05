@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, InputGroup, FormControl, FormGroup} from "react-bootstrap";
 import axios from "axios";
-import header from "../Header";
+import {useNavigate} from 'react-router-dom';
 
 
 function RegisterForm() {
@@ -11,6 +11,10 @@ function RegisterForm() {
     const [userEmail, setUserEmail] = useState("")
 
     const [checkIdState, setCheckIdState] = useState(false)
+
+    const [btnState, setBtnState] = useState(false);
+
+    const navigate = useNavigate();
 
     function onChangeId(e){
         setUserId(e.target.value);
@@ -32,17 +36,17 @@ function RegisterForm() {
     }
 
     function checkIdDuplicate(){ //id 길이, 특수문자 check 하기
-        let regEx = new RegExp(/^(?=.*?[A-Za-z]).{5,15}$/); //특수문자도 빼야되는데 일단 보류
-        alert(regEx.test(userId))
-        if(regEx.test(userId))
+        let idWordEx = new RegExp(/^(?=.*?[A-Za-z]).{3,15}$/);
+        let idSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
+        if(idWordEx.test(userId) && !(idSpecialEx.test(userId)))
         {
-            axios.post("http://localhost:8080/user/duplicate", {id: userId}).then((Response) => {
+            axios.post("http://localhost:8080/user/duplicateId", {id: userId}).then((Response) => {
                 if (Response.data === true) {
                     setCheckIdState(false);
-                    alert("이미 존재하는 아이디입니다" + checkIdState);
+                    alert("이미 존재하는 아이디입니다");
                 } else {
                     setCheckIdState(true);
-                    alert("사용 가능한 아이디입니다" + checkIdState);
+                    alert("사용 가능한 아이디입니다");
                 }
             }).catch((Error) => {
                 console.log(Error);
@@ -58,40 +62,73 @@ function RegisterForm() {
     {
         if(checkIdState === true)
         {
-            let pwdEx = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,20}$/);
-            let mailEx = new RegExp(/^(?=.*?[A-Za-z]).{5,50}$/);
+            let pwdEx = new RegExp(/^(?=.*?[A-Za-z#?!@$%^&*-]).{8,20}$/);
+
             if(pwdEx.test(userPassword))
             {
                 if(userPasswordCheck.toString() === userPassword.toString())
                 {
-                   if(mailEx.test(userEmail))
-                   {
-                       return 1;
-                   }
-                   else return -1;
+                    let mailEx = new RegExp(/^(?=.*?[A-Za-z]).{3,50}$/);
+                    let mailSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
+
+                    if(mailEx.test(userEmail) && !(mailSpecialEx.test(userEmail)))
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        alert("이메일이 올바른 형식이 아닙니다");
+                        return -1;
+                    }
                 }
-                else return -1;
+                else
+                {
+                    alert("비밀번호를 다시 확인해주세요");
+                    return -1;
+                }
             }
-            else return -1;
+            else
+            {
+                alert("비밀번호가 올바른 형식이 아닙니다");
+                return -1;
+            }
         }
-        else return -1;
+        else
+        {
+            alert("아이디 중복 체크를 해주세요");
+            return -1;
+        }
     }
 
     function register() //수정할것
     {
-        let check = checkInput();
-        if(check === 1)
+        let checkEmail = 1;
+        axios.post("http://localhost:8080/user/duplicateEmail",{email: userEmail}).then((Response)=>{
+            if(Response.data === true)
+            {
+                checkEmail = 0;
+                alert("이미 사용하고 있는 메일 주소입니다");
+            }
+            else
+            {}
+        }).catch((Error)=>{
+            alert("failed");
+        })
+
+        if(checkEmail === 1)
         {
-            alert("can register");
-            /*axios.post("http://localhost:8080/test/insert",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
-            console.log(Response.data);
-            }).catch((Error)=>{
-                console.log(Error);
-            })*/
-        }
-        else
-        {
-            alert("cannot register");
+            let check = checkInput();
+            if(check === 1)
+            {
+                setBtnState(true);
+                axios.post("http://localhost:8080/user/register",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
+                    alert("입력하신 메일 주소로 인증 메일을 전송했습니다. 인증을 위해 메일로 전송한 링크를 클릭해주세요");
+                }).catch((Error)=>{
+                    alert("failed");
+                })/*.finally(()=>{navigate("/register/certification", {state: {id: userId, pwd: userPassword, email: userEmail}});})*/
+            }
+            else
+            {}
         }
     }
 
@@ -132,7 +169,7 @@ function RegisterForm() {
                                     <InputGroup.Text id="basic-addon2">@pusan.ac.kr</InputGroup.Text>
                                 </InputGroup>
                             </FormGroup>
-                            <Button variant="info" type="submit" onClick={register}>
+                            <Button disabled={btnState} variant="info" type="button" onClick={register}>
                                 회원가입
                             </Button>
                         </Form>
