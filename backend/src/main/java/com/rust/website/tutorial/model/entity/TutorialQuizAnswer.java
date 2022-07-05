@@ -5,31 +5,27 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
-public class TutorialQuiz implements Serializable {
+@IdClass(TutorialQuizAnswerKey.class)
+public class TutorialQuizAnswer implements Serializable {
+
     @Id
-    @OneToOne
-    @JoinColumn(name="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tutorial_id")
     @JsonIgnoreProperties({"tutorialQuiz", "tutorialSubs"})
-    private Tutorial tutorial; //foreign key
+    private Tutorial tutorial;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+    @Id
+    private int id;
 
-    @Lob
     @Column(nullable = false)
-    private String content;
-
-    @CreationTimestamp
-    private Timestamp date;
+    private int answer;
 }

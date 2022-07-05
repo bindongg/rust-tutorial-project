@@ -2,7 +2,8 @@ package com.rust.website.exercise.controller;
 
 import com.rust.website.exercise.model.model.JudgeInputModel;
 import com.rust.website.exercise.model.model.JudgeOutputModel;
-import com.rust.website.user.service.JudgeService;
+import com.rust.website.exercise.service.JudegeService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 
 @Controller
+@AllArgsConstructor
 public class JudgeController {
-    @Autowired
-    private JudgeService judgeService;
+
+    private final JudegeService judgeService;
 
     @ResponseBody
     @RequestMapping(value="/judge", method = RequestMethod.POST)

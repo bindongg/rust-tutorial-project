@@ -1,6 +1,8 @@
 package com.rust.website.user.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rust.website.exercise.model.entity.ExerciseTry;
+import com.rust.website.tutorial.model.entity.TutorialDone;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.model.myEnum.UserRoleType;
 import lombok.AllArgsConstructor;
@@ -38,8 +40,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<ExerciseTry> exerciseTry;
 
-    //@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    //private List<TutorialDone> tutorialDone;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy(value = "tutorial_id ASC")
+    @JsonIgnoreProperties({"user"})
+    private List<TutorialDone> tutorialDone;
 
     @CreationTimestamp
     private Timestamp date;

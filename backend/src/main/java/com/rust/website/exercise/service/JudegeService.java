@@ -1,4 +1,4 @@
-package com.rust.website.user.service;
+package com.rust.website.exercise.service;
 
 import com.rust.website.exercise.model.model.JudgeInputModel;
 import com.rust.website.exercise.model.model.JudgeOutputModel;
@@ -9,12 +9,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Service
-public class JudegeServiceImpl implements JudgeService {
+public class JudegeService {
     static private int processNumber = 0;
     static private final String CODE_PATH = ".\\online_judge\\temp_code\\";
     static private final String TC_PATH = ".\\online_judge\\questions\\q";
 
-    @Override
+
     public JudgeOutputModel onlineJudge(JudgeInputModel inputModel) throws IOException {
         processNumber = (processNumber + 1) % 100000;
         String fileName = new String("temp" + processNumber);
