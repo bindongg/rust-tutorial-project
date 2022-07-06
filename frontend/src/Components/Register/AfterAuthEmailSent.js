@@ -8,6 +8,7 @@ function AfterAuthEmailSent() {
     const id = location.state.id;
     const password = location.state.password;
     const email = location.state.email;
+    const authId = location.state.authId;
 
     function register()
     {   //재전송 시 문제 처리하기, 그냥 추가된 record delete by 하면 되나??
