@@ -1,6 +1,7 @@
 package com.rust.website.user.controller;
 
 import com.rust.website.user.ResponseDTO.ResponseDTO;
+import com.rust.website.user.model.entity.MailResendObject;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.exception.NoSuchEntityException;
@@ -47,6 +48,20 @@ public class UserController {
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
+    @CrossOrigin("http://localhost:3000")
+    @PostMapping({"/user/register/resend"})
+    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendObject mailResendObject)
+    {
+        User user = new User();
+        user.setId(mailResendObject.getId());
+        user.setPassword(mailResendObject.getPassword());
+        user.setEmail(mailResendObject.getEmail());
+
+        String authId = userService.registerMailResent(user, mailResendObject.getAuthId());
+
+        return new ResponseDTO<>(HttpStatus.OK.value(), authId);
+    }
+
     @GetMapping ("/user/authConfirm/{authId}")
     public String authConfirm(@PathVariable String authId)
     {
@@ -57,18 +72,18 @@ public class UserController {
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseDTO<String> temp()
     {
-        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "temp"); //temp
+        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "IllegalArgumentException"); //temp
     }
 
     @ExceptionHandler(MailSendException.class)
     protected ResponseDTO<String> temp2()
     {
-        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "temp"); //temp
+        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "MailSendException"); //temp
     }
 
     @ExceptionHandler(NoSuchEntityException.class)
     protected ResponseDTO<String> temp3()
     {
-        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "temp"); //temp
+        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "NoSuchEntityException"); //temp
     }
 }

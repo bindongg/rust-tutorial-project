@@ -1,15 +1,14 @@
 package com.rust.website.user.service;
 
 import com.rust.website.mail.service.MailService;
-import com.rust.website.user.ResponseDTO.ResponseDTO;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.rust.website.user.model.myEnum.UserAuthState;
+import com.rust.website.user.model.myEnum.UserRoleType;
 import com.rust.website.user.repository.UserAuthRepository;
 import com.rust.website.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +56,55 @@ public class UserService {
         }
         catch (IllegalArgumentException illegalArgumentException) {
             throw new IllegalArgumentException("User or UserAuth addition failed");
+        }
+        catch (MailSendException mailSendException) {
+            throw new MailSendException("mail transmission failed");
+        }
+    }
+
+    @Transactional
+    public String registerMailResent(User user, String authId)
+    {
+        try
+        {
+            Optional<User> optUser = userRepository.findByIdAndAuthState(user.getId(), UserAuthState.INACTIVE);
+            if(optUser.isPresent())
+            {
+                Optional<UserAuth> optUserAuth = userAuthRepository.findByIdAndUsed(authId, false);
+                if(optUserAuth.isPresent())
+                {
+                    userRepository.deleteByIdAndAuthState(user.getId(), UserAuthState.INACTIVE); //그냥 user table은 냅두고 userAuth만 새로 추가?
+                    userAuthRepository.deleteByIdAndUsed(authId, false);
+
+                    User nUser = new User();
+                    nUser.setId(user.getId());
+                    nUser.setPassword(user.getPassword());
+                    nUser.setEmail(user.getEmail()+"@pusan.ac.kr");
+                    nUser.setAuthState(UserAuthState.INACTIVE);
+                    nUser.setRole(UserRoleType.USER);
+
+                    UserAuth nUserAuth = new UserAuth(user.getId());
+
+                    userRepository.save(nUser);
+                    userAuthRepository.save(nUserAuth);
+
+                    mailService.sendAuthMail(nUser.getEmail(), nUserAuth.getId());
+
+                    return nUserAuth.getId();
+                }
+                else
+                {
+                    throw new NoSuchEntityException("UserAuth entity does not exist");
+                }
+            }
+            else
+            {
+                throw new NoSuchEntityException("User entity does not exist");
+            }
+        }
+        catch (IllegalArgumentException illegalArgumentException)
+        {
+            throw new IllegalArgumentException();
         }
         catch (MailSendException mailSendException) {
             throw new MailSendException("mail transmission failed");
