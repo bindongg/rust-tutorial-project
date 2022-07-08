@@ -20,7 +20,11 @@ import java.util.List;
 @Entity
 public class Tutorial {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false, unique = true)
+    private int number;
 
     @Column(nullable = false, length = 20)
     private String name;
@@ -28,11 +32,12 @@ public class Tutorial {
     @CreationTimestamp
     private Timestamp date;
 
-    @OneToMany(mappedBy = "tutorial", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"tutorial", "content"})
+    @OrderBy(value = "number ASC")
     private List<TutorialSub> tutorialSubs;
 
-    @OneToOne(mappedBy = "tutorial", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"tutorial", "content"})
+    @OneToOne(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"tutorial", "content", "tutorialQuizAnswers"})
     private TutorialQuiz tutorialQuiz;
 }

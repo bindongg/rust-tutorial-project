@@ -6,10 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,10 +21,8 @@ import java.sql.Timestamp;
 @Entity
 public class TutorialQuiz implements Serializable {
     @Id
-    @OneToOne
-    @JoinColumn(name="id")
-    @JsonIgnoreProperties({"tutorialQuiz", "tutorialSubs"})
-    private Tutorial tutorial; //foreign key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -32,4 +33,14 @@ public class TutorialQuiz implements Serializable {
 
     @CreationTimestamp
     private Timestamp date;
+
+    @OneToOne
+    @JoinColumn(name="tutorial_id", unique = true)
+    @JsonIgnoreProperties({"tutorialQuiz", "tutorialSubs"})
+    private Tutorial tutorial; //foreign key
+
+    @OneToMany(mappedBy = "tutorialQuiz", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"tutorialQuiz"})
+    private List<TutorialQuizAnswer> tutorialQuizAnswers;
+
 }

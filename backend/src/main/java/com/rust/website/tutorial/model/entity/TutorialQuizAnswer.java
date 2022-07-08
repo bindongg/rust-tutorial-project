@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,18 +16,20 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @Entity
-@IdClass(TutorialQuizAnswerKey.class)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"number", "tutorialQuiz_id"})})
 public class TutorialQuizAnswer implements Serializable {
-
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tutorial_id")
-    @JsonIgnoreProperties({"tutorialQuiz", "tutorialSubs"})
-    private Tutorial tutorial;
-
-    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
+    private int number;
+
+    @Column(nullable = false)
     private int answer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tutorialQuiz_id")
+    @JsonIgnoreProperties({"tutorial", "tutorialAnswers"})
+    private TutorialQuiz tutorialQuiz;
 }
