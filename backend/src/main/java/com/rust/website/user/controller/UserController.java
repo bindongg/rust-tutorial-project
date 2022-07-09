@@ -72,18 +72,24 @@ public class UserController {
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseDTO<String> temp()
     {
-        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "IllegalArgumentException"); //temp
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "IllegalArgumentException"); //temp
     }
 
     @ExceptionHandler(MailSendException.class)
     protected ResponseDTO<String> temp2()
     {
-        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "MailSendException"); //temp
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "MailSendException"); //temp
     }
 
     @ExceptionHandler(NoSuchEntityException.class)
     protected ResponseDTO<String> temp3()
     {
-        return new ResponseDTO<>(HttpStatus.BAD_GATEWAY.value(), "NoSuchEntityException"); //temp
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "NoSuchEntityException"); //temp
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseDTO<String> temp4()
+    {
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "Exception");
     }
 }
