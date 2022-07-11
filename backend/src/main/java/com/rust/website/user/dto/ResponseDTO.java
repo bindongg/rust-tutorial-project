@@ -1,4 +1,4 @@
-package com.rust.website.user.ResponseDTO;
+package com.rust.website.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

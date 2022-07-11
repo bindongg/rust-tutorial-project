@@ -40,7 +40,7 @@ function RegisterForm() {
         let idSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
         if(idWordEx.test(userId) && !(idSpecialEx.test(userId)))
         {
-            axios.post("http://localhost:8080/user/duplicateId", {id: userId}).then((Response) => {
+            axios.post("http://localhost:8080/user/duplicateId", {id: userId}, {withCredentials: true}).then((Response) => {
                 if(Response.data.code === 200)
                 {
                     if (Response.data.data === true) {

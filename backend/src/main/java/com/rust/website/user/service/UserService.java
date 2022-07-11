@@ -1,6 +1,7 @@
 package com.rust.website.user.service;
 
 import com.rust.website.mail.service.MailService;
+import com.rust.website.user.dto.LoginDTO;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.exception.NoSuchEntityException;
@@ -50,7 +51,7 @@ public class UserService {
         try {
             userRepository.save(user);
             userAuthRepository.save(userAuth);
-            mailService.sendAuthMail(user.getEmail(), userAuth.getId());
+            //mailService.sendAuthMail(user.getEmail(), userAuth.getId());
 
             return userAuth.getId();
         }
@@ -134,5 +135,11 @@ public class UserService {
         {
             throw new NoSuchEntityException("UserAuth entity does not exist");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> loginCheck(LoginDTO loginDTO)
+    {
+        return userRepository.findById(loginDTO.getUserId());
     }
 }
