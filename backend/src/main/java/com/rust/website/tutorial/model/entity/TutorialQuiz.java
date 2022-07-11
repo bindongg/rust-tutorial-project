@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,7 +33,7 @@ public class TutorialQuiz implements Serializable {
     private Timestamp date;
 
     @OneToOne
-    @JoinColumn(name="tutorial_id", unique = true)
+    @JoinColumn(name="tutorial_id", unique = true, nullable = false)
     @JsonIgnoreProperties({"tutorialQuiz", "tutorialSubs"})
     private Tutorial tutorial; //foreign key
 

@@ -41,6 +41,7 @@ public class User {
     private UserAuthState authState;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"user"})
     private List<ExerciseTry> exerciseTry;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

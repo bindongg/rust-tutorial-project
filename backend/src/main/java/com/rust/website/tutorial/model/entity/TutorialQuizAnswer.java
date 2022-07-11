@@ -29,7 +29,7 @@ public class TutorialQuizAnswer implements Serializable {
     private int answer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tutorialQuiz_id")
+    @JoinColumn(name = "tutorialQuiz_id", nullable = false)
     @JsonIgnoreProperties({"tutorial", "tutorialAnswers"})
     private TutorialQuiz tutorialQuiz;
 }

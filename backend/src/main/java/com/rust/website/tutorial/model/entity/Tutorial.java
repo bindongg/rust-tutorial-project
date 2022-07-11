@@ -1,8 +1,6 @@
 package com.rust.website.tutorial.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.rust.website.tutorial.model.entity.TutorialQuiz;
-import com.rust.website.tutorial.model.entity.TutorialSub;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Tutorial {
+public class Tutorial implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -190,7 +190,7 @@ public class TutorialService {
         tutorialQuiz.setDate(newTutorialQuiz.getDate());
 
         tutorialQuizAnswerRepository.deleteByTutorialQuiz_id(tutorialQuiz.getId());
-        tutorialQuizRepository.flush();
+        tutorialQuizAnswerRepository.flush();
         IntStream.range(0, answers.size())
                 .mapToObj(i -> TutorialQuizAnswer.builder()
                         .answer(answers.get(i))
