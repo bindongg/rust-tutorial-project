@@ -1,7 +1,6 @@
 package com.rust.website.exercise.service;
 
 import com.rust.website.exercise.model.entity.Exercise;
-import com.rust.website.exercise.model.entity.ExerciseContent;
 import com.rust.website.exercise.model.entity.ExerciseTestcase;
 import com.rust.website.exercise.model.entity.ExerciseTry;
 import com.rust.website.exercise.model.myEnum.ExerciseSolved;
@@ -11,7 +10,7 @@ import com.rust.website.exercise.repository.ExerciseTestcaseRepository;
 import com.rust.website.exercise.repository.ExerciseTryRepository;
 import com.rust.website.tutorial.model.model.CompileInput;
 import com.rust.website.tutorial.model.model.CompileOutput;
-import com.rust.website.tutorial.model.vo.ResponseVo;
+import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.tutorial.service.CompileService;
 import com.rust.website.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -64,9 +62,9 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseVo<String> compileUserCode(CompileInput compileInput, int number, String id)
+    public ResponseDTO<String> compileUserCode(CompileInput compileInput, int number, String id)
     {
-        ResponseVo<String> responseVo = new ResponseVo<String>(HttpStatus.OK.value(), "맞았습니다!");
+        ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "맞았습니다!");
         Exercise exercise = exerciseRepository.findByNumber(number);
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         int i = 0;
@@ -99,29 +97,29 @@ public class ExerciseService {
         else
         {
             exerciseTry.setSolved(ExerciseSolved.FAIL);
-            responseVo.setData("틀렸습니다.");
+            responseDTO.setData("틀렸습니다.");
         }
 
         exerciseTryRepository.save(exerciseTry);
-        return responseVo;
+        return responseDTO;
     }
 
     @Transactional
-    public ResponseVo<String> addExercise(Exercise exercise)
+    public ResponseDTO<String> addExercise(Exercise exercise)
     {
-        ResponseVo<String> responseVo = new ResponseVo<>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
+        ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
         exercise.getExerciseContent().setExercise(exercise);
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         IntStream.range(0, exerciseTestcases.size())
                         .forEach(i -> exerciseTestcases.get(i).setExercise(exercise));
         exerciseRepository.save(exercise);
-        return responseVo;
+        return responseDTO;
     }
 
     @Transactional
-    public ResponseVo<String> updateExercise(Exercise newExercise, int number)
+    public ResponseDTO<String> updateExercise(Exercise newExercise, int number)
     {
-        ResponseVo<String> responseVo = new ResponseVo<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
+        ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
         Exercise exercise = exerciseRepository.findByNumber(number);
         exercise.copy(newExercise);
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
@@ -139,18 +137,18 @@ public class ExerciseService {
                 )
                 .forEach(tc -> exerciseTestcaseRepository.save(tc));
 
-        return responseVo;
+        return responseDTO;
     }
 
     @Transactional
-    public ResponseVo<String> deleteExercise(int number)
+    public ResponseDTO<String> deleteExercise(int number)
     {
-        ResponseVo<String> responseVo = new ResponseVo<>(HttpStatus.OK.value(), "삭제가 완료되었습니다.");
+        ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "삭제가 완료되었습니다.");
         int id = exerciseRepository.findByNumber(number).getId();
         exerciseTryRepository.deleteByExercise_id(id);
         exerciseRepository.deleteById(id);
 
-        return responseVo;
+        return responseDTO;
     }
 
 }

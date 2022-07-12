@@ -1,9 +1,9 @@
-package com.rust.website.user.model.entity;
+package com.rust.website.common.dto;
 
 import lombok.Getter;
 
 @Getter
-public class MailResendObject {
+public class MailResendDTO {
     String id;
     String authId;
     String password;
