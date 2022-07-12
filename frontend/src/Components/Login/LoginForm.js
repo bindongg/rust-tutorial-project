@@ -1,7 +1,27 @@
-import React from "react";
+import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, NavLink} from "react-bootstrap";
+import axios from "axios";
 
 function LoginForm() {
+
+    const [userId,setUserId] = useState("");
+    const [userPwd,setUserPwd] = useState("");
+
+    function onChangeId(e)
+    {
+        setUserId(e.target.value);
+    }
+
+    function onChangePwd(e)
+    {
+        setUserPwd(e.target.value);
+    }
+
+    function logIn()
+    {
+        axios.post("http://localhost:8080/login",{userId: userId, userPwd: userPwd}, {withCredentials: true}).then().catch()
+    }
+
     return (
         <>
             <Container>
@@ -11,7 +31,7 @@ function LoginForm() {
                         <Form>
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>아이디</Form.Label>
-                                <Form.Control type="id" placeholder="아이디를 입력하세요" />
+                                <Form.Control type="id" placeholder="아이디를 입력하세요" onChange={onChangeId}/>
                                 <Form.Text className="text-muted">
                                     <NavLink href="/idForgot">아이디 찾기</NavLink>
                                 </Form.Text>
@@ -19,7 +39,7 @@ function LoginForm() {
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>비밀번호</Form.Label>
-                                <Form.Control type="password" placeholder="Password" />
+                                <Form.Control type="password" placeholder="Password" onChange={onChangePwd}/>
                                 <Form.Text className="text-muted">
                                     <NavLink href="/pwdForgot">비밀번호 찾기</NavLink>
                                 </Form.Text>
@@ -27,7 +47,7 @@ function LoginForm() {
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Check type="checkbox" label="로그인 유지" />
                             </Form.Group>
-                            <Button variant="info" type="submit">
+                            <Button variant="info" type="button" onClick={logIn}>
                                 로그인
                             </Button>
                         </Form>

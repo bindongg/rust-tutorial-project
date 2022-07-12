@@ -40,13 +40,20 @@ function RegisterForm() {
         let idSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
         if(idWordEx.test(userId) && !(idSpecialEx.test(userId)))
         {
-            axios.post("http://localhost:8080/user/duplicateId", {id: userId}).then((Response) => {
-                if (Response.data === true) {
-                    setCheckIdState(false);
-                    alert("이미 존재하는 아이디입니다");
-                } else {
-                    setCheckIdState(true);
-                    alert("사용 가능한 아이디입니다");
+            axios.post("http://localhost:8080/user/duplicateId", {id: userId}, {withCredentials: true}).then((Response) => {
+                if(Response.data.code === 200)
+                {
+                    if (Response.data.data === true) {
+                        setCheckIdState(false);
+                        alert("이미 존재하는 아이디입니다");
+                    } else {
+                        setCheckIdState(true);
+                        alert("사용 가능한 아이디입니다");
+                    }
+                }
+                else
+                {
+                    alert("error");
                 }
             }).catch((Error) => {
                 console.log(Error);
@@ -104,13 +111,19 @@ function RegisterForm() {
     {
         let checkEmail = 1;
         axios.post("http://localhost:8080/user/duplicateEmail",{email: userEmail}).then((Response)=>{
-            if(Response.data === true)
+            if(Response.data.code === 200)
             {
-                checkEmail = 0;
-                alert("이미 사용하고 있는 메일 주소입니다");
+                if (Response.data.data === true)
+                {
+                    checkEmail = 0;
+                    alert("이미 사용하고 있는 메일 주소입니다");
+                }
+                else {}
             }
             else
-            {}
+            {
+                alert("error");
+            }
         }).catch((Error)=>{
             alert("failed");
         })
@@ -122,10 +135,26 @@ function RegisterForm() {
             {
                 setBtnState(true);
                 axios.post("http://localhost:8080/user/register",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
-                    alert("입력하신 메일 주소로 인증 메일을 전송했습니다. 인증을 위해 메일로 전송한 링크를 클릭해주세요");
+                    if(Response.data.code === 200)
+                    {
+                        let authId = Response.data.data;
+                        alert("입력하신 메일 주소로 인증 메일을 전송했습니다. 인증을 위해 메일로 전송한 링크를 클릭해주세요");
+                        navigate("/register/certification", {
+                            state: {
+                                id: userId,
+                                authId: authId,
+                                pwd: userPassword,
+                                email: userEmail
+                            }
+                        });
+                    }
+                    else
+                    {
+                        alert("error");
+                    }
                 }).catch((Error)=>{
                     alert("failed");
-                })/*.finally(()=>{navigate("/register/certification", {state: {id: userId, pwd: userPassword, email: userEmail}});})*/
+                })
             }
             else
             {}
