@@ -1,7 +1,7 @@
 package com.rust.website.user.controller;
 
-import com.rust.website.user.dto.LoginDTO;
-import com.rust.website.user.dto.ResponseDTO;
+import com.rust.website.common.dto.LoginDTO;
+import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.user.model.entity.MailResendObject;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
