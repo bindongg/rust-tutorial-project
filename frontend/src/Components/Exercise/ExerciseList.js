@@ -3,7 +3,7 @@ import ExerciseListInfo from "./ExerciseListInfo";
 
 function ExerciseList({exercises}){
     const list = exercises.map(
-        info => (<ExerciseListInfo key = {info.index} info={info}/>)
+        info => (<ExerciseListInfo info={info}/>)
     )
     return (
         <tbody>
