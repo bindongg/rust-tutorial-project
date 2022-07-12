@@ -1,4 +1,4 @@
-package com.rust.website.tutorial.model.vo;
+package com.rust.website.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QuizResponseVo {
+public class QuizResponseDTO {
     private boolean pass;
     private String message;
     private List<Boolean> correctList;

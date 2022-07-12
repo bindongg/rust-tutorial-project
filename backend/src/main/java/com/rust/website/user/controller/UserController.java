@@ -2,7 +2,7 @@ package com.rust.website.user.controller;
 
 import com.rust.website.common.dto.LoginDTO;
 import com.rust.website.common.dto.ResponseDTO;
-import com.rust.website.user.model.entity.MailResendObject;
+import com.rust.website.common.dto.MailResendDTO;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.exception.LoginException;
@@ -50,14 +50,14 @@ public class UserController {
     }
 
     @PostMapping({"/user/register/resend"})
-    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendObject mailResendObject)
+    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendDTO mailResendDTO)
     {
         User user = new User();
-        user.setId(mailResendObject.getId());
-        user.setPassword(mailResendObject.getPassword());
-        user.setEmail(mailResendObject.getEmail());
+        user.setId(mailResendDTO.getId());
+        user.setPassword(mailResendDTO.getPassword());
+        user.setEmail(mailResendDTO.getEmail());
 
-        String authId = userService.registerMailResent(user, mailResendObject.getAuthId());
+        String authId = userService.registerMailResent(user, mailResendDTO.getAuthId());
 
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
