@@ -1,13 +1,21 @@
 package com.rust.website.user.controller;
 
-import com.rust.website.mail.service.MailService;
+import com.rust.website.common.dto.LoginDTO;
+import com.rust.website.common.dto.ResponseDTO;
+import com.rust.website.user.model.entity.MailResendObject;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
+import com.rust.website.user.model.exception.LoginException;
+import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.model.myEnum.UserRoleType;
 import com.rust.website.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -15,23 +23,20 @@ public class UserController {
 
     private final UserService userService;
 
-    @CrossOrigin("http://localhost:3000")
     @PostMapping({"/user/duplicateId"})
-    boolean checkDuplicateId(@RequestBody User user)
+    public ResponseDTO<Boolean> checkDuplicateId(@RequestBody User user)
     {
-        return userService.checkDuplicateId(user.getId());
+        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateId(user.getId()));
     }
 
-    @CrossOrigin("http://localhost:3000")
     @PostMapping({"/user/duplicateEmail"})
-    boolean checkDuplicateEmail(@RequestBody User user)
+    public ResponseDTO<Boolean> checkDuplicateEmail(@RequestBody User user)
     {
-        return userService.checkDuplicateEmail(user.getEmail());
+        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateEmail(user.getEmail()));
     }
 
-    @CrossOrigin("http://localhost:3000")
     @PostMapping({"/user/register"})
-    void addUser(@RequestBody User user)
+    public ResponseDTO<String> addUser(@RequestBody User user)
     {
         user.setRole(UserRoleType.USER);
         user.setAuthState(UserAuthState.INACTIVE);
@@ -39,12 +44,80 @@ public class UserController {
 
         UserAuth userAuth = new UserAuth(user.getId());
 
-        userService.register(user,userAuth);
+        String authId = userService.register(user,userAuth);
+
+        return new ResponseDTO<>(HttpStatus.OK.value(), authId);
+    }
+
+    @PostMapping({"/user/register/resend"})
+    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendObject mailResendObject)
+    {
+        User user = new User();
+        user.setId(mailResendObject.getId());
+        user.setPassword(mailResendObject.getPassword());
+        user.setEmail(mailResendObject.getEmail());
+
+        String authId = userService.registerMailResent(user, mailResendObject.getAuthId());
+
+        return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
     @GetMapping ("/user/authConfirm/{authId}")
-    void authConfirm(@PathVariable String authId)
+    public String authConfirm(@PathVariable String authId)
     {
         userService.confirmAuth(authId);
+        return "인증 완료되었습니다";
+    }
+
+    @PostMapping("/login")
+    public ResponseDTO<Object> login(@RequestBody LoginDTO loginDTO)
+    {
+        Optional<User> optUser = userService.loginCheck(loginDTO);
+        if(optUser.isPresent())
+        {
+            if(optUser.get().getPassword().equals(loginDTO.getUserPwd()) && optUser.get().getAuthState().equals(UserAuthState.ACTIVE))
+            {
+                System.out.println("good input");
+                return new ResponseDTO<>(HttpStatus.OK.value(), null);
+            }
+            else
+            {
+                throw new LoginException();
+            }
+        }
+        else
+        {
+            throw new LoginException();
+        }
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseDTO<String> temp()
+    {
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "IllegalArgumentException"); //temp
+    }
+
+    @ExceptionHandler(MailSendException.class)
+    protected ResponseDTO<String> temp2()
+    {
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "MailSendException"); //temp
+    }
+
+    @ExceptionHandler(NoSuchEntityException.class)
+    protected ResponseDTO<String> temp3()
+    {
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "NoSuchEntityException"); //temp
+    }
+
+    @ExceptionHandler(LoginException.class)
+    protected ResponseDTO<String> temp4()
+    {
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "LoginException");
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseDTO<String> temp0()
+    {
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "Exception");
     }
 }
