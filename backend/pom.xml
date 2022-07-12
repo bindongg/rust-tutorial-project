@@ -67,6 +67,11 @@
             <artifactId>spring-boot-starter-mail</artifactId>
             <version>2.7.0</version>
         </dependency>
+<!--        단위 test-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
 <!--        security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

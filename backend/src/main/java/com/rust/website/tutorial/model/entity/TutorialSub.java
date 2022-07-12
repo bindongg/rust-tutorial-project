@@ -16,10 +16,14 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-@IdClass(TutorialSubKey.class)
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"number", "tutorial_id"})})
 public class TutorialSub implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false)
+    private int number;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -28,12 +32,11 @@ public class TutorialSub implements Serializable {
     @Column(nullable = false)
     private String content;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tutorial_id")
-    @JsonIgnoreProperties({"tutorialQuiz", "tutorialSubs"})
-    private Tutorial tutorial; //foreign key
-
     @CreationTimestamp
     private Timestamp date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tutorial_id", nullable = false)
+    @JsonIgnoreProperties({"tutorialQuiz", "tutorialSubs"})
+    private Tutorial tutorial; //foreign key
 }

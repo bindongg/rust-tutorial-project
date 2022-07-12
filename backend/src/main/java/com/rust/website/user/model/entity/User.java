@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -38,10 +41,10 @@ public class User {
     private UserAuthState authState;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"user"})
     private List<ExerciseTry> exerciseTry;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @OrderBy(value = "tutorial_id ASC")
     @JsonIgnoreProperties({"user"})
     private List<TutorialDone> tutorialDone;
 
