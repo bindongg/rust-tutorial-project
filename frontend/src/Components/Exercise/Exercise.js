@@ -10,8 +10,9 @@ function Exercise(){
 
   useEffect( () => {
     const getExercises = async () => {
-      const exercises = await axios.get("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise");
-      setExercises(exercises.data);
+      const exercises = await axios.get("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise?user_id=testid");
+      setExercises(exercises.data.data);
+      // console.log(exercises.data.data);
     }
     // 실행함으로써 데이타를 fetching합니다.
     getExercises();

@@ -1,14 +1,14 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
-function ExerciseListInfo ({info}) {
+function ExerciseListInfo ({ exercise}) {
     return (
         <tr>
-            <td><Link to="">{info.index}</Link></td>
-            <td><Link to="/exercise/1">{info.title}</Link></td>
-            <td>종류</td>
-            <td>난이도</td>
-            <td>성공</td>
+            <td>{exercise.number}</td>
+            <td><Link to="/exercise/1">{exercise.name}</Link></td>
+            <td>{exercise.tag}</td>
+            <td>{exercise.difficulty}</td>
+            <td>{exercise.solved}</td>
         </tr>
     );
 }
