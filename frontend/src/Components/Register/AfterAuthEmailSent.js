@@ -1,20 +1,36 @@
-import React from "react";
+import React, {useState} from "react";
 import {Row, Container, Col, Button} from "react-bootstrap";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 
 function AfterAuthEmailSent() {
     const location = useLocation();
+
     const id = location.state.id;
-    const password = location.state.password;
+    const password = location.state.pwd;
     const email = location.state.email;
 
+    const [authId,setAuthId] = useState(location.state.authId);
+
+    const [btnState,setBtnState] = useState(false);
+
     function register()
-    {   //재전송 시 문제 처리하기, 그냥 추가된 record delete by 하면 되나??
-        axios.post("http://localhost:8080/user/register",{id: id, password: password, email: email}).then((Response)=>{
-            alert("재전송 완료");
+    {
+        setBtnState(true);
+        axios.post("http://localhost:8080/user/register/resend",{id: id, authId: authId, password: password, email: email}, {withCredentials: true}).then((Response)=>{
+            if(Response.data.code === 200)
+            {
+                setAuthId(Response.data.data);
+                alert("재전송 완료");
+            }
+            else
+            {
+                alert("재전송 실패");
+            }
         }).catch((Error)=>{
             alert("failed");
+        }).finally(()=>{
+            setBtnState(false);
         })
     }
 
@@ -28,7 +44,7 @@ function AfterAuthEmailSent() {
                         <br/>
                         <br/>
                         메일이 5분 이상 오지 않을 때 눌러주세요 &nbsp;
-                        <Button variant="info" type="button" onClick={register}>
+                        <Button disabled={btnState} variant="info" type="button" onClick={register}>
                             다시 보내기
                         </Button>
                     </Col>

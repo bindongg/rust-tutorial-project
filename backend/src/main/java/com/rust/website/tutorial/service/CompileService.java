@@ -84,13 +84,13 @@ public class CompileService {
 
     private static String streamReaderOutput(InputStream is) throws IOException {
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
-        String line;
-        String output="";
+        String line = null;
+        StringBuilder output = new StringBuilder();
         while (true) {
             line = r.readLine();
             if (line == null) {	break; }
-            output = output + line + " \n";
+            output.append(line).append(" \n");
         }
-        return output;
+        return output.toString().trim();
     }
 }

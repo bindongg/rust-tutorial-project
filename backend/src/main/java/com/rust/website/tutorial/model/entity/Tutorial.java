@@ -1,8 +1,6 @@
 package com.rust.website.tutorial.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.rust.website.tutorial.model.entity.TutorialQuiz;
-import com.rust.website.tutorial.model.entity.TutorialSub;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,9 +17,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Tutorial {
+public class Tutorial implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false, unique = true)
+    private int number;
 
     @Column(nullable = false, length = 20)
     private String name;
@@ -28,11 +31,12 @@ public class Tutorial {
     @CreationTimestamp
     private Timestamp date;
 
-    @OneToMany(mappedBy = "tutorial", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"tutorial", "content"})
+    @OrderBy(value = "number ASC")
     private List<TutorialSub> tutorialSubs;
 
-    @OneToOne(mappedBy = "tutorial", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"tutorial", "content"})
+    @OneToOne(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"tutorial", "content", "tutorialQuizAnswers"})
     private TutorialQuiz tutorialQuiz;
 }
