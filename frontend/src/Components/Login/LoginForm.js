@@ -2,6 +2,12 @@ import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, NavLink} from "react-bootstrap";
 import axios from "axios";
 
+const config = {
+    headers: {
+        "Content-Type": "application/json; charset=utf-8",
+    },
+};
+
 function LoginForm() {
 
     const [userId,setUserId] = useState("");
@@ -19,7 +25,15 @@ function LoginForm() {
 
     function logIn()
     {
-        axios.post("http://localhost:8080/login",{userId: userId, userPwd: userPwd}, {withCredentials: true}).then().catch()
+        axios.post("http://localhost:8080/login",{userId: userId, userPwd: userPwd}, config)
+            .then((response)=>{
+
+                console.log("res.data.accessToken : " + response.headers['authorization']);
+                //console.log("res.data : " + JSON.stringify(response.data));
+            })
+            .catch((Error)=>{
+                alert("error");
+            })
     }
 
     return (

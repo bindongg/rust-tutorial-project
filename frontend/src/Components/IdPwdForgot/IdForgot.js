@@ -1,9 +1,15 @@
 import React from "react";
 import {Button, Col, Container, Form, FormControl, FormGroup, InputGroup, NavLink, Row} from "react-bootstrap";
+import axios from "axios";
 
 
 //container -> 중앙으로 모아줌
 function IdForgot() {
+
+    function test()
+    {
+        axios.get("http://localhost:8080/user/findId").then((Response)=>{alert(Response)}).catch((Error)=>{alert(Error)});
+    }
     return (
         <>
             <Container>
@@ -29,7 +35,7 @@ function IdForgot() {
                                     <NavLink href="/pwdForgot">비밀번호 찾기</NavLink>
                                 </Form.Text>
                             </Form.Group>
-                            <Button variant="info" type="submit">
+                            <Button variant="info" type="button" onClick={test}>
                                 아이디 찾기
                             </Button>
                         </Form>

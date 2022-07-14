@@ -1,6 +1,7 @@
 package com.rust.website.user.controller;
 
 import com.rust.website.common.dto.LoginDTO;
+import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
 import com.rust.website.user.model.entity.User;
@@ -13,8 +14,10 @@ import com.rust.website.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSendException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,33 +26,40 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping({"/user/duplicateId"})
-    public ResponseDTO<Boolean> checkDuplicateId(@RequestBody User user)
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @PostMapping({"/duplicateId"})
+   public ResponseDTO<Boolean> checkDuplicateId(@RequestBody Map<String,String> duplicateIdMap)
+   {
+       return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateId(duplicateIdMap.get("id")));
+   }
+    @PostMapping({"/duplicateEmail"})
+    public ResponseDTO<Boolean> checkDuplicateEmail(@RequestBody Map<String,String> duplicateEmailMap)
     {
-        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateId(user.getId()));
+        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateEmail(duplicateEmailMap.get("email")));
     }
 
-    @PostMapping({"/user/duplicateEmail"})
-    public ResponseDTO<Boolean> checkDuplicateEmail(@RequestBody User user)
+    @PostMapping({"/register"})
+    public ResponseDTO<String> addUser(@RequestBody RegisterDTO registerDTO)
     {
-        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateEmail(user.getEmail()));
-    }
+        User user = User.builder()
+                .id(registerDTO.getUserId())
+                .email(registerDTO.getUserEmail() + "@pusan.ac.kr")
+                .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
+                .authState(UserAuthState.INACTIVE)
+                .role(UserRoleType.USER)
+                .build();
 
-    @PostMapping({"/user/register"})
-    public ResponseDTO<String> addUser(@RequestBody User user)
-    {
-        user.setRole(UserRoleType.USER);
-        user.setAuthState(UserAuthState.INACTIVE);
-        user.setEmail(user.getEmail() + "@pusan.ac.kr");
-
-        UserAuth userAuth = new UserAuth(user.getId());
+        UserAuth userAuth = UserAuth.builder()
+                .userId(registerDTO.getUserId())
+                .build();
 
         String authId = userService.register(user,userAuth);
 
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
-    @PostMapping({"/user/register/resend"})
+    @PostMapping({"/register/resend"})
     public ResponseDTO<String> addUserMailResent(@RequestBody MailResendDTO mailResendDTO)
     {
         User user = new User();
@@ -62,15 +72,15 @@ public class UserController {
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
-    @GetMapping ("/user/authConfirm/{authId}")
+    @GetMapping ("/authConfirm/{authId}")
     public String authConfirm(@PathVariable String authId)
     {
         userService.confirmAuth(authId);
         return "인증 완료되었습니다";
     }
 
-    @PostMapping("/login")
-    public ResponseDTO<Object> login(@RequestBody LoginDTO loginDTO)
+    /**@PostMapping("/login")
+    public ResponseDTO<Object>void login(@RequestBody LoginDTO loginDTO)
     {
         Optional<User> optUser = userService.loginCheck(loginDTO);
         if(optUser.isPresent())
@@ -82,13 +92,21 @@ public class UserController {
             }
             else
             {
+                System.out.println("bad input");
                 throw new LoginException();
             }
         }
         else
         {
+            System.out.println("bad input");
             throw new LoginException();
         }
+    }*/
+
+    @GetMapping("/user/findId")
+    public void tt()
+    {
+        System.out.println("find");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

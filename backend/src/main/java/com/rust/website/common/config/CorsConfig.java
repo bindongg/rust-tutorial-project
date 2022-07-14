@@ -6,6 +6,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 public class CorsConfig {
     @Bean
@@ -16,7 +19,7 @@ public class CorsConfig {
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-
+        config.addExposedHeader("Authorization"); //cors 정책엔 기본적으로 cache-control, expired 등 몇몇 헤더만 노출 -> 그 외 헤더를 프론트에서 보고 싶으면 넣어줘야 됨
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

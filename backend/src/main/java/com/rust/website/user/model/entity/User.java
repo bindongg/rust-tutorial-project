@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -50,6 +52,7 @@ public class User {
 
     @CreationTimestamp
     private Timestamp date;
+
 
     //@LastModifiedDate
     //private Timestamp updateDate;
