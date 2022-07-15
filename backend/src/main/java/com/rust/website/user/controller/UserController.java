@@ -1,6 +1,5 @@
 package com.rust.website.user.controller;
 
-import com.rust.website.common.dto.LoginDTO;
 import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
@@ -17,8 +16,10 @@ import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -47,11 +48,13 @@ public class UserController {
                 .email(registerDTO.getUserEmail() + "@pusan.ac.kr")
                 .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
                 .authState(UserAuthState.INACTIVE)
-                .role(UserRoleType.USER)
+                .role(UserRoleType.ROLE_USER)
                 .build();
 
         UserAuth userAuth = UserAuth.builder()
                 .userId(registerDTO.getUserId())
+                .expirationTime(LocalDateTime.now().plusMinutes(UserAuth.EMAIL_TOKEN_EXPIRATION_TIME_VALUE))
+                .used(false)
                 .build();
 
         String authId = userService.register(user,userAuth);
@@ -79,34 +82,41 @@ public class UserController {
         return "인증 완료되었습니다";
     }
 
-    /**@PostMapping("/login")
-    public ResponseDTO<Object>void login(@RequestBody LoginDTO loginDTO)
+    @PostMapping("/test/admin")
+    public void test1(@RequestBody RegisterDTO registerDTO)
     {
-        Optional<User> optUser = userService.loginCheck(loginDTO);
-        if(optUser.isPresent())
-        {
-            if(optUser.get().getPassword().equals(loginDTO.getUserPwd()) && optUser.get().getAuthState().equals(UserAuthState.ACTIVE))
-            {
-                System.out.println("good input");
-                return new ResponseDTO<>(HttpStatus.OK.value(), null);
-            }
-            else
-            {
-                System.out.println("bad input");
-                throw new LoginException();
-            }
-        }
-        else
-        {
-            System.out.println("bad input");
-            throw new LoginException();
-        }
-    }*/
+        User user = User.builder()
+                .id(registerDTO.getUserId())
+                .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
+                .email(registerDTO.getUserEmail())
+                .role(UserRoleType.ROLE_ADMIN)
+                .authState(UserAuthState.ACTIVE)
+                .build();
+        userService.test(user);
+    }
+    @PostMapping("/test/user")
+    public void test2(@RequestBody RegisterDTO registerDTO)
+    {
+        User user = User.builder()
+                .id(registerDTO.getUserId())
+                .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
+                .email(registerDTO.getUserEmail())
+                .role(UserRoleType.ROLE_USER)
+                .authState(UserAuthState.ACTIVE)
+                .build();
+        userService.test(user);
+    }
 
-    @GetMapping("/user/findId")
-    public void tt()
+    @GetMapping("/admin/test")
+    public String test3()
     {
-        System.out.println("find");
+        return "admin test";
+    }
+
+    @GetMapping("/user/test")
+    public String test4()
+    {
+        return "user test";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

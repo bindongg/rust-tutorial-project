@@ -10,14 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.web.bind.annotation.DeleteMapping;
+
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -56,4 +52,6 @@ public class User {
 
     //@LastModifiedDate
     //private Timestamp updateDate;
+
+
 }

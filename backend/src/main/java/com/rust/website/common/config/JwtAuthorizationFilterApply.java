@@ -5,11 +5,10 @@ import com.rust.website.user.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
 public class JwtAuthorizationFilterApply extends AbstractHttpConfigurer<JwtAuthorizationFilterApply, HttpSecurity> {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public JwtAuthorizationFilterApply(UserRepository userRepository)
     {
@@ -18,8 +17,14 @@ public class JwtAuthorizationFilterApply extends AbstractHttpConfigurer<JwtAutho
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-        http.addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
+        try{
+            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            http.addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static JwtAuthorizationFilterApply jwtAuthorizationFilterApply(UserRepository userRepository)

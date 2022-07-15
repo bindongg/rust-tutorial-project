@@ -25,7 +25,7 @@ function LoginForm() {
 
     function logIn()
     {
-        axios.post("http://localhost:8080/login",{userId: userId, userPwd: userPwd}, config)
+        axios.post("http://localhost:8080/login",{userId: userId, userPassword: userPwd}, config)
             .then((response)=>{
 
                 console.log("res.data.accessToken : " + response.headers['authorization']);

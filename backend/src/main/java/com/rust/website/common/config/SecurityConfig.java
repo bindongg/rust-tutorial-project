@@ -31,16 +31,6 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
-                /*.addFilter(corsConfig.corsFilter()) //@CrossOrigin annotation도 가능 근데 이건 인증이 필요한 request 경우 팅김
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //세션 사용 x
-                .and()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .authorizeRequests()
-                .antMatchers("/user/findId", "/user/findPwd", "/user/exercise", "/user/delete")
-                .access("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
-                .anyRequest().permitAll();*/
                 .addFilter(corsConfig.corsFilter())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -52,7 +42,7 @@ public class SecurityConfig{
                 .apply(jwtAuthorizationFilterApply(userRepository))
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .mvcMatchers("/register/**", "/login", "/duplicateId" , "/duplicateEmail", "/authConfirm/**", "/reference/**").permitAll()
+                        .mvcMatchers("/register/**", "/login", "/duplicateId" , "/duplicateEmail", "/authConfirm/**", "/reference/**", "/test/**").permitAll()
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                         .mvcMatchers("/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")
