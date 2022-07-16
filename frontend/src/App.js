@@ -44,7 +44,7 @@ function App() {
                         <Route path="exercise" exact={true} element={<ExercisePage/>}/>
                         <Route path="exercise/tag" exact={true} element={<ExerciseByTagPage/>}/>
                         <Route path="exercise/level" exact={true} element={<ExerciseByLevelPage/>}/>
-                        <Route path="exercise/1" exact={true} element={<ExerciseDetailPage/>}/>
+                        <Route path="exercise/:no" exact={true}  element={<ExerciseDetailPage/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginPage/>}/>
                         <Route path="register" exact={true} element={<RegisterPage/>}/>
