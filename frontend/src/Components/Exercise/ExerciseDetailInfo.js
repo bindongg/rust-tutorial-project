@@ -1,7 +1,11 @@
 import React, {Component, useState} from "react";
 import {Link} from "react-router-dom";
+import ExerciseTestCase from "./ExerciseTestCase";
 
-function ExerciseDetailInfo({index, title, content}){
+function ExerciseDetailInfo({index, title,tag, Content, Testcases}){
+    const testcase = Testcases?.map(
+        Testcase => (<ExerciseTestCase key = {Testcase.id} Testcase={Testcase}/>)
+    )
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
@@ -12,36 +16,38 @@ function ExerciseDetailInfo({index, title, content}){
                 <span><img src="abc.png"></img>&nbsp;&nbsp;</span>
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
-                {content}
+                {Content?.description}
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>입력</h3>
+                {Content?.input_description}
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
-                대충 이렇게 입력하셈
+                {Content?.input_value}
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>출력</h3>
+                {Content?.output_description}
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
-                대충 이렇게 출력하셈
+                {Content?.output_value}
             </div>
             <div className="col-8 mx-auto mt-5">
-                <h3>입출력 예시</h3>
+                <h3>테스트 케이스</h3>
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
-                대충 이렇게 입력하면 이렇게 나와야 됨
+                {testcase}
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>유형</h3>
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <li>
-                    <Link to="#">기타</Link>
+                    <Link to="#">{tag}</Link>
                 </li>
             </div>
         </>
     );
 }
 
-export default ExerciseDetailInfo
+export default ExerciseDetailInfo;
