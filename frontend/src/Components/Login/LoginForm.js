@@ -27,12 +27,16 @@ function LoginForm() {
     {
         axios.post("http://localhost:8080/login",{userId: userId, userPassword: userPwd}, config)
             .then((response)=>{
-
-                console.log("res.data.accessToken : " + response.headers['authorization']);
-                //console.log("res.data : " + JSON.stringify(response.data));
+                if(response.status === 200)
+                {
+                    alert("success ");
+                    console.log("res.data.accessToken : " + response.headers['authorization']);
+                    localStorage.setItem("jwt", response.headers['authorization']);
+                    console.log("item "+localStorage.getItem("jwt"));
+                }
             })
             .catch((Error)=>{
-                alert("error");
+                alert("아이디 또는 비밀번호가 일치하지 않습니다");
             })
     }
 

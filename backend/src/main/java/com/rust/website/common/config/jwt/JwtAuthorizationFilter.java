@@ -2,13 +2,18 @@ package com.rust.website.common.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rust.website.common.auth.PrincipalDetails;
+import com.rust.website.common.config.CustomAuthenticationEntryPoint;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -21,42 +26,49 @@ import java.util.Optional;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
         super(authenticationManager);
         this.userRepository = userRepository;
     }
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("internal");
-
         String header = request.getHeader(JwtProperties.HEADER_STRING);
-        System.out.println("header "+header);
-
         if(header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX))
         {
-            System.out.println("null");
             chain.doFilter(request,response);
             return;
         }
 
         String token = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
+        try{
+            String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+                    .getClaim(JwtProperties.CLAIM_NAME).asString();
+            if (username != null) {
+                Optional<User> optUser = userRepository.findByIdAndAuthState(username, UserAuthState.ACTIVE);
+                if(optUser.isPresent()) {
+                    PrincipalDetails principalDetails = new PrincipalDetails(optUser.get());
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,
+                            null,
+                            principalDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-
-        String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
-                .getClaim(JwtProperties.CLAIM_NAME).asString();
-
-        if (username != null) {
-            Optional<User> optUser = userRepository.findByIdAndAuthState(username, UserAuthState.ACTIVE);
-            PrincipalDetails principalDetails = new PrincipalDetails(optUser.get());
-            System.out.println(principalDetails.getUsername());
-            Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,
-                    null,
-                    principalDetails.getAuthorities());
-
-            System.out.println("auth "+authentication);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                    response.setHeader(JwtProperties.HEADER_STRING, JwtUtil.makeJWT(principalDetails.getUsername())); //토큰 갱신 및 로그아웃 위해 redis 필요?
+                }
+                else
+                {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+        catch (TokenExpiredException | JWTDecodeException | IllegalArgumentException | AuthenticationException e)
+        {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return;
         }
 
         chain.doFilter(request, response);

@@ -2,6 +2,7 @@ import React from 'react';
 import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 
 function Header(){
+
     return (
             <Navbar className="fixed-top" bg="light" expand="lg">
                 <Container>
@@ -33,6 +34,7 @@ function Header(){
                             <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                            <NavDropdown.Item href="#">{localStorage.getItem("jwt")}</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>

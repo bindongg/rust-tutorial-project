@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import static com.rust.website.common.config.JwtAuthenticationFilterApply.jwtAuthenticationFilterApply;
 import static com.rust.website.common.config.JwtAuthorizationFilterApply.jwtAuthorizationFilterApply;
@@ -21,6 +22,10 @@ public class SecurityConfig{
 
     private final UserRepository userRepository;
 
+    //private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+    private final AccessDeniedHandler CustomAccessDeniedHandler;
+
     @Bean
     public BCryptPasswordEncoder encoder()
     {
@@ -32,15 +37,30 @@ public class SecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .addFilter(corsConfig.corsFilter())
+
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
+
                 .csrf().disable()
+
                 .formLogin().disable()
+
                 .httpBasic().disable()
+
                 .apply(jwtAuthenticationFilterApply())
+
                 .and()
+
                 .apply(jwtAuthorizationFilterApply(userRepository))
+
                 .and()
+
+                .exceptionHandling()
+                //.authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(CustomAccessDeniedHandler)
+                .and()
+
                 .authorizeHttpRequests(authorize -> authorize
                         .mvcMatchers("/register/**", "/login", "/duplicateId" , "/duplicateEmail", "/authConfirm/**", "/reference/**", "/test/**").permitAll()
                         .mvcMatchers("/admin/**").hasRole("ADMIN")

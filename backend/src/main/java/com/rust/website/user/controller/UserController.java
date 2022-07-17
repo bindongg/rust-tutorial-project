@@ -1,5 +1,6 @@
 package com.rust.website.user.controller;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
@@ -141,6 +142,12 @@ public class UserController {
     protected ResponseDTO<String> temp4()
     {
         return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "LoginException");
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseDTO<String> temp5()
+    {
+        return new ResponseDTO<>(HttpStatus.FORBIDDEN.value(), "yeeeeeee");
     }
 
     @ExceptionHandler(Exception.class)

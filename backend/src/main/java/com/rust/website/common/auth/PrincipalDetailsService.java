@@ -22,7 +22,6 @@ public class PrincipalDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try
         {
-            System.out.println("serv");
             Optional<User> optUser = userRepository.findByIdAndAuthState(username, UserAuthState.ACTIVE);
             return optUser.map(PrincipalDetails::new).orElseThrow(()-> new UsernameNotFoundException("username not found"));
         }
