@@ -13,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"exercise_id", "number"}))
 public class ExerciseTestcase {
 
     @Id

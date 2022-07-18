@@ -22,7 +22,7 @@ public class Tutorial implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private int number;
 
     @Column(nullable = false, length = 20)
@@ -37,6 +37,6 @@ public class Tutorial implements Serializable {
     private List<TutorialSub> tutorialSubs;
 
     @OneToOne(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties({"tutorial", "content", "tutorialQuizAnswers"})
+    @JsonIgnoreProperties({"tutorial", "tutorialQuizQuestions"})
     private TutorialQuiz tutorialQuiz;
 }

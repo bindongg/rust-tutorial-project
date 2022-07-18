@@ -21,33 +21,33 @@ public class ExerciseController {
             return new ResponseDTO<List<Exercise>>(HttpStatus.OK.value(), exerciseService.getExercises(user_id));
     }
 
-    @GetMapping("/exercise/{number}")
-    public ResponseDTO<Exercise> getExerciseContent(@PathVariable int number)
+    @GetMapping("/exercise/{id}")
+    public ResponseDTO<Exercise> getExerciseContent(@PathVariable int id)
     {
-        return new ResponseDTO<Exercise>(HttpStatus.OK.value(), exerciseService.getExercise(number));
+        return new ResponseDTO<Exercise>(HttpStatus.OK.value(), exerciseService.getExercise(id));
     }
 
-    @PostMapping("/exercise/compile/{number}/{user_id}")
-    public ResponseDTO<String> compileUserCode(@RequestBody CompileInput compileInput, @PathVariable int number, @PathVariable String user_id)
+    @PostMapping("/exercise/compile/{id}/{user_id}")
+    public ResponseDTO<String> compileUserCode(@RequestBody CompileInput compileInput, @PathVariable int id, @PathVariable String user_id)
     {
-        return exerciseService.compileUserCode(compileInput, number, user_id);
+        return exerciseService.compileUserCode(compileInput, id, user_id);
     }
 
-    @PostMapping("/exercise/add")
+    @PostMapping("/exercise")
     public ResponseDTO<String> addExercise(@RequestBody Exercise exercise)
     {
         return exerciseService.addExercise(exercise);
     }
 
-    @PatchMapping("/exercise/update/{number}")
-    public ResponseDTO<String> updateExercise(@RequestBody Exercise exercise, @PathVariable int number)
+    @PatchMapping("/exercise/{id}")
+    public ResponseDTO<String> updateExercise(@RequestBody Exercise exercise, @PathVariable int id)
     {
-        return exerciseService.updateExercise(exercise, number);
+        return exerciseService.updateExercise(exercise, id);
     }
 
-    @DeleteMapping("/exercise/delete/{number}")
-    public ResponseDTO<String> deleteExercise(@PathVariable int number)
+    @DeleteMapping("/exercise/{id}")
+    public ResponseDTO<String> deleteExercise(@PathVariable int id)
     {
-        return exerciseService.deleteExercise(number);
+        return exerciseService.deleteExercise(id);
     }
 }

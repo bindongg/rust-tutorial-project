@@ -3,10 +3,10 @@ package com.rust.website.tutorial.contorller;
 import com.rust.website.tutorial.model.entity.Tutorial;
 import com.rust.website.tutorial.model.entity.TutorialQuiz;
 import com.rust.website.tutorial.model.entity.TutorialSub;
+import com.rust.website.tutorial.model.model.Answers;
 import com.rust.website.tutorial.model.model.CompileInput;
 import com.rust.website.tutorial.model.model.CompileOutput;
 import com.rust.website.common.dto.QuizResponseDTO;
-import com.rust.website.tutorial.model.model.QuizAndAnswer;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.tutorial.service.CompileService;
 import com.rust.website.tutorial.service.TutorialService;
@@ -31,24 +31,24 @@ public class TutorialController {
         return new ResponseDTO<List<Tutorial>>(HttpStatus.OK.value(), tutorials);
     }
 
-    @GetMapping("/tutorial/{number}/{subNumber}")
-    public ResponseDTO<TutorialSub> getTutorialSub(@PathVariable int number, @PathVariable int subNumber)
+    @GetMapping("/tutorial/sub/{subId}")
+    public ResponseDTO<TutorialSub> getTutorialSub(@PathVariable int subId)
     {
-        TutorialSub sub = tutorialService.getTutorialSub(number, subNumber);
+        TutorialSub sub = tutorialService.getTutorialSub(subId);
         return new ResponseDTO<TutorialSub>(HttpStatus.OK.value(), sub);
     }
 
-    @GetMapping("tutorial/quiz/{number}")
-    public ResponseDTO<TutorialQuiz> getTutorialQuiz(@PathVariable int number)
+    @GetMapping("tutorial/quiz/{quizId}")
+    public ResponseDTO<TutorialQuiz> getTutorialQuiz(@PathVariable int quizId)
     {
-        TutorialQuiz quiz = tutorialService.getTutorialQuiz(number);
+        TutorialQuiz quiz = tutorialService.getTutorialQuiz(quizId);
         return new ResponseDTO<TutorialQuiz>(HttpStatus.OK.value(), quiz);
     }
 
-    @PostMapping("tutorial/quiz/{number}/{userId}")
-    public ResponseDTO<QuizResponseDTO> postTutorialQuizAnswer(@RequestBody QuizAndAnswer quizAndAnswer, @PathVariable int number, @PathVariable String userId)
+    @PostMapping("tutorial/quiz/{id}/{userId}")
+    public ResponseDTO<QuizResponseDTO> postTutorialQuizAnswer(@RequestBody List<Integer> answers, @PathVariable int id, @PathVariable String userId)
     {
-        QuizResponseDTO quizResponseDTO = tutorialService.postTutorialQuizAnswer(quizAndAnswer.getAnswers(), number , userId);
+        QuizResponseDTO quizResponseDTO = tutorialService.postTutorialQuizAnswer(answers, id , userId);
         return new ResponseDTO<QuizResponseDTO>(HttpStatus.OK.value(), quizResponseDTO);
     }
 
@@ -66,66 +66,58 @@ public class TutorialController {
         return new ResponseDTO<String>(HttpStatus.OK.value(), output);
     }
 
-    @PostMapping("tutorial/add")
+    @PostMapping("tutorial")
     public ResponseDTO<String> addTutorial(@RequestBody Tutorial tutorial)
     {
         return tutorialService.addTutorial(tutorial);
     }
 
-    @PatchMapping("tutorial/update/{number}")
-    public ResponseDTO<String> updateTutorial(@RequestBody Tutorial tutorial, @PathVariable int number)
+    @PatchMapping("tutorial/{id}")
+    public ResponseDTO<String> updateTutorial(@RequestBody Tutorial tutorial, @PathVariable int id)
     {
-        return tutorialService.updateTutorial(tutorial, number);
+        return tutorialService.updateTutorial(tutorial, id);
     }
 
-    @DeleteMapping("tutorial/delete/{number}")
-    public ResponseDTO<String> deleteTutorial(@PathVariable int number)
+    @DeleteMapping("tutorial/{id}")
+    public ResponseDTO<String> deleteTutorial(@PathVariable int id)
     {
-        return tutorialService.deleteTutorial(number);
+        return tutorialService.deleteTutorial(id);
     }
 
-    @PostMapping("tutorial/{number}/sub/add")
-    public ResponseDTO<String> addTutorialSub(@RequestBody TutorialSub tutorialSub, @PathVariable int number)
+    @PostMapping("tutorial/{id}/sub")
+    public ResponseDTO<String> addTutorialSub(@RequestBody TutorialSub tutorialSub, @PathVariable int id)
     {
-        return tutorialService.addTutorialSub(tutorialSub, number);
+        return tutorialService.addTutorialSub(tutorialSub, id);
     }
 
-    @PatchMapping("tutorial/{number}/sub/update/{subNumber}")
-    public ResponseDTO<String> updateTutorialSub(@RequestBody TutorialSub tutorialSub, @PathVariable int number, @PathVariable int subNumber)
+    @PatchMapping("tutorial/sub/{subId}")
+    public ResponseDTO<String> updateTutorialSub(@RequestBody TutorialSub tutorialSub, @PathVariable int subId)
     {
-        return tutorialService.updateTutorialSub(tutorialSub, number, subNumber);
+        return tutorialService.updateTutorialSub(tutorialSub, subId);
     }
 
-    @DeleteMapping("tutorial/{number}/sub/delete/{subNumber}")
-    public ResponseDTO<String> deleteTutorialSub(@PathVariable int number, @PathVariable int subNumber)
+    @DeleteMapping("tutorial/sub/{subId}")
+    public ResponseDTO<String> deleteTutorialSub(@PathVariable int subId)
     {
-        return tutorialService.deleteTutorialSub(number, subNumber);
+        return tutorialService.deleteTutorialSub(subId);
     }
 
-    @PostMapping("tutorial/{number}/quiz/add")
-    public ResponseDTO<String> addTutorialQuiz(@RequestBody QuizAndAnswer quizAndAnswer, @PathVariable int number)
+    @PostMapping("tutorial/{id}/quiz")
+    public ResponseDTO<String> addTutorialQuiz(@RequestBody TutorialQuiz quiz, @PathVariable int id)
     {
-        TutorialQuiz quiz = TutorialQuiz.builder()
-                .name(quizAndAnswer.getName())
-                .content(quizAndAnswer.getContent())
-                .build();
-        return tutorialService.addTutorialQuiz(number, quiz, quizAndAnswer.getAnswers());
+        return tutorialService.addTutorialQuiz(id, quiz);
     }
 
-    @PatchMapping("tutorial/{number}/quiz/update")
-    public ResponseDTO<String> updateTutorialQuiz(@RequestBody QuizAndAnswer quizAndAnswer, @PathVariable int number)
+    @PatchMapping("tutorial/quiz/{quizId}")
+    public ResponseDTO<String> updateTutorialQuiz(@RequestBody TutorialQuiz quiz, @PathVariable int quizId)
     {
-        TutorialQuiz quiz = TutorialQuiz.builder()
-                .name(quizAndAnswer.getName())
-                .content(quizAndAnswer.getContent())
-                .build();
-        return tutorialService.updateTutorialQuiz(number, quiz, quizAndAnswer.getAnswers());
+        return tutorialService.updateTutorialQuiz(quizId, quiz);
     }
 
-    @DeleteMapping("tutorial/{number}/quiz/delete")
-    public ResponseDTO<String> deleteTutorialQuiz(@PathVariable int number)
+    @DeleteMapping("tutorial/quiz/{quizId}")
+    public ResponseDTO<String> deleteTutorialQuiz(@PathVariable int quizId)
     {
-        return tutorialService.deleteTutorialQuiz(number);
+        return tutorialService.deleteTutorialQuiz(quizId);
     }
 
 }

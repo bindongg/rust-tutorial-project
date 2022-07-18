@@ -5,12 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TutorialRepository extends JpaRepository<Tutorial, Integer> {
     @Query(value = "select * from tutorial order by number asc limit ?1", nativeQuery = true)
     public List<Tutorial> getTutorials(int tutorialNum);
-
-    public Tutorial findByNumber(int number);
-
-    public void deleteByNumber(int number);
+    public Optional<Tutorial> findByNumber(int number);
 }

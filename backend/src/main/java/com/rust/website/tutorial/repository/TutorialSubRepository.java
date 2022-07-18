@@ -8,7 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TutorialSubRepository extends JpaRepository<TutorialSub, Integer> {
-    public TutorialSub findByTutorial_idAndNumber(int tutorial_id, int number);
-
-    public void deleteByTutorial_idAndNumber(int tutorial_id, int number);
 }
