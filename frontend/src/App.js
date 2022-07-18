@@ -22,6 +22,7 @@ import ExercisePage from "./ExercisePage/ExercisePage";
 import ExerciseByTagPage from "./ExercisePage/ExerciseByTagPage";
 import ExerciseDetailPage from "./ExercisePage/ExerciseDetailPage";
 import ExerciseByLevelPage from "./ExercisePage/ExerciseByLevelPage";
+import ExerciseAddForm from "./Components/Exercise/ExerciseAddForm";
 
 
 
@@ -45,6 +46,7 @@ function App() {
                         <Route path="exercise/tag" exact={true} element={<ExerciseByTagPage/>}/>
                         <Route path="exercise/level" exact={true} element={<ExerciseByLevelPage/>}/>
                         <Route path="exercise/:no" exact={true}  element={<ExerciseDetailPage/>}/>
+                        <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginPage/>}/>
                         <Route path="register" exact={true} element={<RegisterPage/>}/>
