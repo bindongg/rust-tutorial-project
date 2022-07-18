@@ -1,6 +1,7 @@
 package com.rust.website.user.controller;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.rust.website.common.cache.RedisService;
 import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
@@ -30,20 +31,20 @@ public class UserController {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final RedisService test;
+
     @PostMapping({"/duplicateId"})
-   public ResponseDTO<Boolean> checkDuplicateId(@RequestBody Map<String,String> duplicateIdMap)
-   {
-       return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateId(duplicateIdMap.get("id")));
-   }
+    public ResponseDTO<Boolean> checkDuplicateId(@RequestBody Map<String, String> duplicateIdMap) {
+        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateId(duplicateIdMap.get("id")));
+    }
+
     @PostMapping({"/duplicateEmail"})
-    public ResponseDTO<Boolean> checkDuplicateEmail(@RequestBody Map<String,String> duplicateEmailMap)
-    {
+    public ResponseDTO<Boolean> checkDuplicateEmail(@RequestBody Map<String, String> duplicateEmailMap) {
         return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateEmail(duplicateEmailMap.get("email")));
     }
 
     @PostMapping({"/register"})
-    public ResponseDTO<String> addUser(@RequestBody RegisterDTO registerDTO)
-    {
+    public ResponseDTO<String> addUser(@RequestBody RegisterDTO registerDTO) {
         User user = User.builder()
                 .id(registerDTO.getUserId())
                 .email(registerDTO.getUserEmail() + "@pusan.ac.kr")
@@ -58,14 +59,13 @@ public class UserController {
                 .used(false)
                 .build();
 
-        String authId = userService.register(user,userAuth);
+        String authId = userService.register(user, userAuth);
 
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
     @PostMapping({"/register/resend"})
-    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendDTO mailResendDTO)
-    {
+    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendDTO mailResendDTO) {
         User user = new User();
         user.setId(mailResendDTO.getId());
         user.setPassword(mailResendDTO.getPassword());
@@ -76,16 +76,14 @@ public class UserController {
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
-    @GetMapping ("/authConfirm/{authId}")
-    public String authConfirm(@PathVariable String authId)
-    {
+    @GetMapping("/authConfirm/{authId}")
+    public String authConfirm(@PathVariable String authId) {
         userService.confirmAuth(authId);
         return "인증 완료되었습니다";
     }
 
     @PostMapping("/test/admin")
-    public void test1(@RequestBody RegisterDTO registerDTO)
-    {
+    public void test1(@RequestBody RegisterDTO registerDTO) {
         User user = User.builder()
                 .id(registerDTO.getUserId())
                 .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
@@ -95,9 +93,9 @@ public class UserController {
                 .build();
         userService.test(user);
     }
+
     @PostMapping("/test/user")
-    public void test2(@RequestBody RegisterDTO registerDTO)
-    {
+    public void test2(@RequestBody RegisterDTO registerDTO) {
         User user = User.builder()
                 .id(registerDTO.getUserId())
                 .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
@@ -106,6 +104,31 @@ public class UserController {
                 .authState(UserAuthState.ACTIVE)
                 .build();
         userService.test(user);
+    }
+
+    @PostMapping("/test/redis/in")
+    public void redistest(@RequestBody Map<String,String> mp)
+    {
+        String id = mp.get("id");
+        String value = mp.get("value");
+        test.setRedisStringValue(id,value);
+    }
+
+    @GetMapping ("/test/redis/out/{id}")
+    public void redistest2(@PathVariable String id)
+    {
+        String value = test.getRedisStringValue(id);
+        if(value == null)
+        {
+            System.out.println("null");
+        }
+        else System.out.println(value);
+    }
+
+    @GetMapping("/test/delete/{id}")
+    public void redistest3(@PathVariable String id)
+    {
+        test.delRedisStringValue(id);
     }
 
     @GetMapping("/admin/test")

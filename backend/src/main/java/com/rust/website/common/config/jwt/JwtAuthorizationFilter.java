@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rust.website.common.auth.PrincipalDetails;
-import com.rust.website.common.config.CustomAuthenticationEntryPoint;
+import com.rust.website.common.cache.RedisService;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.repository.UserRepository;
@@ -28,10 +28,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
 
     private final UserRepository userRepository;
 
+    private final RedisService redisService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, RedisService redisService) {
         super(authenticationManager);
         this.userRepository = userRepository;
+        this.redisService = redisService;
     }
 
 
@@ -44,20 +46,27 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
             return;
         }
 
-        String token = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
+        String token = request.getHeader(JwtProperties.HEADER_STRING);
         try{
-            String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+            String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token.replace(JwtProperties.TOKEN_PREFIX, ""))
                     .getClaim(JwtProperties.CLAIM_NAME).asString();
+
+            if(!token.equals(redisService.getRedisStringValue(username))) //받은 토큰과 redis에 저장된 토큰 비교
+            {
+                throw new Exception();
+            }
+
             if (username != null) {
                 Optional<User> optUser = userRepository.findByIdAndAuthState(username, UserAuthState.ACTIVE);
-                if(optUser.isPresent()) {
+                if(optUser.isPresent())
+                {
                     PrincipalDetails principalDetails = new PrincipalDetails(optUser.get());
                     Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,
                             null,
                             principalDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                    response.setHeader(JwtProperties.HEADER_STRING, JwtUtil.makeJWT(principalDetails.getUsername())); //토큰 갱신 및 로그아웃 위해 redis 필요?
+                    response.setHeader(JwtProperties.HEADER_STRING, JwtUtil.makeJWT(principalDetails.getUsername())); //토큰이 유효한 상태로 요청 시 토큰 유효시간을 위해 새 토큰 발행?
                 }
                 else
                 {
@@ -67,7 +76,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
         }
         catch (TokenExpiredException | JWTDecodeException | IllegalArgumentException | AuthenticationException e)
         {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value()); //401, 그냥 로그아웃 처리 -> 프론트에서 다시 로그아웃 api로 요청하는 방식으로?
+            return;
+        }
+        catch (Exception e)
+        {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value()); //마찬가지
             return;
         }
 

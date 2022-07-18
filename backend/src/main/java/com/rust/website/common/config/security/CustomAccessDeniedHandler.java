@@ -1,4 +1,4 @@
-package com.rust.website.common.config;
+package com.rust.website.common.config.security;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,7 +14,7 @@ import java.io.IOException;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.addHeader("exception", "denied");
+        response.setStatus(HttpStatus.FORBIDDEN.value()); //403
+        response.addHeader("exception", "denied"); //필요없을듯?
     }
 }

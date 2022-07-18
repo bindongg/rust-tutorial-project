@@ -1,5 +1,6 @@
-package com.rust.website.common.config;
+package com.rust.website.common.config.security;
 
+import com.rust.website.common.cache.RedisService;
 import com.rust.website.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import static com.rust.website.common.config.JwtAuthenticationFilterApply.jwtAuthenticationFilterApply;
-import static com.rust.website.common.config.JwtAuthorizationFilterApply.jwtAuthorizationFilterApply;
+import static com.rust.website.common.config.security.JwtAuthenticationFilterApply.jwtAuthenticationFilterApply;
+import static com.rust.website.common.config.security.JwtAuthorizationFilterApply.jwtAuthorizationFilterApply;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +22,8 @@ public class SecurityConfig{
     private final CorsConfig corsConfig;
 
     private final UserRepository userRepository;
+
+    private final RedisService redisService;
 
     //private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
@@ -48,12 +51,18 @@ public class SecurityConfig{
 
                 .httpBasic().disable()
 
-                .apply(jwtAuthenticationFilterApply())
+                .apply(jwtAuthenticationFilterApply(redisService))
 
                 .and()
 
-                .apply(jwtAuthorizationFilterApply(userRepository))
+                .apply(jwtAuthorizationFilterApply(userRepository,redisService))
 
+                .and()
+
+                .logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(new CustomLogoutHandler())
+                .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                 .and()
 
                 .exceptionHandling()
@@ -62,7 +71,7 @@ public class SecurityConfig{
                 .and()
 
                 .authorizeHttpRequests(authorize -> authorize
-                        .mvcMatchers("/register/**", "/login", "/duplicateId" , "/duplicateEmail", "/authConfirm/**", "/reference/**", "/test/**").permitAll()
+                        .mvcMatchers("/register/**", "/login", "/logout", "/duplicateId" , "/duplicateEmail", "/authConfirm/**", "/reference/**", "/test/**").permitAll()
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                         .mvcMatchers("/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")

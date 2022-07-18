@@ -1,4 +1,4 @@
-package com.rust.website.common.config;
+package com.rust.website.common.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

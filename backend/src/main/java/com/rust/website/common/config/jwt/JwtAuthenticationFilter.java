@@ -2,8 +2,11 @@ package com.rust.website.common.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rust.website.common.auth.PrincipalDetails;
+import com.rust.website.common.cache.RedisService;
 import com.rust.website.common.dto.LoginDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +22,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter { //원래는 spring security 에서 form login으로 id,pwd 전송하면 동작
     private final AuthenticationManager authenticationManager;
+
+    private final RedisService redisService;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         ObjectMapper om = new ObjectMapper();
@@ -45,6 +51,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String jwtToken = JwtUtil.makeJWT(principalDetails.getUsername());
+
+        redisService.setRedisStringValue(principalDetails.getUsername(), jwtToken); //로그인 시 redis에 <id,token> pair로 저장
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
     }
 
