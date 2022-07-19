@@ -2,6 +2,12 @@ import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, NavLink} from "react-bootstrap";
 import axios from "axios";
 
+const config = {
+    headers: {
+        "Content-Type": "application/json; charset=utf-8",
+    },
+};
+
 function LoginForm() {
 
     const [userId,setUserId] = useState("");
@@ -19,7 +25,19 @@ function LoginForm() {
 
     function logIn()
     {
-        axios.post("http://localhost:8080/login",{userId: userId, userPwd: userPwd}, {withCredentials: true}).then().catch()
+        axios.post("http://localhost:8080/login",{userId: userId, userPassword: userPwd}, config)
+            .then((response)=>{
+                if(response.status === 200)
+                {
+                    alert("success ");
+                    console.log("res.data.accessToken : " + response.headers['authorization']);
+                    localStorage.setItem("jwt", response.headers['authorization']);
+                    console.log("item "+localStorage.getItem("jwt"));
+                }
+            })
+            .catch((Error)=>{
+                alert("아이디 또는 비밀번호가 일치하지 않습니다");
+            })
     }
 
     return (

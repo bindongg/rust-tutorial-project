@@ -25,10 +25,6 @@ public class TutorialQuiz implements Serializable {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Lob
-    @Column(nullable = false)
-    private String content;
-
     @CreationTimestamp
     private Timestamp date;
 
@@ -39,6 +35,6 @@ public class TutorialQuiz implements Serializable {
 
     @OneToMany(mappedBy = "tutorialQuiz", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"tutorialQuiz"})
-    private List<TutorialQuizAnswer> tutorialQuizAnswers;
+    private List<TutorialQuizQuestion> tutorialQuizQuestions;
 
 }

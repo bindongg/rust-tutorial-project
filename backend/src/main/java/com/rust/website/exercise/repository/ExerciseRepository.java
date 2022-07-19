@@ -9,6 +9,4 @@ import java.util.List;
 public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
     @Query(value = "select ex from Exercise ex order by ex.number asc")
     public List<Exercise> findAllOrderByNumberAsc();
-
-    public Exercise findByNumber(int number);
 }

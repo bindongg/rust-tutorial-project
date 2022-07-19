@@ -20,7 +20,7 @@ public class TutorialService {
     private final TutorialDoneRepository tutorialDoneRepository;
     private final TutorialSubRepository tutorialSubRepository;
     private final TutorialQuizRepository tutorialQuizRepository;
-    private final TutorialQuizAnswerRepository tutorialQuizAnswerRepository;
+    private final TutorialQuizQuestionRepository tutorialQuizQuestionRepository;
 
     @Transactional(readOnly = true)
     public List<Tutorial> getTutorials(String userId)
@@ -31,23 +31,23 @@ public class TutorialService {
     }
 
     @Transactional(readOnly = true)
-    public TutorialSub getTutorialSub(int number, int subNumber)
+    public TutorialSub getTutorialSub(int subId)
     {
-        int id = tutorialRepository.findByNumber(number).getId();
-        return tutorialSubRepository.findByTutorial_idAndNumber(id, subNumber);
+        return tutorialSubRepository.findById(subId).get();
     }
 
     @Transactional(readOnly = true)
-    public TutorialQuiz getTutorialQuiz(int number)
+    public TutorialQuiz getTutorialQuiz(int quizId)
     {
-        return tutorialRepository.findByNumber(number).getTutorialQuiz();
+        return tutorialQuizRepository.findById(quizId).get();
     }
 
     @Transactional
-    public QuizResponseDTO postTutorialQuizAnswer(List<Integer> userAnswers, int number, String userId)
+    public QuizResponseDTO postTutorialQuizAnswer(List<Integer> userAnswers, int id, String userId)
     {
-        int tutorialId = tutorialRepository.findByNumber(number).getTutorialQuiz().getId();
-        List<TutorialQuizAnswer> answers = tutorialQuizAnswerRepository.findByTutorialQuiz_idOrderByIdAsc(tutorialId);
+        Tutorial tutorial = tutorialRepository.findByNumber(id).get();
+        int quizId = tutorial.getTutorialQuiz().getId();
+        List<TutorialQuizQuestion> answers = tutorialQuizQuestionRepository.findByTutorialQuiz_idOrderByIdAsc(quizId);
         List<Boolean> correctList = new ArrayList<Boolean>();
         Boolean isCorrect = true;
         for (int i = 0; i < answers.size(); ++i) {
@@ -62,9 +62,9 @@ public class TutorialService {
 
         String message = null;
         if (isCorrect) {
-            TutorialDone newDone = tutorialDoneRepository.findByUser_idAndTutorialId(userId, tutorialId);
+            TutorialDone newDone = tutorialDoneRepository.findByUser_idAndTutorialId(userId, id).get();
             if (newDone == null) {
-                tutorialDoneRepository.insert(userId, tutorialId);
+                tutorialDoneRepository.insert(userId, id);
             }
             message = "맞았습니다!";
         } else {
@@ -78,22 +78,16 @@ public class TutorialService {
     public ResponseDTO<String> addTutorial(Tutorial newTutorial)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
-        if (tutorialRepository.findByNumber(newTutorial.getNumber()) == null) {
-            tutorialRepository.save(newTutorial);
-        }
-        else
-        {
-            responseDTO.setData("추가에 실패하였습니다.");
-            responseDTO.setCode(HttpStatus.CONFLICT.value());
-        }
+        tutorialRepository.save(newTutorial);
+
         return responseDTO;
     }
 
     @Transactional
-    public ResponseDTO<String> updateTutorial(Tutorial newTutorial, int number)
+    public ResponseDTO<String> updateTutorial(Tutorial newTutorial, int id)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "변경이 완료되었습니다.");
-        Tutorial tutorial = tutorialRepository.findByNumber(number);
+        Tutorial tutorial = tutorialRepository.findById(id).get();
         tutorial.setName(newTutorial.getName());
         tutorial.setNumber(newTutorial.getNumber());
 
@@ -101,39 +95,30 @@ public class TutorialService {
     }
 
     @Transactional
-    public ResponseDTO<String> deleteTutorial(int number)
+    public ResponseDTO<String> deleteTutorial(int id)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "삭제가 완료되었습니다.");
-        tutorialDoneRepository.deleteByTutorial_id(tutorialRepository.findByNumber(number).getId());
-        tutorialRepository.deleteByNumber(number);
+        tutorialDoneRepository.deleteByTutorial_id(id);
+        tutorialRepository.deleteById(id);
 
         return responseDTO;
     }
 
     @Transactional
-    public ResponseDTO<String> addTutorialSub(TutorialSub newTutorialSub, int number)
+    public ResponseDTO<String> addTutorialSub(TutorialSub newTutorialSub, int id)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
-        Tutorial tutorial = tutorialRepository.findByNumber(number);
-        if (tutorialSubRepository.findByTutorial_idAndNumber(tutorial.getId(), newTutorialSub.getNumber()) == null)
-        {
-            newTutorialSub.setTutorial(tutorial);
-            tutorialSubRepository.save(newTutorialSub);
-        }
-        else {
-            responseDTO.setData("추가에 실패하였습니다.");
-            responseDTO.setCode(HttpStatus.CONFLICT.value());
-        }
+        newTutorialSub.setTutorial(tutorialRepository.findById(id).get());
+        tutorialSubRepository.save(newTutorialSub);
 
         return responseDTO;
     }
 
     @Transactional
-    public ResponseDTO<String> updateTutorialSub(TutorialSub newTutorialSub, int number, int subNumber)
+    public ResponseDTO<String> updateTutorialSub(TutorialSub newTutorialSub, int subId)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "변경이 완료되었습니다.");
-        int tutorial_id = tutorialRepository.findByNumber(number).getId();
-        TutorialSub tutorialSub = tutorialSubRepository.findByTutorial_idAndNumber(tutorial_id, subNumber);
+        TutorialSub tutorialSub = tutorialSubRepository.findById(subId).get();
         tutorialSub.setName(newTutorialSub.getName());
         tutorialSub.setNumber(newTutorialSub.getNumber());
         tutorialSub.setContent(newTutorialSub.getContent());
@@ -142,33 +127,30 @@ public class TutorialService {
     }
 
     @Transactional
-    public ResponseDTO<String> deleteTutorialSub(int number, int subNumber)
+    public ResponseDTO<String> deleteTutorialSub(int subId)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "삭제가 완료되었습니다.");
-        Tutorial tutorial = tutorialRepository.findByNumber(number);
-        tutorial.getTutorialSubs().removeIf(sub -> sub.getNumber() == subNumber);
-        tutorialSubRepository.deleteByTutorial_idAndNumber(tutorial.getId(), subNumber);
+        tutorialSubRepository.deleteById(subId);
 
         return responseDTO;
     }
 
     @Transactional
-    public ResponseDTO<String> addTutorialQuiz(int number, TutorialQuiz newTutorialQuiz, List<Integer> answers)
+    public ResponseDTO<String> addTutorialQuiz(int id, TutorialQuiz newTutorialQuiz)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
-        Tutorial tutorial = tutorialRepository.findByNumber(number);
-        if (tutorialQuizRepository.findByTutorial_id(tutorial.getId()) == null)
+        Tutorial tutorial = tutorialRepository.findById(id).get();
+        if (tutorial.getTutorialQuiz() == null)
         {
             newTutorialQuiz.setTutorial(tutorial);
+            List<TutorialQuizQuestion> tutorialQuizQuestions = newTutorialQuiz.getTutorialQuizQuestions();
+            IntStream.range(0, tutorialQuizQuestions.size())
+                    .forEach(i -> {
+                        TutorialQuizQuestion newQuestion = tutorialQuizQuestions.get(i);
+                        newQuestion.setNumber(i+1);
+                        newQuestion.setTutorialQuiz(newTutorialQuiz);
+                    });
             tutorialQuizRepository.save(newTutorialQuiz);
-            IntStream.range(0, answers.size())
-                    .mapToObj(i -> TutorialQuizAnswer.builder()
-                                    .answer(answers.get(i))
-                                    .number(i + 1)
-                                    .tutorialQuiz(newTutorialQuiz)
-                                    .build()
-                    )
-                    .forEach(newTutorialQuizAnswer -> tutorialQuizAnswerRepository.save(newTutorialQuizAnswer));
         }
         else
         {
@@ -179,35 +161,34 @@ public class TutorialService {
     }
 
     @Transactional
-    public ResponseDTO<String> updateTutorialQuiz(int number, TutorialQuiz newTutorialQuiz, List<Integer> answers)
+    public ResponseDTO<String> updateTutorialQuiz(int quizId, TutorialQuiz newTutorialQuiz)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(),"변경이 완료되었습니다.");
-        Tutorial tutorial = tutorialRepository.findByNumber(number);
-        TutorialQuiz tutorialQuiz = tutorialQuizRepository.findByTutorial_id(tutorial.getId());
-        tutorialQuiz.setContent(newTutorialQuiz.getContent());
+        TutorialQuiz tutorialQuiz = tutorialQuizRepository.findById(quizId).get();
         tutorialQuiz.setName(newTutorialQuiz.getName());
-        tutorialQuiz.setDate(newTutorialQuiz.getDate());
 
-        tutorialQuizAnswerRepository.deleteByTutorialQuiz_id(tutorialQuiz.getId());
-        tutorialQuizAnswerRepository.flush();
-        IntStream.range(0, answers.size())
-                .mapToObj(i -> TutorialQuizAnswer.builder()
-                        .answer(answers.get(i))
-                        .number(i + 1)
-                        .tutorialQuiz(tutorialQuiz)
-                        .build()
-                )
-                .forEach(newTutorialQuizAnswer -> tutorialQuizAnswerRepository.save(newTutorialQuizAnswer));
+
+        tutorialQuizQuestionRepository.deleteByTutorialQuiz_id(quizId);
+        tutorialQuizQuestionRepository.flush();
+        List<TutorialQuizQuestion> tutorialQuizQuestions = newTutorialQuiz.getTutorialQuizQuestions();
+        IntStream.range(0, tutorialQuizQuestions.size())
+                .forEach(i -> {
+                    TutorialQuizQuestion newQuestion = tutorialQuizQuestions.get(i);
+                    newQuestion.setNumber(i+1);
+                    newQuestion.setTutorialQuiz(tutorialQuiz);
+                    tutorialQuizQuestionRepository.save(newQuestion);
+                });
+
         return responseDTO;
     }
 
     @Transactional
-    public ResponseDTO<String> deleteTutorialQuiz(int number)
+    public ResponseDTO<String> deleteTutorialQuiz(int quizId)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(),"삭제가 완료되었습니다.");
-        Tutorial tutorial = tutorialRepository.findByNumber(number);
-        tutorial.setTutorialQuiz(null);
-        tutorialQuizRepository.deleteByTutorial_id(tutorial.getId());
+        TutorialQuiz tutorialQuiz = tutorialQuizRepository.findById(quizId).get();
+        tutorialQuiz.getTutorial().setTutorialQuiz(null);
+        tutorialQuizRepository.deleteById(quizId);
 
         return responseDTO;
     }

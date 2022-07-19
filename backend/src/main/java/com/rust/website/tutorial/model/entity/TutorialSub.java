@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {"number", "tutorial_id"})})
 public class TutorialSub implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -19,7 +19,7 @@ public class MailService {
         message.setSubject("rust tutorial 회원 가입 메일");
         message.setText(
                 "회원 가입을 위해 아래 링크를 클릭해주세요\n" +
-                        "http://localhost:8080/user/authConfirm/" + authId);
+                        "http://localhost:8080/authConfirm/" + authId);
         mailSender.send(message);
     }
 }

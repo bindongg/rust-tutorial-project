@@ -40,7 +40,7 @@ function RegisterForm() {
         let idSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
         if(idWordEx.test(userId) && !(idSpecialEx.test(userId)))
         {
-            axios.post("http://localhost:8080/user/duplicateId", {id: userId}, {withCredentials: true}).then((Response) => {
+            axios.post("http://localhost:8080/duplicateId", {id: userId}, {withCredentials: true}).then((Response) => {
                 if(Response.data.code === 200)
                 {
                     if (Response.data.data === true) {
@@ -110,7 +110,7 @@ function RegisterForm() {
     function register() //수정할것
     {
         let checkEmail = 1;
-        axios.post("http://localhost:8080/user/duplicateEmail",{email: userEmail}).then((Response)=>{
+        axios.post("http://localhost:8080/duplicateEmail",{email: userEmail}).then((Response)=>{
             if(Response.data.code === 200)
             {
                 if (Response.data.data === true)
@@ -134,7 +134,7 @@ function RegisterForm() {
             if(check === 1)
             {
                 setBtnState(true);
-                axios.post("http://localhost:8080/user/register",{id: userId, password: userPassword, email: userEmail}).then((Response)=>{
+                axios.post("http://localhost:8080/register",{userId: userId, userPassword: userPassword, userEmail: userEmail}).then((Response)=>{
                     if(Response.data.code === 200)
                     {
                         let authId = Response.data.data;
