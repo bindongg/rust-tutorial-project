@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 public class UserAuth {
-    private static final long EMAIL_TOKEN_EXPIRATION_TIME_VALUE = 5L;
+    public static final long EMAIL_TOKEN_EXPIRATION_TIME_VALUE = 10L;
 
     @Id
     @GeneratedValue(generator = "uuid2")

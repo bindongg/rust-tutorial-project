@@ -17,7 +17,7 @@ function AfterAuthEmailSent() {
     function register()
     {
         setBtnState(true);
-        axios.post("http://localhost:8080/user/register/resend",{id: id, authId: authId, password: password, email: email}, {withCredentials: true}).then((Response)=>{
+        axios.post("http://localhost:8080/register/resend",{id: id, authId: authId, password: password, email: email}, {withCredentials: true}).then((Response)=>{
             if(Response.data.code === 200)
             {
                 setAuthId(Response.data.data);
