@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest(classes = {ExerciseService.class, ExerciseRepository.class, ExerciseTryRepository.class})
 @EnableJpaRepositories(basePackages = "com.rust.website.exercise.repository")
 public class ExerciseServiceTest {
@@ -24,4 +27,6 @@ public class ExerciseServiceTest {
     void mapTest() {
 //        exerciseService.getExercises("hdm");
     }
+
+
 }

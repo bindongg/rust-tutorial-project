@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class QuizAndAnswer {
-    private String name;
-    private String content;
+@NoArgsConstructor
+public class Answers {
     private List<Integer> answers;
 }

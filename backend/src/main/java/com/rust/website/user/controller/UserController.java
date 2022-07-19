@@ -1,6 +1,8 @@
 package com.rust.website.user.controller;
 
-import com.rust.website.common.dto.LoginDTO;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.rust.website.common.cache.RedisService;
+import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
 import com.rust.website.user.model.entity.User;
@@ -13,9 +15,13 @@ import com.rust.website.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSendException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -23,35 +29,43 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping({"/user/duplicateId"})
-    public ResponseDTO<Boolean> checkDuplicateId(@RequestBody User user)
-    {
-        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateId(user.getId()));
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final RedisService test;
+
+    @PostMapping({"/duplicateId"})
+    public ResponseDTO<Boolean> checkDuplicateId(@RequestBody Map<String, String> duplicateIdMap) {
+        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateId(duplicateIdMap.get("id")));
     }
 
-    @PostMapping({"/user/duplicateEmail"})
-    public ResponseDTO<Boolean> checkDuplicateEmail(@RequestBody User user)
-    {
-        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateEmail(user.getEmail()));
+    @PostMapping({"/duplicateEmail"})
+    public ResponseDTO<Boolean> checkDuplicateEmail(@RequestBody Map<String, String> duplicateEmailMap) {
+        return new ResponseDTO<>(HttpStatus.OK.value(), userService.checkDuplicateEmail(duplicateEmailMap.get("email")));
     }
 
-    @PostMapping({"/user/register"})
-    public ResponseDTO<String> addUser(@RequestBody User user)
-    {
-        user.setRole(UserRoleType.USER);
-        user.setAuthState(UserAuthState.INACTIVE);
-        user.setEmail(user.getEmail() + "@pusan.ac.kr");
+    @PostMapping({"/register"})
+    public ResponseDTO<String> addUser(@RequestBody RegisterDTO registerDTO) {
+        User user = User.builder()
+                .id(registerDTO.getUserId())
+                .email(registerDTO.getUserEmail() + "@pusan.ac.kr")
+                .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
+                .authState(UserAuthState.INACTIVE)
+                .role(UserRoleType.ROLE_USER)
+                .build();
 
-        UserAuth userAuth = new UserAuth(user.getId());
+        UserAuth userAuth = UserAuth.builder()
+                .userId(registerDTO.getUserId())
+                .expirationTime(LocalDateTime.now().plusMinutes(UserAuth.EMAIL_TOKEN_EXPIRATION_TIME_VALUE))
+                .used(false)
+                .build();
 
-        String authId = userService.register(user,userAuth);
+        String authId = userService.register(user, userAuth);
 
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
-    @PostMapping({"/user/register/resend"})
-    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendDTO mailResendDTO)
-    {
+    @PostMapping({"/register/resend"})
+    public ResponseDTO<String> addUserMailResent(@RequestBody MailResendDTO mailResendDTO) {
         User user = new User();
         user.setId(mailResendDTO.getId());
         user.setPassword(mailResendDTO.getPassword());
@@ -62,33 +76,71 @@ public class UserController {
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
-    @GetMapping ("/user/authConfirm/{authId}")
-    public String authConfirm(@PathVariable String authId)
-    {
+    @GetMapping("/authConfirm/{authId}")
+    public String authConfirm(@PathVariable String authId) {
         userService.confirmAuth(authId);
         return "인증 완료되었습니다";
     }
 
-    @PostMapping("/login")
-    public ResponseDTO<Object> login(@RequestBody LoginDTO loginDTO)
+    @PostMapping("/test/admin")
+    public void test1(@RequestBody RegisterDTO registerDTO) {
+        User user = User.builder()
+                .id(registerDTO.getUserId())
+                .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
+                .email(registerDTO.getUserEmail())
+                .role(UserRoleType.ROLE_ADMIN)
+                .authState(UserAuthState.ACTIVE)
+                .build();
+        userService.test(user);
+    }
+
+    @PostMapping("/test/user")
+    public void test2(@RequestBody RegisterDTO registerDTO) {
+        User user = User.builder()
+                .id(registerDTO.getUserId())
+                .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
+                .email(registerDTO.getUserEmail())
+                .role(UserRoleType.ROLE_USER)
+                .authState(UserAuthState.ACTIVE)
+                .build();
+        userService.test(user);
+    }
+
+    @PostMapping("/test/redis/in")
+    public void redistest(@RequestBody Map<String,String> mp)
     {
-        Optional<User> optUser = userService.loginCheck(loginDTO);
-        if(optUser.isPresent())
+        String id = mp.get("id");
+        String value = mp.get("value");
+        test.setRedisStringValue(id,value);
+    }
+
+    @GetMapping ("/test/redis/out/{id}")
+    public void redistest2(@PathVariable String id)
+    {
+        String value = test.getRedisStringValue(id);
+        if(value == null)
         {
-            if(optUser.get().getPassword().equals(loginDTO.getUserPwd()) && optUser.get().getAuthState().equals(UserAuthState.ACTIVE))
-            {
-                System.out.println("good input");
-                return new ResponseDTO<>(HttpStatus.OK.value(), null);
-            }
-            else
-            {
-                throw new LoginException();
-            }
+            System.out.println("null");
         }
-        else
-        {
-            throw new LoginException();
-        }
+        else System.out.println(value);
+    }
+
+    @GetMapping("/test/delete/{id}")
+    public void redistest3(@PathVariable String id)
+    {
+        test.delRedisStringValue(id);
+    }
+
+    @GetMapping("/admin/test")
+    public String test3()
+    {
+        return "admin test";
+    }
+
+    @GetMapping("/user/test")
+    public String test4()
+    {
+        return "user test";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -113,6 +165,12 @@ public class UserController {
     protected ResponseDTO<String> temp4()
     {
         return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "LoginException");
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseDTO<String> temp5()
+    {
+        return new ResponseDTO<>(HttpStatus.FORBIDDEN.value(), "yeeeeeee");
     }
 
     @ExceptionHandler(Exception.class)

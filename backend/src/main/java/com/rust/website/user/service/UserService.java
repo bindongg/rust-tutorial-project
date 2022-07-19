@@ -1,12 +1,10 @@
 package com.rust.website.user.service;
 
 import com.rust.website.mail.service.MailService;
-import com.rust.website.common.dto.LoginDTO;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.rust.website.user.model.myEnum.UserAuthState;
-import com.rust.website.user.model.myEnum.UserRoleType;
 import com.rust.website.user.repository.UserAuthRepository;
 import com.rust.website.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +49,7 @@ public class UserService {
         try {
             userRepository.save(user);
             userAuthRepository.save(userAuth);
-            //mailService.sendAuthMail(user.getEmail(), userAuth.getId());
+            mailService.sendAuthMail(user.getEmail(), userAuth.getId());
 
             return userAuth.getId();
         }
@@ -74,22 +72,17 @@ public class UserService {
                 Optional<UserAuth> optUserAuth = userAuthRepository.findByIdAndUsed(authId, false);
                 if(optUserAuth.isPresent())
                 {
-                    userRepository.deleteByIdAndAuthState(user.getId(), UserAuthState.INACTIVE); //그냥 user table은 냅두고 userAuth만 새로 추가?
                     userAuthRepository.deleteByIdAndUsed(authId, false);
 
-                    User nUser = new User();
-                    nUser.setId(user.getId());
-                    nUser.setPassword(user.getPassword());
-                    nUser.setEmail(user.getEmail()+"@pusan.ac.kr");
-                    nUser.setAuthState(UserAuthState.INACTIVE);
-                    nUser.setRole(UserRoleType.USER);
+                    UserAuth nUserAuth = UserAuth.builder()
+                            .userId(optUser.get().getId())
+                            .expirationTime(LocalDateTime.now().plusMinutes(UserAuth.EMAIL_TOKEN_EXPIRATION_TIME_VALUE))
+                            .used(false)
+                            .build();
 
-                    UserAuth nUserAuth = new UserAuth(user.getId());
-
-                    userRepository.save(nUser);
                     userAuthRepository.save(nUserAuth);
 
-                    mailService.sendAuthMail(nUser.getEmail(), nUserAuth.getId());
+                    mailService.sendAuthMail(optUser.get().getEmail(), nUserAuth.getId());
 
                     return nUserAuth.getId();
                 }
@@ -137,9 +130,9 @@ public class UserService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public Optional<User> loginCheck(LoginDTO loginDTO)
+    @Transactional
+    public void test(User user)
     {
-        return userRepository.findById(loginDTO.getUserId());
+        userRepository.save(user);
     }
 }

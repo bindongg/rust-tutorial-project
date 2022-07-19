@@ -44,10 +44,8 @@ public class ExerciseService {
         List<Exercise> returnList = new ArrayList<>();
         exercises.stream()
                 .forEach(e -> {
-                    if (exerciseTries.get(e.getId()) != null)
-                    {
-                        e.setSolved(exerciseTries.get(e.getId()).getSolved());
-                    }
+                    if (exerciseTries.get(e.getId()) != null) { e.setSolved(exerciseTries.get(e.getId()).getSolved()); }
+                    else { e.setSolved(ExerciseSolved.NO_TRY);}
                     e.setExerciseContent(null);
                     e.setExerciseTestcases(null);
                     returnList.add(e);
@@ -56,16 +54,16 @@ public class ExerciseService {
     }
 
     @Transactional(readOnly = true)
-    public Exercise getExercise(int number)
+    public Exercise getExercise(int id)
     {
-        return exerciseRepository.findByNumber(number);
+        return exerciseRepository.findById(id).get();
     }
 
     @Transactional
-    public ResponseDTO<String> compileUserCode(CompileInput compileInput, int number, String id)
+    public ResponseDTO<String> compileUserCode(CompileInput compileInput, int id, String userId)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "맞았습니다!");
-        Exercise exercise = exerciseRepository.findByNumber(number);
+        Exercise exercise = exerciseRepository.findById(id).get();
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         int i = 0;
         for (; i < exerciseTestcases.size(); ++i)
@@ -81,11 +79,11 @@ public class ExerciseService {
             if (!exerciseTestcases.get(i).getOutput().equals(compileOutput.getStdOut())) { break; }
         }
 
-        ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(id, exercise.getId());
+        ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).get();
         if (exerciseTry == null) {
             exerciseTry = ExerciseTry.builder()
                     .exercise(exercise)
-                    .user(userRepository.findById(id).get())
+                    .user(userRepository.findById(userId).get())
                     .build();
         }
         exerciseTry.setSourceCode(compileInput.getCode());
@@ -117,14 +115,14 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseDTO<String> updateExercise(Exercise newExercise, int number)
+    public ResponseDTO<String> updateExercise(Exercise newExercise, int id)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
-        Exercise exercise = exerciseRepository.findByNumber(number);
+        Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
 
-        exerciseTestcaseRepository.deleteByExercise_id(exercise.getId());
+        exerciseTestcaseRepository.deleteByExercise_id(id);
         exerciseTestcaseRepository.flush();
         List<ExerciseTestcase> exerciseTestcases = newExercise.getExerciseTestcases();
         IntStream.range(0, exerciseTestcases.size())
@@ -141,10 +139,9 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseDTO<String> deleteExercise(int number)
+    public ResponseDTO<String> deleteExercise(int id)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "삭제가 완료되었습니다.");
-        int id = exerciseRepository.findByNumber(number).getId();
         exerciseTryRepository.deleteByExercise_id(id);
         exerciseRepository.deleteById(id);
 
