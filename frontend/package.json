@@ -42,6 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io"
+  }
 }
