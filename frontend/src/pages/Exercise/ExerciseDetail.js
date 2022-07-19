@@ -1,6 +1,6 @@
 import React, {Component, useEffect, useState} from "react";
 import axios from "axios";
-import ExerciseDetailInfo from "./ExerciseDetailInfo";
+import ExerciseDetailInfo from "./components/ExerciseDetailInfo";
 
 function ExerciseDetail() {
     const [exerciseDetails, setExerciseDetails] = useState([]);

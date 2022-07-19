@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Table } from "react-bootstrap";
 import axios from "axios";
-import ExerciseList from "./ExerciseList";
+import ExerciseList from "./components/ExerciseList";
 import Button from 'react-bootstrap/Button';
 
 function Exercise(){

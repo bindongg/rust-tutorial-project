@@ -1,6 +1,6 @@
 import React from "react";
 import {Container} from "react-bootstrap";
-import SolvedExerciseContainer from "./SolvedExerciseContainer";
+import SolvedExerciseContainer from "./components/SolvedExerciseContainer";
 
 function SolvedExercise() {
     return (
