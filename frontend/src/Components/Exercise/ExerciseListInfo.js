@@ -1,24 +1,15 @@
-import React, {Component} from "react";
+import React from "react";
 import {Link} from "react-router-dom";
 
-class ExerciseListInfo extends Component{
-    static defaultProps={
-        info:{
-            index: 0,
-            title: 'exercise title'
-        }
-    }
-    render(){
-        const {index, title} = this.props.info;
-        return(
-            <tr>
-              <td><Link to="">{index}</Link></td>
-              <td><Link to="/exercise/1">{title}</Link></td>
-              <td>종류</td>
-              <td>난이도</td>
-              <td>성공</td>
-            </tr>
-        )
-    }
+function ExerciseListInfo ({ exercise}) {
+    return (
+        <tr>
+            <td>{exercise.number}</td>
+            <td><Link to= {`/exercise/${exercise.number}`} >{exercise.name}</Link></td>
+            <td>{exercise.tag}</td>
+            <td>{exercise.difficulty}</td>
+            <td>{exercise.solved}</td>
+        </tr>
+    );
 }
 export default ExerciseListInfo;
