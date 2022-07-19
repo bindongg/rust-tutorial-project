@@ -13,7 +13,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases}){
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3 style={{display:"inline-flex"}}>문제 &nbsp;</h3>
-                <span><img src="abc.png"></img>&nbsp;&nbsp;</span>
+                <span><img src="../abc.png"></img>&nbsp;&nbsp;</span>
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 {Content?.description}
