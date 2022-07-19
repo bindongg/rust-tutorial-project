@@ -22,6 +22,7 @@ import ExercisePage from "./ExercisePage/ExercisePage";
 import ExerciseByTagPage from "./ExercisePage/ExerciseByTagPage";
 import ExerciseDetailPage from "./ExercisePage/ExerciseDetailPage";
 import ExerciseByLevelPage from "./ExercisePage/ExerciseByLevelPage";
+import ExerciseAddForm from "./Components/Exercise/ExerciseAddForm";
 
 
 
@@ -32,19 +33,25 @@ function App() {
             <Header/>
             <main className="pt-5">
                     <Routes>
+                        {/*home*/}
                         <Route index element={<HomePage />} />
                         <Route path="home" exact={true} element={<HomePage/>}/>
+                        {/*tutorial*/}
                         <Route path="tutorial" exact={true} element={<TutorialPage/>}/>
                         <Route path="tutorial/detail" exact={true} element={<TutorialDetailPage/>}/>
+                        {/*reference*/}
                         <Route path="reference" exact={true} element={<ReferencePage/>}/>
+                        {/*exercise*/}
                         <Route path="exercise" exact={true} element={<ExercisePage/>}/>
                         <Route path="exercise/tag" exact={true} element={<ExerciseByTagPage/>}/>
                         <Route path="exercise/level" exact={true} element={<ExerciseByLevelPage/>}/>
-                        <Route path="exercise/1" exact={true} element={<ExerciseDetailPage/>}/>
+                        <Route path="exercise/:no" exact={true}  element={<ExerciseDetailPage/>}/>
+                        <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
+                        {/*login*/}
                         <Route path="login" exact={true} element={<LoginPage/>}/>
                         <Route path="register" exact={true} element={<RegisterPage/>}/>
                         <Route path="register/certification" exact={true} element={<AfterAuthEmailSent/>}/>
-
+                        {/*idPwdForgot*/}
                         <Route path="idForgot" exact={true} element={<IdForgotPage/>}/>
                         <Route path="idForgot/getId" exact={true} element={<IdForgotGetIdPage/>}/>
                         <Route path="pwdForgot" exact={true} element={<PwdForgotPage/>}/>
