@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String jwtToken = JwtUtil.makeJWT(principalDetails.getUsername());
 
-        redisService.setRedisStringValue(principalDetails.getUsername(), jwtToken); //로그인 시 redis에 <id,token> pair로 저장
+        redisService.setRedisStringValue(principalDetails.getUsername(), JwtProperties.TOKEN_PREFIX+jwtToken);
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
     }
 

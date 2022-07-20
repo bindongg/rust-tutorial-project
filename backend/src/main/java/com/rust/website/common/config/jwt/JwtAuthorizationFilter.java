@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final UserRepository userRepository;
 
@@ -39,19 +39,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader(JwtProperties.HEADER_STRING);
-        if(header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX))
+        String token = request.getHeader(JwtProperties.HEADER_STRING);
+        if(token == null || !token.startsWith(JwtProperties.TOKEN_PREFIX))
         {
             chain.doFilter(request,response);
             return;
         }
 
-        String token = request.getHeader(JwtProperties.HEADER_STRING);
         try{
             String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token.replace(JwtProperties.TOKEN_PREFIX, ""))
                     .getClaim(JwtProperties.CLAIM_NAME).asString();
 
-            if(!token.equals(redisService.getRedisStringValue(username))) //받은 토큰과 redis에 저장된 토큰 비교
+            if(!token.equals(redisService.getRedisStringValue(username)))
             {
                 throw new Exception();
             }
@@ -66,7 +65,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
                             principalDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                    response.setHeader(JwtProperties.HEADER_STRING, JwtUtil.makeJWT(principalDetails.getUsername())); //토큰이 유효한 상태로 요청 시 토큰 유효시간을 위해 새 토큰 발행?
+                    response.setHeader(JwtProperties.HEADER_STRING, JwtUtil.makeJWT(principalDetails.getUsername()));
                 }
                 else
                 {
@@ -76,12 +75,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter { //권한
         }
         catch (TokenExpiredException | JWTDecodeException | IllegalArgumentException | AuthenticationException e)
         {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value()); //401, 그냥 로그아웃 처리 -> 프론트에서 다시 로그아웃 api로 요청하는 방식으로?
+            response.setStatus(HttpStatus.UNAUTHORIZED.value()); //temp
             return;
         }
         catch (Exception e)
         {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value()); //마찬가지
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
 

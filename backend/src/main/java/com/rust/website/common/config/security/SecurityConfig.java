@@ -61,7 +61,7 @@ public class SecurityConfig{
 
                 .logout()
                 .logoutUrl("/logout")
-                .addLogoutHandler(new CustomLogoutHandler())
+                .addLogoutHandler(new CustomLogoutHandler(redisService))
                 .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                 .and()
 

@@ -1,6 +1,8 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Row, Container, Col, Form, Button, NavLink} from "react-bootstrap";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {Token} from "../../Context/Token/Token";
 
 const config = {
     headers: {
@@ -9,9 +11,11 @@ const config = {
 };
 
 function LoginForm() {
+    const {setToken} = useContext(Token);
 
     const [userId,setUserId] = useState("");
     const [userPwd,setUserPwd] = useState("");
+    const navigate = useNavigate();
 
     function onChangeId(e)
     {
@@ -30,9 +34,9 @@ function LoginForm() {
                 if(response.status === 200)
                 {
                     alert("success ");
-                    console.log("res.data.accessToken : " + response.headers['authorization']);
                     localStorage.setItem("jwt", response.headers['authorization']);
-                    console.log("item "+localStorage.getItem("jwt"));
+                    setToken(localStorage.getItem("jwt"));
+                    navigate("/home");
                 }
             })
             .catch((Error)=>{

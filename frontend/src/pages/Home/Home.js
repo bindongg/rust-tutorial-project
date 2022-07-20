@@ -1,7 +1,46 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Figure} from "react-bootstrap";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {decodeToken} from "react-jwt";
+import {Token} from "../../Context/Token/Token";
+
 
 function Home(){
+
+    const navigate = useNavigate();
+
+    const {token,setToken} = useContext(Token);
+
+    function Logout()
+    {
+        alert(localStorage.getItem("jwt"));
+        let tkn = token;
+        alert(tkn);
+        axios.post("http://localhost:8080/logout",null, {headers: {authorization: tkn}})
+            .then(
+                (response)=>{
+                    if(response.status === 200)
+                    {
+                        alert("logout");
+                        localStorage.clear();
+                        setToken(null);
+                    }
+                }
+            )
+            .catch(
+                (Error)=> {
+                    alert("error");
+                }
+            )
+    }
+
+    function temp()
+    {
+        let token = localStorage.getItem("jwt");
+        let res = decodeToken(token);
+        alert(res.username);
+    }
     return (
         <div className="App text-center">
             <figure className="figure text-center">
@@ -22,6 +61,7 @@ function Home(){
                 </Button>
                 {""}
             </div>
+            <Button onClick={Logout}>log</Button>
             <br></br>
         </div>
     );

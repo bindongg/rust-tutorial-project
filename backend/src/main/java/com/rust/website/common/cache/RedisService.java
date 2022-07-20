@@ -1,5 +1,6 @@
 package com.rust.website.common.cache;
 
+import com.rust.website.common.config.jwt.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -22,7 +23,7 @@ public class RedisService {
     {
         ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
         stringStringValueOperations.set(key, value);
-        stringRedisTemplate.expire(key, 600, TimeUnit.SECONDS);
+        stringRedisTemplate.expire(key, JwtProperties.EXPIRATION_TIME/1000, TimeUnit.SECONDS);
     }
 
     public void delRedisStringValue(String key)
