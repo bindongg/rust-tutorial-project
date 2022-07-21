@@ -12,28 +12,6 @@ function Home(){
 
     const {token,setToken} = useContext(Token);
 
-    function Logout()
-    {
-        alert(localStorage.getItem("jwt"));
-        let tkn = token;
-        alert(tkn);
-        axios.post("http://localhost:8080/logout",null, {headers: {authorization: tkn}})
-            .then(
-                (response)=>{
-                    if(response.status === 200)
-                    {
-                        alert("logout");
-                        localStorage.clear();
-                        setToken(null);
-                    }
-                }
-            )
-            .catch(
-                (Error)=> {
-                    alert("error");
-                }
-            )
-    }
 
     function temp()
     {
@@ -61,7 +39,6 @@ function Home(){
                 </Button>
                 {""}
             </div>
-            <Button onClick={Logout}>log</Button>
             <br></br>
         </div>
     );

@@ -47,8 +47,8 @@ public class UserService {
     @Transactional
     public String register(User user, UserAuth userAuth) {
         try {
-            userRepository.save(user);
-            userAuthRepository.save(userAuth);
+            //userRepository.save(user);
+            //userAuthRepository.save(userAuth);
             mailService.sendAuthMail(user.getEmail(), userAuth.getId());
 
             return userAuth.getId();

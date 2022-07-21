@@ -51,6 +51,7 @@ function App() {
                         <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
+                        <Route path="logout" exact={true}/>
                         <Route path="register" exact={true} element={<RegisterForm/>}/>
                         <Route path="register/certification" exact={true} element={<AfterAuthEmailSent/>}/>
                         {/*idPwdForgot*/}

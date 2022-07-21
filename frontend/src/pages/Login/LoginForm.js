@@ -33,14 +33,13 @@ function LoginForm() {
             .then((response)=>{
                 if(response.status === 200)
                 {
-                    alert("success ");
                     localStorage.setItem("jwt", response.headers['authorization']);
                     setToken(localStorage.getItem("jwt"));
                     navigate("/home");
                 }
             })
             .catch((Error)=>{
-                alert("아이디 또는 비밀번호가 일치하지 않습니다");
+                alert(Error.response.status+" 아이디 또는 비밀번호가 일치하지 않습니다");
             })
     }
 
