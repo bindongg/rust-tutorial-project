@@ -14,13 +14,34 @@ function ExerciseAddForm() {
 
     const onSubmit = (data) => {
         console.log('data', data)
-        return  axios.post("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise/add",
+        return  axios.post("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise",
             {data: data},
             {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
             console.log('register result', result)
             // history.push("/login")
         }).catch()
     }
+
+    const testcasesNums=[1,2,3]; //테스트 케이스
+    const testcases = testcasesNums.map(function (testcasesNum, index){
+        return (
+            <Row key={index} className="mb-3">
+                <Col>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>TestCase 입력 {testcasesNum}번 </Form.Label>
+                        <Form.Control as="textarea" placeholder="테스트 케이스 input을 입력하세요" {...register("exerciseTestcases["+ index+ "].input")} />
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>TestCase 출력 {testcasesNum}번 </Form.Label>
+                        <Form.Control as="textarea" placeholder="테스트 케이스 output을 입력하세요" {...register("exerciseTestcases["+ index+ "].output")} />
+                    </Form.Group>
+                </Col>
+            </Row>
+        )
+    })
+
 
     return (
         <>
@@ -85,7 +106,7 @@ function ExerciseAddForm() {
                                 <Form.Control as="textarea" placeholder="1번 출력값 예시을 입력하세요" {...register("exerciseContent.output_value")} />
                             </Form.Group>
 
-                            {/*TODO 테스트 케이스 추가하기*/}
+                            {testcases}
 
                            <Button variant="info" type="submit" onSubmit={handleSubmit(onValid, onInvalid)}>
                                 문제 추가
