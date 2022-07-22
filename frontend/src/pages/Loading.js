@@ -19,7 +19,6 @@ function Loading(){
                     radius={2}
                     margin={2}
                 />
-                <span>시간이 다소 소요될 수 있습니다</span>
             </div>
         </div>
     );

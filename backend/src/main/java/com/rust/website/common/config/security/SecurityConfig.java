@@ -71,7 +71,8 @@ public class SecurityConfig{
                 .and()
 
                 .authorizeHttpRequests(authorize -> authorize
-                        .mvcMatchers("/register/**", "/login", "/logout", "/duplicateId" , "/duplicateEmail", "/authConfirm/**", "/reference/**", "/test/**").permitAll()
+                        .mvcMatchers("/register/**", "/login", "/logout", "/duplicateId" , "/duplicateEmail",
+                                "/authConfirm/**", "/reference/**", "/id", "/password","/test/**").permitAll()
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                         .mvcMatchers("/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")

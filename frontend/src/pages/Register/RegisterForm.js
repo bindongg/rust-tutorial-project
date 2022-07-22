@@ -57,7 +57,7 @@ function RegisterForm() {
                     alert("error");
                 }
             }).catch((Error) => {
-                console.log(Error);
+                alert(Error.response.status+"error");
             })
         }
         else

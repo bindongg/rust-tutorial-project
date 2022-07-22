@@ -7,6 +7,7 @@ import com.rust.website.common.dto.LoginDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             loginDTO = om.readValue(request.getInputStream(), LoginDTO.class);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
         if(loginDTO != null)
         {

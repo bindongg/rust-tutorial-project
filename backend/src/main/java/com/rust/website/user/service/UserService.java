@@ -1,5 +1,6 @@
 package com.rust.website.user.service;
 
+import com.rust.website.common.CommonProperties;
 import com.rust.website.mail.service.MailService;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
@@ -9,16 +10,19 @@ import com.rust.website.user.repository.UserAuthRepository;
 import com.rust.website.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailSendException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MailService mailService;
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
@@ -47,8 +51,8 @@ public class UserService {
     @Transactional
     public String register(User user, UserAuth userAuth) {
         try {
-            //userRepository.save(user);
-            //userAuthRepository.save(userAuth);
+            userRepository.save(user);
+            userAuthRepository.save(userAuth);
             mailService.sendAuthMail(user.getEmail(), userAuth.getId());
 
             return userAuth.getId();
@@ -127,6 +131,45 @@ public class UserService {
         else
         {
             throw new NoSuchEntityException("UserAuth entity does not exist");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public String getId(String email, String password)
+    {
+        Optional<User> optUser = userRepository.findByEmail(email+CommonProperties.EMAIL_POSTFIX);
+        if(optUser.isPresent())
+        {
+            boolean match = bCryptPasswordEncoder.matches(password, optUser.get().getPassword());
+            if(match)
+            {
+                return optUser.get().getId();
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    @Transactional
+    public boolean getPassword(String id, String email)
+    {
+        if(userRepository.findByIdAndEmail(id, email+CommonProperties.EMAIL_POSTFIX).isPresent())
+        {
+            String nPassword = CommonProperties.PRJ_NAME+(new Random().nextInt(1000000));
+            userRepository.findByIdAndEmail(id, email+CommonProperties.EMAIL_POSTFIX).get().setPassword(bCryptPasswordEncoder.encode(nPassword));
+            mailService.sendPasswordMail(email+CommonProperties.EMAIL_POSTFIX, nPassword);
+
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

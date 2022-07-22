@@ -52,7 +52,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             if(!token.equals(redisService.getRedisStringValue(username)))
             {
-                throw new Exception();
+                throw new IllegalArgumentException();
             }
 
             if (username != null) {
@@ -65,7 +65,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                             principalDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                    response.setHeader(JwtProperties.HEADER_STRING, JwtUtil.makeJWT(principalDetails.getUsername()));
+                    //response.setHeader(JwtProperties.HEADER_STRING, JwtUtil.makeJWT(principalDetails.getUsername()));
                 }
                 else
                 {
@@ -75,11 +75,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
         catch (TokenExpiredException | JWTDecodeException | IllegalArgumentException | AuthenticationException e)
         {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value()); //temp
-            return;
-        }
-        catch (Exception e)
-        {
+            String username = JWT.decode(token.replace(JwtProperties.TOKEN_PREFIX,"")).getClaim(JwtProperties.CLAIM_NAME).asString();
+            redisService.delRedisStringValue(username);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
