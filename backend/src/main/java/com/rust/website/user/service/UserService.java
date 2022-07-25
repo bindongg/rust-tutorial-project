@@ -161,15 +161,41 @@ public class UserService {
     {
         if(userRepository.findByIdAndEmail(id, email+CommonProperties.EMAIL_POSTFIX).isPresent())
         {
-            String nPassword = CommonProperties.PRJ_NAME+(new Random().nextInt(1000000));
-            userRepository.findByIdAndEmail(id, email+CommonProperties.EMAIL_POSTFIX).get().setPassword(bCryptPasswordEncoder.encode(nPassword));
-            mailService.sendPasswordMail(email+CommonProperties.EMAIL_POSTFIX, nPassword);
+            try{
+                String nPassword = CommonProperties.PRJ_NAME + (new Random().nextInt(1000000));
+                userRepository.findByIdAndEmail(id, email + CommonProperties.EMAIL_POSTFIX).get().setPassword(bCryptPasswordEncoder.encode(nPassword));
+                mailService.sendPasswordMail(email + CommonProperties.EMAIL_POSTFIX, nPassword);
 
-            return true;
+                return true;
+            }
+            catch (MailSendException mailSendException) {
+                throw new MailSendException("mail transmission failed");
+            }
         }
         else
         {
             return false;
+        }
+    }
+
+    @Transactional
+    public void updatePassword(String username, String password, String newPassword)
+    {
+        Optional<User> optUser = userRepository.findById(username);
+        if(optUser.isPresent())
+        {
+            if(bCryptPasswordEncoder.matches(password,optUser.get().getPassword()))
+            {
+                optUser.get().setPassword(bCryptPasswordEncoder.encode(newPassword));
+            }
+            else
+            {
+                throw new IllegalArgumentException();
+            }
+        }
+        else
+        {
+            throw new NoSuchEntityException();
         }
     }
 

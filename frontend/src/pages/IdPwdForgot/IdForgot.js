@@ -44,7 +44,7 @@ function IdForgot() {
                 <Row className="mt-5">
                     <Col lg={7} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
                         <Form>
-                            <FormGroup className="mb-3" controlId="formBasicEmail">
+                            <FormGroup className="mb-3">
                                 <Form.Label>이메일</Form.Label>
                                 <InputGroup className="mb-3">
                                     <FormControl
@@ -53,10 +53,10 @@ function IdForgot() {
                                         aria-describedby="basic-addon2"
                                         onChange={onChangeEmail}
                                     />
-                                    <InputGroup.Text id="basic-addon2">@pusan.ac.kr</InputGroup.Text>
+                                    <InputGroup.Text>@pusan.ac.kr</InputGroup.Text>
                                 </InputGroup>
                             </FormGroup>
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-3">
                                 <Form.Label>비밀번호</Form.Label>
                                 <Form.Control type="password" placeholder="비밀번호를 입력하세요"
                                               onChange={onChangePassword}/>

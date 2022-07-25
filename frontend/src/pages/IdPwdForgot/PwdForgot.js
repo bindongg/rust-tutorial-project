@@ -29,8 +29,15 @@ function PwdForgot() {
         axios.post("http://localhost:8080/password",{id: id, email: email})
             .then((response)=>
             {
-                alert("입력하신 메일 주소로 임시 비밀번호를 전송했습니다.");
-                navigate("/login");
+                if(response.data.code === 200)
+                {
+                    alert("입력하신 메일 주소로 임시 비밀번호를 전송했습니다.");
+                    navigate("/login");
+                }
+                else
+                {
+                    alert("fail");
+                }
             })
             .catch((Error)=>
             {
@@ -74,7 +81,7 @@ function PwdForgot() {
                                         aria-describedby="basic-addon2"
                                         onChange={onChangeEmail}
                                     />
-                                    <InputGroup.Text id="basic-addon2">@pusan.ac.kr</InputGroup.Text>
+                                    <InputGroup.Text>@pusan.ac.kr</InputGroup.Text>
                                 </InputGroup>
                             </FormGroup>
                             <Button variant="info" type="button" onClick={send}>

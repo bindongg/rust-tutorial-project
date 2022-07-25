@@ -4,6 +4,7 @@ import {Token} from "../Context/Token/Token";
 import {decodeToken} from "react-jwt";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {logout} from "../Common/Modules/Common";
 
 const config = {
     headers: {
@@ -13,7 +14,7 @@ const config = {
 
 function Header(){
     const {token,setToken} = useContext(Token)
-    const username = token === null ? null : (decodeToken(token).username);
+    const username = (token === null ? null : (decodeToken(token).username));
 
     const navigate = useNavigate();
 
@@ -24,9 +25,7 @@ function Header(){
                 (response)=>{
                     if(response.status === 200)
                     {
-                        localStorage.clear();
-                        setToken(null);
-                        navigate("/login")
+                        logout(token,setToken,navigate);
                     }
                 }
             )
@@ -75,7 +74,7 @@ function Header(){
                             {
                                 token === null
                                     ? (<></>)
-                                    : (<NavDropdown title={username} id="basic-nav-dropdown">
+                                    : (<NavDropdown title={username}>
                                         <NavDropdown.Item href="/info">사용자 정보</NavDropdown.Item>
                                         <NavDropdown.Item href="/info/solved">시도한 문제</NavDropdown.Item>
                                         <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, InputGroup, FormControl, FormGroup} from "react-bootstrap";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom';
@@ -203,7 +203,7 @@ function RegisterForm() {
                                         aria-describedby="basic-addon2"
                                         onChange={onChangeEmail}
                                     />
-                                    <InputGroup.Text id="basic-addon2">@pusan.ac.kr</InputGroup.Text>
+                                    <InputGroup.Text>@pusan.ac.kr</InputGroup.Text>
                                 </InputGroup>
                             </FormGroup>
                             <Button variant="info" type="button" onClick={register}>

@@ -19,6 +19,7 @@ function Home(){
         let res = decodeToken(token);
         alert(res.username);
     }
+
     return (
         <div className="App text-center">
             <figure className="figure text-center">

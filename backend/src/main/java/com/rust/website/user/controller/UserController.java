@@ -1,8 +1,10 @@
 package com.rust.website.user.controller;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rust.website.common.CommonProperties;
 import com.rust.website.common.cache.RedisService;
+import com.rust.website.common.config.jwt.JwtProperties;
 import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
@@ -19,9 +21,9 @@ import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -89,9 +91,9 @@ public class UserController {
         String id = userService.getId(getIdMap.get("email"),getIdMap.get("password"));
         if(id == null)
         {
-            return new ResponseDTO<>(200, null);
+            return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), null);
         }
-        else return new ResponseDTO<>(200, id);
+        else return new ResponseDTO<>(HttpStatus.OK.value(), id);
     }
 
     @PostMapping("/password")
@@ -100,12 +102,21 @@ public class UserController {
         boolean res = userService.getPassword(getPasswordMap.get("id"), getPasswordMap.get("email"));
         if(res)
         {
-            return new ResponseDTO<>(200, "OK");
+            return new ResponseDTO<>(HttpStatus.OK.value(), "OK");
         }
         else
         {
-            return new ResponseDTO<>(200, "FaIL");
+            return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "FaIL");
         }
+    }
+
+    @PostMapping("/user/password")
+    public ResponseDTO<String> updatePassword(@RequestBody Map<String,String> getNewPasswordMap, HttpServletRequest request)
+    {
+        userService.updatePassword(JWT.decode(request.getHeader(JwtProperties.HEADER_STRING)
+                .replace(JwtProperties.TOKEN_PREFIX,"")).getClaim(JwtProperties.CLAIM_NAME).asString(),
+                getNewPasswordMap.get("password"), getNewPasswordMap.get("newPassword"));
+        return new ResponseDTO<>(HttpStatus.OK.value(), "OK");
     }
 
     @PostMapping("/test/admin")
@@ -173,6 +184,12 @@ public class UserController {
     public String test5()
     {
         return "tutorial test";
+    }
+
+    @GetMapping("/user/req")
+    public void test6(HttpServletRequest req)
+    {
+        System.out.println(req.getHeader(JwtProperties.HEADER_STRING));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

@@ -11,7 +11,7 @@ const config = {
 };
 
 function LoginForm() {
-    const {setToken} = useContext(Token);
+    const {token,setToken} = useContext(Token);
 
     const [userId,setUserId] = useState("");
     const [userPwd,setUserPwd] = useState("");
