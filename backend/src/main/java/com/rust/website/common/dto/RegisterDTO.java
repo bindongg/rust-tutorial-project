@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder
 public class RegisterDTO {
     String userId;
-    String UserPassword;
+    String userPassword;
     String userEmail;
 }
