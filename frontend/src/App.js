@@ -25,6 +25,7 @@ import ExerciseAddForm from "./pages/Exercise/ExerciseAddForm";
 import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
+import AddAdmin from "./pages/Tutorial/AddAdmin";
 
 
 
@@ -42,6 +43,7 @@ function App() {
                         <Route path="tutorial" exact={true} element={<Tutorial/>}/>
                         <Route path="tutorial/sub/:number" exact={true} element={<TutorialSub/>}/>
                         <Route path="tutorial/quiz/:number" exact={true} element={<TutorialQuiz/>}/>
+                        <Route path="addAdmin" exact={true} element={<AddAdmin/>}/>
                         {/*reference*/}
                         <Route path="reference" exact={true} element={<Reference/>}/>
                         {/*exercise*/}
