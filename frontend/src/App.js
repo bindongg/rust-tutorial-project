@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Header from "./pages/Header";
 
 import Footer from "./pages/Footer";
@@ -23,13 +23,15 @@ import ExerciseByTag from "./pages/Exercise/ExerciseByTag";
 import ExerciseDetail from "./pages/Exercise/ExerciseDetail";
 import ExerciseByLevel from "./pages/Exercise/ExerciseByLevel";
 import ExerciseAddForm from "./pages/Exercise/ExerciseAddForm";
-
+import {Token} from "./Context/Token/Token";
 
 
 //container -> 중앙으로 모아줌
 function App() {
+    const [token,setToken] = useState(localStorage.getItem("jwt"));
     return (
-        <>
+        <div>
+            <Token.Provider value={{token,setToken}}>
             <Header/>
             <main className="pt-5">
                     <Routes>
@@ -49,6 +51,7 @@ function App() {
                         <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
+                        <Route path="logout" exact={true}/>
                         <Route path="register" exact={true} element={<RegisterForm/>}/>
                         <Route path="register/certification" exact={true} element={<AfterAuthEmailSent/>}/>
                         {/*idPwdForgot*/}
@@ -61,7 +64,8 @@ function App() {
                         <Route path="info/solved" exact={true} element={<SolvedExercise/>}/>
                     </Routes>
             </main>
-        </>
+            </Token.Provider>
+        </div>
     );
 }
 

@@ -1,7 +1,25 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Figure} from "react-bootstrap";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {decodeToken} from "react-jwt";
+import {Token} from "../../Context/Token/Token";
+
 
 function Home(){
+
+    const navigate = useNavigate();
+
+    const {token,setToken} = useContext(Token);
+
+
+    function temp()
+    {
+        let token = localStorage.getItem("jwt");
+        let res = decodeToken(token);
+        alert(res.username);
+    }
+
     return (
         <div className="App text-center">
             <figure className="figure text-center">

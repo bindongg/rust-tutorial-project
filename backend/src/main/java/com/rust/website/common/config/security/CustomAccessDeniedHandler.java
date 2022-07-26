@@ -15,6 +15,5 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setStatus(HttpStatus.FORBIDDEN.value()); //403
-        response.addHeader("exception", "denied"); //필요없을듯?
     }
 }
