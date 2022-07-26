@@ -1,5 +1,6 @@
 package com.rust.website.tutorial.contorller;
 
+import com.rust.website.common.cache.RedisService;
 import com.rust.website.tutorial.model.entity.Tutorial;
 import com.rust.website.tutorial.model.entity.TutorialQuiz;
 import com.rust.website.tutorial.model.entity.TutorialSub;
@@ -27,7 +28,9 @@ public class TutorialController {
     @GetMapping("/tutorial/{userId}")
     public ResponseDTO<List<Tutorial>> getTutorialMainPage(@PathVariable String userId)
     {
+
         List<Tutorial> tutorials = tutorialService.getTutorials(userId);
+
         return new ResponseDTO<List<Tutorial>>(HttpStatus.OK.value(), tutorials);
     }
 
@@ -46,9 +49,9 @@ public class TutorialController {
     }
 
     @PostMapping("tutorial/quiz/{id}/{userId}")
-    public ResponseDTO<QuizResponseDTO> postTutorialQuizAnswer(@RequestBody List<Integer> answers, @PathVariable int id, @PathVariable String userId)
+    public ResponseDTO<QuizResponseDTO> postTutorialQuizAnswer(@RequestBody Answers answers, @PathVariable int id, @PathVariable String userId)
     {
-        QuizResponseDTO quizResponseDTO = tutorialService.postTutorialQuizAnswer(answers, id , userId);
+        QuizResponseDTO quizResponseDTO = tutorialService.postTutorialQuizAnswer(answers.getAnswers(), id , userId);
         return new ResponseDTO<QuizResponseDTO>(HttpStatus.OK.value(), quizResponseDTO);
     }
 
