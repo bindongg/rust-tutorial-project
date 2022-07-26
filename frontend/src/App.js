@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Header from "./pages/Header";
 
 import Footer from "./pages/Footer";
@@ -15,7 +15,6 @@ import InfoMain from "./pages/UserInfo/InfoMain";
 import PwdUpdate from "./pages/UserInfo/PwdUpdate";
 import SolvedExercise from "./pages/UserInfo/SolvedExercise";
 import Home from "./pages/Home/Home";
-import TutorialDetail from "./pages/Tutorial/TutorialSub";
 import Reference from "./pages/Reference/Reference";
 import Exercise from "./pages/Exercise/Exercise";
 import ExerciseByTag from "./pages/Exercise/ExerciseByTag";
@@ -26,13 +25,16 @@ import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
 import AddAdmin from "./pages/Tutorial/AddAdmin";
+import {Token} from "./Context/Token/Token";
 
 
 
 //container -> 중앙으로 모아줌
 function App() {
+    const [token,setToken] = useState(localStorage.getItem("jwt"));
     return (
-        <>
+        <div>
+            <Token.Provider value={{token,setToken}}>
             <Header/>
             <main className="pt-5">
                     <Routes>
@@ -54,6 +56,7 @@ function App() {
                         <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
+                        <Route path="logout" exact={true}/>
                         <Route path="register" exact={true} element={<RegisterForm/>}/>
                         <Route path="register/certification" exact={true} element={<AfterAuthEmailSent/>}/>
                         {/*idPwdForgot*/}
@@ -66,7 +69,8 @@ function App() {
                         <Route path="info/solved" exact={true} element={<SolvedExercise/>}/>
                     </Routes>
             </main>
-        </>
+            </Token.Provider>
+        </div>
     );
 }
 

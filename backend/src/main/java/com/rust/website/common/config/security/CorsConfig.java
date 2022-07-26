@@ -1,5 +1,6 @@
 package com.rust.website.common.config.security;
 
+import com.rust.website.common.config.jwt.JwtProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -19,7 +20,7 @@ public class CorsConfig {
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.addExposedHeader("Authorization"); //cors 정책엔 기본적으로 cache-control, expired 등 몇몇 헤더만 노출 -> 그 외 헤더를 프론트에서 보고 싶으면 넣어줘야 됨
+        config.addExposedHeader(JwtProperties.HEADER_STRING); //cors 정책엔 기본적으로 cache-control, expired 등 몇몇 헤더만 노출 -> 그 외 헤더를 프론트에서 보고 싶으면 넣어줘야 됨
         config.addExposedHeader("exception");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);

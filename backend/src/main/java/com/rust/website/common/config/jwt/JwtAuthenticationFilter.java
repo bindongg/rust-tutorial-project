@@ -7,6 +7,7 @@ import com.rust.website.common.dto.LoginDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             loginDTO = om.readValue(request.getInputStream(), LoginDTO.class);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
         if(loginDTO != null)
         {
@@ -52,7 +53,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String jwtToken = JwtUtil.makeJWT(principalDetails.getUsername());
 
+<<<<<<< HEAD
         redisService.setRedisStringValue(principalDetails.getUsername(), JwtProperties.TOKEN_PREFIX+jwtToken); //로그인 시 redis에 <id,token> pair로 저장
+=======
+        redisService.setRedisStringValue(principalDetails.getUsername(), JwtProperties.TOKEN_PREFIX+jwtToken);
+>>>>>>> 32ea53652be28c29228ce83dd0d4081ece77bd5e
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
     }
 
