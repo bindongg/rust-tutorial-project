@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, InputGroup, FormControl, FormGroup} from "react-bootstrap";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom';
+import Loading from "../Loading";
 
 
 function RegisterForm() {
@@ -12,7 +13,7 @@ function RegisterForm() {
 
     const [checkIdState, setCheckIdState] = useState(false)
 
-    const [btnState, setBtnState] = useState(false);
+    const [loadingState, setLoadingState] = useState(false);
 
     const navigate = useNavigate();
 
@@ -56,7 +57,7 @@ function RegisterForm() {
                     alert("error");
                 }
             }).catch((Error) => {
-                console.log(Error);
+                alert(Error.response.status+"error");
             })
         }
         else
@@ -133,7 +134,7 @@ function RegisterForm() {
             let check = checkInput();
             if(check === 1)
             {
-                setBtnState(true);
+                setLoadingState(true);
                 axios.post("http://localhost:8080/register",{userId: userId, userPassword: userPassword, userEmail: userEmail}).then((Response)=>{
                     if(Response.data.code === 200)
                     {
@@ -150,10 +151,12 @@ function RegisterForm() {
                     }
                     else
                     {
-                        alert("error");
+                        alert("메일 전송 실패");
                     }
                 }).catch((Error)=>{
-                    alert("failed");
+                    alert(Error.response.status+" failed");
+                }).finally(()=>{
+                    setLoadingState(false);
                 })
             }
             else
@@ -163,7 +166,12 @@ function RegisterForm() {
 
     return (
         <>
-            <Container>
+            {
+                loadingState === true
+                    ? (<Loading/>)
+                    : (<></>)
+            }
+            <Container style={loadingState ? {pointerEvents: "none", opacity: "0.4"} : {}}>
                 <h3 className="text-black mt-5 p-3 text-center rounded">회원가입</h3>
                 <Row className="mt-5">
                     <Col lg={7} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
@@ -195,10 +203,10 @@ function RegisterForm() {
                                         aria-describedby="basic-addon2"
                                         onChange={onChangeEmail}
                                     />
-                                    <InputGroup.Text id="basic-addon2">@pusan.ac.kr</InputGroup.Text>
+                                    <InputGroup.Text>@pusan.ac.kr</InputGroup.Text>
                                 </InputGroup>
                             </FormGroup>
-                            <Button disabled={btnState} variant="info" type="button" onClick={register}>
+                            <Button variant="info" type="button" onClick={register}>
                                 회원가입
                             </Button>
                         </Form>

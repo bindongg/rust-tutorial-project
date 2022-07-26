@@ -14,8 +14,9 @@ function Exercise(){
       setExercises(exercises.data.data);
     }
     // 실행함으로써 데이타를 fetching합니다.
-    getExercises();
+    getExercises();    
     }, []);
+    
 
     return (
       <>

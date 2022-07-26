@@ -1,7 +1,11 @@
 package com.rust.website.user.controller;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.rust.website.common.CommonProperties;
 import com.rust.website.common.cache.RedisService;
+import com.rust.website.common.config.jwt.JwtProperties;
+import com.rust.website.common.config.jwt.JwtUtil;
 import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
@@ -18,9 +22,9 @@ import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -47,7 +51,7 @@ public class UserController {
     public ResponseDTO<String> addUser(@RequestBody RegisterDTO registerDTO) {
         User user = User.builder()
                 .id(registerDTO.getUserId())
-                .email(registerDTO.getUserEmail() + "@pusan.ac.kr")
+                .email(registerDTO.getUserEmail() + CommonProperties.EMAIL_POSTFIX)
                 .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
                 .authState(UserAuthState.INACTIVE)
                 .role(UserRoleType.ROLE_USER)
@@ -80,6 +84,39 @@ public class UserController {
     public String authConfirm(@PathVariable String authId) {
         userService.confirmAuth(authId);
         return "인증 완료되었습니다";
+    }
+
+    @PostMapping("/id")
+    public ResponseDTO<String> getId(@RequestBody Map<String,String> getIdMap)
+    {
+        String id = userService.getId(getIdMap.get("email"),getIdMap.get("password"));
+        if(id == null)
+        {
+            return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), null);
+        }
+        else return new ResponseDTO<>(HttpStatus.OK.value(), id);
+    }
+
+    @PostMapping("/password")
+    public ResponseDTO<String> getPassword(@RequestBody Map<String,String> getPasswordMap)
+    {
+        boolean res = userService.getPassword(getPasswordMap.get("id"), getPasswordMap.get("email"));
+        if(res)
+        {
+            return new ResponseDTO<>(HttpStatus.OK.value(), "OK");
+        }
+        else
+        {
+            return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "FaIL");
+        }
+    }
+
+    @PostMapping("/user/password")
+    public ResponseDTO<String> updatePassword(@RequestBody Map<String,String> getNewPasswordMap, HttpServletRequest request)
+    {
+        userService.updatePassword(JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME),
+                getNewPasswordMap.get("password"), getNewPasswordMap.get("newPassword"));
+        return new ResponseDTO<>(HttpStatus.OK.value(), "OK");
     }
 
     @PostMapping("/test/admin")
@@ -141,6 +178,18 @@ public class UserController {
     public String test4()
     {
         return "user test";
+    }
+
+    @GetMapping("/tutorial/test")
+    public String test5()
+    {
+        return "tutorial test";
+    }
+
+    @GetMapping("/user/req")
+    public void test6(HttpServletRequest req)
+    {
+        System.out.println(req.getHeader(JwtProperties.HEADER_STRING));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

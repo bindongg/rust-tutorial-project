@@ -1,5 +1,9 @@
 package com.rust.website.common.config.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.rust.website.common.cache.RedisService;
+import com.rust.website.common.config.jwt.JwtProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,15 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CustomLogoutHandler implements LogoutHandler {
 
+    private final RedisService redisService;
+
+    public CustomLogoutHandler(RedisService redisService)
+    {
+        this.redisService = redisService;
+    }
+
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try{
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            System.out.println("logout");
+            String token = request.getHeader("authorization");
+            String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token.replace(JwtProperties.TOKEN_PREFIX, ""))
+                    .getClaim(JwtProperties.CLAIM_NAME).asString();
+            redisService.delRedisStringValue(username);
+            SecurityContextHolder.clearContext();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
 }

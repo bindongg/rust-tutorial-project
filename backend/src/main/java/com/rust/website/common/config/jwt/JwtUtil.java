@@ -14,4 +14,9 @@ public class JwtUtil {
                     .withClaim(JwtProperties.CLAIM_NAME, userName)
                     .sign(Algorithm.HMAC512(JwtProperties.SECRET));
     }
+
+    public static String getClaim(String token, String claimName)
+    {
+        return JWT.decode(token.replace(JwtProperties.TOKEN_PREFIX,"")).getClaim(claimName).asString();
+    }
 }

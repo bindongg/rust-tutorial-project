@@ -23,12 +23,8 @@ function AfterAuthEmailSent() {
                 setAuthId(Response.data.data);
                 alert("재전송 완료");
             }
-            else
-            {
-                alert("재전송 실패");
-            }
         }).catch((Error)=>{
-            alert("failed");
+            alert(Error.response.status+" failed");
         }).finally(()=>{
             setBtnState(false);
         })
