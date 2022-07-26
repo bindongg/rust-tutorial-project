@@ -5,6 +5,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rust.website.common.CommonProperties;
 import com.rust.website.common.cache.RedisService;
 import com.rust.website.common.config.jwt.JwtProperties;
+import com.rust.website.common.config.jwt.JwtUtil;
 import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
@@ -113,8 +114,7 @@ public class UserController {
     @PostMapping("/user/password")
     public ResponseDTO<String> updatePassword(@RequestBody Map<String,String> getNewPasswordMap, HttpServletRequest request)
     {
-        userService.updatePassword(JWT.decode(request.getHeader(JwtProperties.HEADER_STRING)
-                .replace(JwtProperties.TOKEN_PREFIX,"")).getClaim(JwtProperties.CLAIM_NAME).asString(),
+        userService.updatePassword(JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME),
                 getNewPasswordMap.get("password"), getNewPasswordMap.get("newPassword"));
         return new ResponseDTO<>(HttpStatus.OK.value(), "OK");
     }
