@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useHistory } from "react-router-dom"
 
 
-function ExerciseAddForm() {
+function ExerciseUpdateForm() {
     const { register, watch, reset,handleSubmit } = useForm();
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
@@ -14,7 +14,9 @@ function ExerciseAddForm() {
 
     const onSubmit = (data) => {
         console.log('data', data)
-        return  axios.post("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise",
+        let problemURL = window.location.pathname;
+        let problemNum = problemURL[problemURL.length-1];
+        return  axios.patch("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise/"+problemNum, //TODO: patch -> put
             {data: data},
             {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
             console.log('register result', result)
@@ -46,10 +48,10 @@ function ExerciseAddForm() {
     return (
         <>
             <Container>
-                <h3 className="text-black mt-5 p-3 text-center rounded">문제 추가하기</h3>
+                <h3 className="text-black mt-5 p-3 text-center rounded">문제 수정하기</h3>
                 <Row className="mt-7">
                     <Col lg={7} md={10} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
-                        <Form onSubmit={handleSubmit(onSubmit)} onReset={reset} >
+                        <Form onSubmit={handleSubmit(onSubmit, onInvalid)} onReset={reset} >
                             <Form.Group className="mb-3" controlId="exerciseTitle">
                                 <Form.Label>제목</Form.Label>
                                 <Form.Control type="title" placeholder="제목을 입력하세요" {...register("name")} />
@@ -108,8 +110,8 @@ function ExerciseAddForm() {
 
                             {testcases}
 
-                           <Button variant="info" type="submit" onSubmit={handleSubmit(onValid, onInvalid)}>
-                                문제 추가
+                           <Button variant="info" type="submit" >
+                                문제 수정
                             </Button>
                         </Form>
                     </Col>
@@ -119,4 +121,4 @@ function ExerciseAddForm() {
     );
 }
 
-export default ExerciseAddForm;
+export default ExerciseUpdateForm;

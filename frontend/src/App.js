@@ -21,6 +21,7 @@ import ExerciseByTag from "./pages/Exercise/ExerciseByTag";
 import ExerciseDetail from "./pages/Exercise/ExerciseDetail";
 import ExerciseByLevel from "./pages/Exercise/ExerciseByLevel";
 import ExerciseAddForm from "./pages/Exercise/ExerciseAddForm";
+import ExerciseUpdateForm from "./pages/Exercise/ExerciseUpdateForm";
 import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
@@ -54,6 +55,7 @@ function App() {
                         <Route path="exercise/level" exact={true} element={<ExerciseByLevel/>}/>
                         <Route path="exercise/:no" exact={true}  element={<ExerciseDetail/>}/>
                         <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
+                        <Route path="exercise/:no/update" exact={true}  element={<ExerciseUpdateForm/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
                         <Route path="logout" exact={true}/>
@@ -63,7 +65,7 @@ function App() {
                         <Route path="idForgot" exact={true} element={<IdForgot/>}/>
                         <Route path="idForgot/getId" exact={true} element={<IdForgotGetId/>}/>
                         <Route path="pwdForgot" exact={true} element={<PwdForgot/>}/>
-                        <Route path="pwdForgot/getPwd" exact={true} element={<PwdForgotEmailSent/>}/>
+                        <Route path="pwdForgot/getPwd" exact={true} element={<PwdForgot tEmailSent/>}/>
                         <Route path="info" exact={true} element={<InfoMain/>}/>
                         <Route path="info/updatePwd" exact={true} element={<PwdUpdate/>}/>
                         <Route path="info/solved" exact={true} element={<SolvedExercise/>}/>
