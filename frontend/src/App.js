@@ -27,6 +27,7 @@ import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
 import AddAdmin from "./pages/Tutorial/AddAdmin";
 import {Token} from "./Context/Token/Token";
+import AdminAuth from "./pages/Admin/AdminAuth";
 
 
 
@@ -69,6 +70,8 @@ function App() {
                         <Route path="info" exact={true} element={<InfoMain/>}/>
                         <Route path="info/updatePwd" exact={true} element={<PwdUpdate/>}/>
                         <Route path="info/solved" exact={true} element={<SolvedExercise/>}/>
+                        {/*admin*/}
+                        <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
                     </Routes>
             </main>
             </Token.Provider>

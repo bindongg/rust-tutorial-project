@@ -6,6 +6,7 @@ import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.rust.website.user.model.myEnum.UserAuthState;
+import com.rust.website.user.model.myEnum.UserRoleType;
 import com.rust.website.user.repository.UserAuthRepository;
 import com.rust.website.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -196,6 +197,26 @@ public class UserService {
         else
         {
             throw new NoSuchEntityException();
+        }
+    }
+
+    @Transactional
+    public void updateAuthority(String username, String role)
+    {
+        if(userRepository.findById(username).isPresent())
+        {
+            if(userRepository.findById(username).get().getRole().equals(UserRoleType.ROLE_ADMIN))
+            {
+                throw new IllegalArgumentException();
+            }
+            else
+            {
+                userRepository.findById(username).get().setRole(role.equals(UserRoleType.ROLE_USER.toString()) ? UserRoleType.ROLE_USER : UserRoleType.ROLE_MANAGER);
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException();
         }
     }
 
