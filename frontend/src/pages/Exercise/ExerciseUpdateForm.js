@@ -36,20 +36,21 @@ function ExerciseUpdateForm() {
         }).catch()
     }
 
-    const testcasesNums=[1,2,3]; //테스트 케이스
-    const testcases = testcasesNums.map(function (testcasesNum, index){
+    const exerciseTestCases = exerciseDetail.Testcases;
+
+    const testcases = exerciseTestCases.map(function (exerciseTestCase, index){
         return (
             <Row key={index} className="mb-3">
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>TestCase 입력 {testcasesNum}번 </Form.Label>
-                        <Form.Control as="textarea" defaultValue={exerciseDetail.Testcases[index].input }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].input")} />
+                        <Form.Label>TestCase 입력 {exerciseTestCase.number}번 </Form.Label>
+                        <Form.Control as="textarea" defaultValue={exerciseTestCase.input }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].input")} />
                     </Form.Group>
                 </Col>
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>TestCase 출력 {testcasesNum}번 </Form.Label>
-                        <Form.Control as="textarea" defaultValue={exerciseDetail.Testcases[index].output }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].output")} />
+                        <Form.Label>TestCase 출력 {exerciseTestCase.number}번 </Form.Label>
+                        <Form.Control as="textarea" defaultValue={exerciseTestCase.output }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].output")} />
                     </Form.Group>
                 </Col>
             </Row>
