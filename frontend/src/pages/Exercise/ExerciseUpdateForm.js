@@ -2,11 +2,23 @@ import React, { useState} from "react";
 import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import { useHistory } from "react-router-dom"
+import {useHistory, useLocation} from "react-router-dom"
 
 
 function ExerciseUpdateForm() {
+
+    const location = useLocation();
+    const exerciseDetail = location.state.exerciseDetail;
+
+    const [editedExercise, setEditedExercise] = useState({exerciseDetail});
     const { register, watch, reset,handleSubmit } = useForm();
+
+    const onEditChange = (e) => {
+        setEditedExercise({ //문법
+            ...editedExercise,
+            [e.target.name]: e.target.value
+        })
+    }
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
     const onValid = (data) => console.log(data, "onValid");
@@ -31,19 +43,18 @@ function ExerciseUpdateForm() {
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>TestCase 입력 {testcasesNum}번 </Form.Label>
-                        <Form.Control as="textarea" placeholder="테스트 케이스 input을 입력하세요" {...register("exerciseTestcases["+ index+ "].input")} />
+                        <Form.Control as="textarea" defaultValue={exerciseDetail.Testcases[index].input }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].input")} />
                     </Form.Group>
                 </Col>
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>TestCase 출력 {testcasesNum}번 </Form.Label>
-                        <Form.Control as="textarea" placeholder="테스트 케이스 output을 입력하세요" {...register("exerciseTestcases["+ index+ "].output")} />
+                        <Form.Control as="textarea" defaultValue={exerciseDetail.Testcases[index].output }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].output")} />
                     </Form.Group>
                 </Col>
             </Row>
         )
     })
-
 
     return (
         <>
@@ -54,13 +65,13 @@ function ExerciseUpdateForm() {
                         <Form onSubmit={handleSubmit(onSubmit, onInvalid)} onReset={reset} >
                             <Form.Group className="mb-3" controlId="exerciseTitle">
                                 <Form.Label>제목</Form.Label>
-                                <Form.Control type="title" placeholder="제목을 입력하세요" {...register("name")} />
+                                <Form.Control type="title" defaultValue={exerciseDetail.title}  onChange={onEditChange} {...register("name")} />
                             </Form.Group>
 
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="exerciseLevel">
                                     <Form.Label>문제 난이도</Form.Label>
-                                    <Form.Select aria-label="exercise level" {...register("difficulty")} >
+                                    <Form.Select aria-label="exercise level"  {...register("difficulty")} >
                                         <option>난이도를 선택해주세요</option>
                                         <option value="STAR1">STAR1</option>
                                         <option value="STAR2">STAR2</option>
@@ -72,7 +83,7 @@ function ExerciseUpdateForm() {
 
                                 <Form.Group as={Col} controlId="exerciseKind">
                                     <Form.Label>문제 분류</Form.Label>
-                                    <Form.Select aria-label="exercise kind" {...register("tag")}>
+                                    <Form.Select aria-label="exercise kind" defaultValue={exerciseDetail.tag}  onChange={onEditChange} {...register("tag")}>
                                         <option>문제 분류를 선택해주세요</option>
                                         //TODO 문제 분류 확정되면 추가하기
                                         <option value="STACK">STACK</option>
@@ -85,27 +96,27 @@ function ExerciseUpdateForm() {
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>문제 설명</Form.Label>
-                                <Form.Control as="textarea" placeholder="문제 내용을 입력하세요" {...register("exerciseContent.description")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.description}   onChange={onEditChange} {...register("exerciseContent.description")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 입력에 대한 설명</Form.Label>
-                                <Form.Control as="textarea" placeholder="1번 입력에 대한 설명을 입력하세요" {...register("exerciseContent.input_description")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.input_description}   onChange={onEditChange}{...register("exerciseContent.input_description")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 입력값 예시</Form.Label>
-                                <Form.Control as="textarea" placeholder="1번 입력값 예시를 입력하세요" {...register("exerciseContent.input_value")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.input_value}   onChange={onEditChange}{...register("exerciseContent.input_value")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 출력에 대한 설명</Form.Label>
-                                <Form.Control as="textarea" placeholder="1번 출력에 대한 설명을 입력하세요" {...register("exerciseContent.output_description")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.output_description}  onChange={onEditChange} {...register("exerciseContent.output_description")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 출력값 예시</Form.Label>
-                                <Form.Control as="textarea" placeholder="1번 출력값 예시을 입력하세요" {...register("exerciseContent.output_value")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.output_value}  onChange={onEditChange} {...register("exerciseContent.output_value")} />
                             </Form.Group>
 
                             {testcases}
