@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom"
 
 function ExerciseAddForm() {
     const { register, watch, reset,handleSubmit } = useForm();
+    const [testcaseNums, setTestcaseNums] = useState([1 ]);
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
     const onValid = (data) => console.log(data, "onValid");
@@ -22,19 +23,22 @@ function ExerciseAddForm() {
         }).catch()
     }
 
-    const testcasesNums=[1,2,3]; //테스트 케이스
-    const testcases = testcasesNums.map(function (testcasesNum, index){
+    const addTestcase = () => {
+        setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
+    };
+
+    const testcases = testcaseNums.map(function (testcasesNum, index){
         return (
             <Row key={index} className="mb-3">
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>TestCase 입력 {testcasesNum}번 </Form.Label>
+                        <Form.Label>Test Case 입력 {testcasesNum}번 </Form.Label>
                         <Form.Control as="textarea" placeholder="테스트 케이스 input을 입력하세요" {...register("exerciseTestcases["+ index+ "].input")} />
                     </Form.Group>
                 </Col>
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>TestCase 출력 {testcasesNum}번 </Form.Label>
+                        <Form.Label>Test Case 출력 {testcasesNum}번 </Form.Label>
                         <Form.Control as="textarea" placeholder="테스트 케이스 output을 입력하세요" {...register("exerciseTestcases["+ index+ "].output")} />
                     </Form.Group>
                 </Col>
@@ -107,7 +111,9 @@ function ExerciseAddForm() {
                             </Form.Group>
 
                             {testcases}
-
+                            <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
+                            <br/>
+                            <br/>
                            <Button variant="info" type="submit" onSubmit={handleSubmit(onValid, onInvalid)}>
                                 문제 추가
                             </Button>
