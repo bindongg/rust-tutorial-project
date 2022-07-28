@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
@@ -62,8 +63,8 @@ public class TutorialService {
 
         String message = null;
         if (isCorrect) {
-            TutorialDone newDone = tutorialDoneRepository.findByUser_idAndTutorialId(userId, id).get();
-            if (newDone == null) {
+            Optional<TutorialDone> newDone = tutorialDoneRepository.findByUser_idAndTutorialId(userId, id);
+            if (!newDone.isPresent()) {
                 tutorialDoneRepository.insert(userId, id);
             }
             message = "맞았습니다!";

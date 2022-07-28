@@ -12,5 +12,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByIdAndAuthState(String id, UserAuthState authState);
 
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByIdAndEmail(String id, String email);
+
     void deleteByIdAndAuthState(String id, UserAuthState authState);
 }
