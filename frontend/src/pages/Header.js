@@ -57,6 +57,7 @@ function Header(){
                             <NavDropdown.Item href="/exercise/tag">분류별 문제</NavDropdown.Item>
                             <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
                         </NavDropdown>
+                        <Nav.Link href="/#">Question</Nav.Link>
                     </Nav>
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

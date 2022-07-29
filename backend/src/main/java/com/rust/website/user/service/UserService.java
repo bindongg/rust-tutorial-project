@@ -205,7 +205,9 @@ public class UserService {
     {
         if(userRepository.findById(username).isPresent())
         {
-            if(userRepository.findById(username).get().getRole().equals(UserRoleType.ROLE_ADMIN))
+            if(userRepository.findById(username).get().getRole().equals(UserRoleType.ROLE_ADMIN)
+                    || role.equals(UserRoleType.ROLE_ADMIN.toString())
+                    || !(role.equals(UserRoleType.ROLE_USER.toString()) || role.equals(UserRoleType.ROLE_MANAGER.toString())))
             {
                 throw new IllegalArgumentException();
             }
