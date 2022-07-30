@@ -1,4 +1,4 @@
-package com.rust.website.tutorial.model.model;
+package com.rust.website.tutorial.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CompileOutput {
+public class CompileOutputDTO {
 	private String stdOut;
 	private String stdErr;
 }

@@ -1,12 +1,14 @@
 package com.rust.website.tutorial.contorller;
 
-import com.rust.website.common.cache.RedisService;
+import com.rust.website.common.config.jwt.JwtProperties;
+import com.rust.website.common.config.jwt.JwtUtil;
+import com.rust.website.tutorial.model.dto.TutorialSubDTO;
 import com.rust.website.tutorial.model.entity.Tutorial;
 import com.rust.website.tutorial.model.entity.TutorialQuiz;
 import com.rust.website.tutorial.model.entity.TutorialSub;
-import com.rust.website.tutorial.model.model.Answers;
-import com.rust.website.tutorial.model.model.CompileInput;
-import com.rust.website.tutorial.model.model.CompileOutput;
+import com.rust.website.tutorial.model.dto.AnswersDTO;
+import com.rust.website.tutorial.model.dto.CompileInputDTO;
+import com.rust.website.tutorial.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.QuizResponseDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.tutorial.service.CompileService;
@@ -15,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,43 +28,48 @@ public class TutorialController {
     private final TutorialService tutorialService;
     private final CompileService compileService;
 
-    @GetMapping("/tutorial/{userId}")
-    public ResponseDTO<List<Tutorial>> getTutorialMainPage(@PathVariable String userId)
+    @GetMapping("/tutorial")
+    public ResponseDTO<List<Tutorial>> getTutorialMainPage(HttpServletRequest request)
     {
-
+        String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
         List<Tutorial> tutorials = tutorialService.getTutorials(userId);
 
         return new ResponseDTO<List<Tutorial>>(HttpStatus.OK.value(), tutorials);
     }
 
-    @GetMapping("/tutorial/sub/{subId}")
-    public ResponseDTO<TutorialSub> getTutorialSub(@PathVariable int subId)
+    @GetMapping("/tutorial/{id}/sub/{subId}")
+    public ResponseDTO<TutorialSubDTO> getTutorialSub(@PathVariable int id, @PathVariable int subId)
     {
-        TutorialSub sub = tutorialService.getTutorialSub(subId);
-        return new ResponseDTO<TutorialSub>(HttpStatus.OK.value(), sub);
+        TutorialSubDTO tutorialSubDTO = TutorialSubDTO.builder()
+                .sub(tutorialService.getTutorialSub(subId))
+                .nextSub(tutorialService.getNextTutorialSub(id, subId))
+                .preSub(tutorialService.getPreTutorialSub(id, subId))
+                .build();
+        return new ResponseDTO<>(HttpStatus.OK.value(), tutorialSubDTO);
     }
 
-    @GetMapping("tutorial/quiz/{quizId}")
-    public ResponseDTO<TutorialQuiz> getTutorialQuiz(@PathVariable int quizId)
+    @GetMapping("tutorial/quiz/{id}")
+    public ResponseDTO<TutorialQuiz> getTutorialQuiz(@PathVariable int id)
     {
-        TutorialQuiz quiz = tutorialService.getTutorialQuiz(quizId);
+        TutorialQuiz quiz = tutorialService.getTutorialQuiz(id);
         return new ResponseDTO<TutorialQuiz>(HttpStatus.OK.value(), quiz);
     }
 
-    @PostMapping("tutorial/quiz/{id}/{userId}")
-    public ResponseDTO<QuizResponseDTO> postTutorialQuizAnswer(@RequestBody Answers answers, @PathVariable int id, @PathVariable String userId)
+    @PostMapping("tutorial/quiz/{id}")
+    public ResponseDTO<QuizResponseDTO> postTutorialQuizAnswer(@RequestBody AnswersDTO answersDTO, @PathVariable int id, HttpServletRequest request)
     {
-        QuizResponseDTO quizResponseDTO = tutorialService.postTutorialQuizAnswer(answers.getAnswers(), id , userId);
+        String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
+        QuizResponseDTO quizResponseDTO = tutorialService.postTutorialQuizAnswer(answersDTO.getAnswers(), id , userId);
         return new ResponseDTO<QuizResponseDTO>(HttpStatus.OK.value(), quizResponseDTO);
     }
 
     @GetMapping("tutorial/compile")
-    public ResponseDTO<String> executeTutorialCode(@RequestBody CompileInput compileInput)
+    public ResponseDTO<String> executeTutorialCode(@RequestBody CompileInputDTO compileInputDTO)
     {
         String output = null;
         try {
-            CompileOutput compileOutputModel = compileService.onlineCompile(compileInput);
-            output = (compileOutputModel.getStdOut().length() != 0) ? compileOutputModel.getStdOut() : compileOutputModel.getStdErr();
+            CompileOutputDTO compileOutputDTOModel = compileService.onlineCompile(compileInputDTO);
+            output = (compileOutputDTOModel.getStdOut().length() != 0) ? compileOutputDTOModel.getStdOut() : compileOutputDTOModel.getStdErr();
         } catch (IOException e) {
             e.printStackTrace();
             output = "IOException Error";
@@ -122,5 +130,4 @@ public class TutorialController {
     {
         return tutorialService.deleteTutorialQuiz(quizId);
     }
-
 }

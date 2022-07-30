@@ -1,4 +1,4 @@
-package com.rust.website.tutorial.model.model;
+package com.rust.website.tutorial.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Answers {
+public class AnswersDTO {
     private List<Integer> answers;
 }

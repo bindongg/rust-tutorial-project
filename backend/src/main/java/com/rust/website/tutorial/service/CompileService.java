@@ -1,7 +1,7 @@
 package com.rust.website.tutorial.service;
 
-import com.rust.website.tutorial.model.model.CompileInput;
-import com.rust.website.tutorial.model.model.CompileOutput;
+import com.rust.website.tutorial.model.dto.CompileInputDTO;
+import com.rust.website.tutorial.model.dto.CompileOutputDTO;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -13,24 +13,24 @@ public class CompileService {
     private static final String CODE_PATH = ".\\online_compile\\";
     private static int processNumber = 0;
 
-    public CompileOutput onlineCompile(CompileInput compileInputModel) throws IOException {
+    public CompileOutputDTO onlineCompile(CompileInputDTO compileInputDTOModel) throws IOException {
         processNumber = (processNumber + 1) % 100000;
         String fileName = new String("temp" + processNumber);
 
-        CompileOutput compileOutputModel = new CompileOutput();
+        CompileOutputDTO compileOutputDTOModel = new CompileOutputDTO();
         try {
             FileWriter myWriter = new FileWriter(CODE_PATH + fileName + "_code.rs");
-            myWriter.write(compileInputModel.getCode());
+            myWriter.write(compileInputDTOModel.getCode());
             System.out.println("[Process Number " + processNumber + "]");
             System.out.println("[Input Code]");
-            System.out.println(compileInputModel.getCode());
+            System.out.println(compileInputDTOModel.getCode());
             myWriter.close();
 
             System.out.println("[Input StdIn]");
-            System.out.println(compileInputModel.getStdIn());
+            System.out.println(compileInputDTOModel.getStdIn());
             myWriter = new FileWriter(CODE_PATH + fileName + "_input.txt");
-            if (compileInputModel.getStdIn() != null) {
-                myWriter.write(compileInputModel.getStdIn());
+            if (compileInputDTOModel.getStdIn() != null) {
+                myWriter.write(compileInputDTOModel.getStdIn());
             }
             myWriter.close();
 
@@ -41,15 +41,15 @@ public class CompileService {
         }
 
         Process p = runRustCode(fileName);
-        compileOutputModel.setStdErr(streamReaderOutput(p.getErrorStream()));
-        compileOutputModel.setStdOut(streamReaderOutput(p.getInputStream()));
+        compileOutputDTOModel.setStdErr(streamReaderOutput(p.getErrorStream()));
+        compileOutputDTOModel.setStdOut(streamReaderOutput(p.getInputStream()));
         deleteCodeFiles(fileName);
 
         System.out.println("[Output StdOut]");
-        System.out.println(compileOutputModel.getStdOut());
+        System.out.println(compileOutputDTOModel.getStdOut());
         System.out.println("[Output StdErr]");
-        System.out.println(compileOutputModel.getStdErr());
-        return compileOutputModel;
+        System.out.println(compileOutputDTOModel.getStdErr());
+        return compileOutputDTOModel;
     }
 
     private void deleteCodeFiles(String fileName) throws IOException {

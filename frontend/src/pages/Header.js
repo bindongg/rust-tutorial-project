@@ -5,6 +5,7 @@ import {decodeToken} from "react-jwt";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {logout} from "../Common/Modules/Common";
+import './Header.css';
 
 const config = {
     headers: {
@@ -13,7 +14,7 @@ const config = {
 };
 
 function Header(){
-    const {token,setToken} = useContext(Token)
+    const {token,setToken} = useContext(Token);
     const username = (token === null ? null : (decodeToken(token).username));
 
     const navigate = useNavigate();
@@ -37,7 +38,9 @@ function Header(){
     }
 
     return (
-            <Navbar className="fixed-top" bg="light" expand="lg">
+            // <Navbar className="sticky-top" bg="light">
+            // <Navbar className="fixed-top" bg="light" expand="lg">                
+            <Navbar className="fixed-top" bg="light">                
                 <Container>
                     <Navbar.Brand href="/">
                         <img

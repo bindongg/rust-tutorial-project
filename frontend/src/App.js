@@ -27,6 +27,12 @@ import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
 import AddAdmin from "./pages/Tutorial/AddAdmin";
 import {Token} from "./Context/Token/Token";
+import TutorialCreateForm from "./pages/Tutorial/TutorialCreateForm";
+import TutorialUpdateForm from "./pages/Tutorial/TutorialUpdateForm";
+import TutorialSubCreateForm from "./pages/Tutorial/TutorialSubCreateForm";
+import TutorialSubUpdateForm from "./pages/Tutorial/TutorialSubUpdateForm";
+import TutorialQuizCreateForm from "./pages/Tutorial/TutorialQuizCreateForm";
+import TutorialQuizUpdateForm from "./pages/Tutorial/TutorialQuizUpdateForm";
 
 
 
@@ -44,8 +50,14 @@ function App() {
                         <Route path="home" exact={true} element={<Home />}/>
                         {/*tutorial*/}
                         <Route path="tutorial" exact={true} element={<Tutorial/>}/>
-                        <Route path="tutorial/sub/:number" exact={true} element={<TutorialSub/>}/>
-                        <Route path="tutorial/quiz/:number" exact={true} element={<TutorialQuiz/>}/>
+                        <Route path="tutorial/:id/sub/:subId" exact={true} element={<TutorialSub/>}/>
+                        <Route path="tutorial/quiz/:id" exact={true} element={<TutorialQuiz/>}/>
+                        <Route path="tutorial/createForm" exact={true} element={<TutorialCreateForm/>}/>
+                        <Route path="tutorial/updateForm" exact={true} element={<TutorialUpdateForm/>}/>
+                        <Route path="tutorial/sub/createForm" exact={true} element={<TutorialSubCreateForm/>}/>
+                        <Route path="tutorial/sub/updateForm" exact={true} element={<TutorialSubUpdateForm/>}/>
+                        <Route path="tutorial/quiz/createForm" exact={true} element={<TutorialQuizCreateForm/>}/>
+                        <Route path="tutorial/quiz/updateForm" exact={true} element={<TutorialQuizUpdateForm/>}/>
                         <Route path="addAdmin" exact={true} element={<AddAdmin/>}/>
                         {/*reference*/}
                         <Route path="reference" exact={true} element={<Reference/>}/>

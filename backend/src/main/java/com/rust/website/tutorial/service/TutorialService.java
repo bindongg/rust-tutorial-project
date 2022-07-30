@@ -32,21 +32,24 @@ public class TutorialService {
     }
 
     @Transactional(readOnly = true)
-    public TutorialSub getTutorialSub(int subId)
-    {
-        return tutorialSubRepository.findById(subId).get();
-    }
+    public TutorialSub getTutorialSub(int subId) { return tutorialSubRepository.findById(subId).get(); }
 
     @Transactional(readOnly = true)
-    public TutorialQuiz getTutorialQuiz(int quizId)
+    public TutorialSub getNextTutorialSub(int id, int subId) { return tutorialSubRepository.findNextTutorialSub(id, subId).orElse(null); }
+
+    @Transactional(readOnly = true)
+    public TutorialSub getPreTutorialSub(int id, int subId) { return tutorialSubRepository.findPreTutorialSub(id, subId).orElse(null); }
+
+    @Transactional(readOnly = true)
+    public TutorialQuiz getTutorialQuiz(int id)
     {
-        return tutorialQuizRepository.findById(quizId).get();
+        return tutorialRepository.findById(id).get().getTutorialQuiz();
     }
 
     @Transactional
     public QuizResponseDTO postTutorialQuizAnswer(List<Integer> userAnswers, int id, String userId)
     {
-        Tutorial tutorial = tutorialRepository.findByNumber(id).get();
+        Tutorial tutorial = tutorialRepository.findById(id).get();
         int quizId = tutorial.getTutorialQuiz().getId();
         List<TutorialQuizQuestion> answers = tutorialQuizQuestionRepository.findByTutorialQuiz_idOrderByIdAsc(quizId);
         List<Boolean> correctList = new ArrayList<Boolean>();
