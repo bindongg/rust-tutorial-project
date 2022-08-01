@@ -15,7 +15,7 @@ function ExerciseAddForm() {
 
     const onSubmit = (data) => {
         console.log('data', data)
-        return  axios.post("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise",
+        return  axios.post("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise",
             {data: data},
             {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
             console.log('register result', result)
