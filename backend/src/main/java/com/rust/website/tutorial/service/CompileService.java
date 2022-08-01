@@ -21,22 +21,14 @@ public class CompileService {
         try {
             FileWriter myWriter = new FileWriter(CODE_PATH + fileName + "_code.rs");
             myWriter.write(compileInputDTOModel.getCode());
-            System.out.println("[Process Number " + processNumber + "]");
-            System.out.println("[Input Code]");
-            System.out.println(compileInputDTOModel.getCode());
             myWriter.close();
 
-            System.out.println("[Input StdIn]");
-            System.out.println(compileInputDTOModel.getStdIn());
             myWriter = new FileWriter(CODE_PATH + fileName + "_input.txt");
             if (compileInputDTOModel.getStdIn() != null) {
                 myWriter.write(compileInputDTOModel.getStdIn());
             }
             myWriter.close();
-
-            System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
-            System.out.println("An error occurred.");
             e.printStackTrace();
         }
 
@@ -45,10 +37,6 @@ public class CompileService {
         compileOutputDTOModel.setStdOut(streamReaderOutput(p.getInputStream()));
         deleteCodeFiles(fileName);
 
-        System.out.println("[Output StdOut]");
-        System.out.println(compileOutputDTOModel.getStdOut());
-        System.out.println("[Output StdErr]");
-        System.out.println(compileOutputDTOModel.getStdErr());
         return compileOutputDTOModel;
     }
 

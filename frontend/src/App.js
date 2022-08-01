@@ -33,6 +33,7 @@ import TutorialSubCreateForm from "./pages/Tutorial/TutorialSubCreateForm";
 import TutorialSubUpdateForm from "./pages/Tutorial/TutorialSubUpdateForm";
 import TutorialQuizCreateForm from "./pages/Tutorial/TutorialQuizCreateForm";
 import TutorialQuizUpdateForm from "./pages/Tutorial/TutorialQuizUpdateForm";
+import Compile from "./pages/Compile/Compile";
 
 
 
@@ -48,6 +49,8 @@ function App() {
                         {/*home*/}
                         <Route index element={<Home />} />
                         <Route path="home" exact={true} element={<Home />}/>
+                        {/* compile */}
+                        <Route path="compile" exact={true} element={<Compile/>}/>
                         {/*tutorial*/}
                         <Route path="tutorial" exact={true} element={<Tutorial/>}/>
                         <Route path="tutorial/:id/sub/:subId" exact={true} element={<TutorialSub/>}/>

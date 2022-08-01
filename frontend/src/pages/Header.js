@@ -38,7 +38,6 @@ function Header(){
     }
 
     return (
-            // <Navbar className="sticky-top" bg="light">
             // <Navbar className="fixed-top" bg="light" expand="lg">                
             <Navbar className="fixed-top" bg="light">                
                 <Container>
@@ -59,6 +58,7 @@ function Header(){
                             <NavDropdown.Item href="/exercise/tag">분류별 문제</NavDropdown.Item>
                             <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
                         </NavDropdown>
+                        <Nav.Link href="/compile">Online Compiler</Nav.Link>
                     </Nav>
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

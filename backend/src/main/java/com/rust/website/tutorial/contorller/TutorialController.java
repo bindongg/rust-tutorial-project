@@ -63,7 +63,7 @@ public class TutorialController {
         return new ResponseDTO<QuizResponseDTO>(HttpStatus.OK.value(), quizResponseDTO);
     }
 
-    @GetMapping("tutorial/compile")
+    @PostMapping("tutorial/compile")
     public ResponseDTO<String> executeTutorialCode(@RequestBody CompileInputDTO compileInputDTO)
     {
         String output = null;
