@@ -3,6 +3,7 @@ package com.rust.website.reference.controller;
 
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.reference.model.entitiy.Reference;
+import com.rust.website.reference.model.model.ReferenceDTO;
 import com.rust.website.reference.service.ReferenceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class ReferenceController {
     }
 
     @GetMapping("/reference/{id}")
-    public ResponseDTO<Reference> getReference(@PathVariable int id)
+    public ResponseDTO<ReferenceDTO> getReference(@PathVariable int id)
     {
         return referenceService.getReference(id);
     }

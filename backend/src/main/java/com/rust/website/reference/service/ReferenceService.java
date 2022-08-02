@@ -2,6 +2,7 @@ package com.rust.website.reference.service;
 
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.reference.model.entitiy.Reference;
+import com.rust.website.reference.model.model.ReferenceDTO;
 import com.rust.website.reference.repository.ReferenceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,15 @@ public class ReferenceService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDTO<Reference> getReference(@PathVariable int id)
+    public ResponseDTO<ReferenceDTO> getReference(@PathVariable int id)
     {
-        ResponseDTO<Reference> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), null);
-        responseDTO.setData(referenceRepository.findById(id).get());
+        ResponseDTO<ReferenceDTO> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), null);
+        ReferenceDTO referenceDTO = ReferenceDTO.builder()
+                .ref(referenceRepository.findById(id).get())
+                .nextRef(referenceRepository.findNextReference(id))
+                .preRef(referenceRepository.findPreReference(id))
+                .build();
+        responseDTO.setData(referenceDTO);
         return responseDTO;
     }
 
