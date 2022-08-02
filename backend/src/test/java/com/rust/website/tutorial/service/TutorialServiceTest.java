@@ -1,15 +1,12 @@
 package com.rust.website.tutorial.service;
 
-import com.rust.website.tutorial.model.model.CompileInput;
-import com.rust.website.tutorial.model.model.CompileOutput;
+import com.rust.website.tutorial.model.dto.CompileInputDTO;
+import com.rust.website.tutorial.model.dto.CompileOutputDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootTest(classes = {CompileService.class})
 public class TutorialServiceTest {
@@ -20,7 +17,7 @@ public class TutorialServiceTest {
     @Test
     @DisplayName("컴파일 테스트")
     public void compileTest() {
-        CompileInput input = CompileInput.builder()
+        CompileInputDTO input = CompileInputDTO.builder()
                 .code("fn main(){ " +
             "let mut line = String::new(); " +
             "std::io::stdin().read_line(&mut line); " +
@@ -28,7 +25,7 @@ public class TutorialServiceTest {
             "}")
                 .stdIn("hdm")
                 .build();
-        CompileOutput output = null;
+        CompileOutputDTO output = null;
         try {
             output = compileService.onlineCompile(input);
         } catch(Exception e) {

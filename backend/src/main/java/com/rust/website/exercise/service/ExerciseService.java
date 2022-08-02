@@ -8,8 +8,8 @@ import com.rust.website.exercise.repository.ExerciseContentRepository;
 import com.rust.website.exercise.repository.ExerciseRepository;
 import com.rust.website.exercise.repository.ExerciseTestcaseRepository;
 import com.rust.website.exercise.repository.ExerciseTryRepository;
-import com.rust.website.tutorial.model.model.CompileInput;
-import com.rust.website.tutorial.model.model.CompileOutput;
+import com.rust.website.tutorial.model.dto.CompileInputDTO;
+import com.rust.website.tutorial.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.tutorial.service.CompileService;
 import com.rust.website.user.repository.UserRepository;
@@ -60,7 +60,7 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseDTO<String> compileUserCode(CompileInput compileInput, int id, String userId)
+    public ResponseDTO<String> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId)
     {
         ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "맞았습니다!");
         Exercise exercise = exerciseRepository.findById(id).get();
@@ -68,15 +68,15 @@ public class ExerciseService {
         int i = 0;
         for (; i < exerciseTestcases.size(); ++i)
         {
-            compileInput.setStdIn(exerciseTestcases.get(i).getInput());
-            CompileOutput compileOutput = null;
+            compileInputDTO.setStdIn(exerciseTestcases.get(i).getInput());
+            CompileOutputDTO compileOutputDTO = null;
             try {
-                compileOutput = compileService.onlineCompile(compileInput);
+                compileOutputDTO = compileService.onlineCompile(compileInputDTO);
             } catch (IOException e) {
                 e.printStackTrace();
                 break;
             }
-            if (!exerciseTestcases.get(i).getOutput().equals(compileOutput.getStdOut())) { break; }
+            if (!exerciseTestcases.get(i).getOutput().equals(compileOutputDTO.getStdOut())) { break; }
         }
 
         ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).get();
@@ -86,7 +86,7 @@ public class ExerciseService {
                     .user(userRepository.findById(userId).get())
                     .build();
         }
-        exerciseTry.setSourceCode(compileInput.getCode());
+        exerciseTry.setSourceCode(compileInputDTO.getCode());
 
         if (exerciseTestcases.size() == i)
         {

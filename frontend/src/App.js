@@ -10,7 +10,6 @@ import RegisterForm from "./pages/Register/RegisterForm";
 import IdForgot from "./pages/IdPwdForgot/IdForgot";
 import IdForgotGetId from "./pages/IdPwdForgot/IdForgotGetId";
 import PwdForgot from "./pages/IdPwdForgot/PwdForgot";
-import PwdForgotEmailSent from "./pages/IdPwdForgot/PwdForgotEmailSent";
 import InfoMain from "./pages/UserInfo/InfoMain";
 import PwdUpdate from "./pages/UserInfo/PwdUpdate";
 import SolvedExercise from "./pages/UserInfo/SolvedExercise";
@@ -26,7 +25,18 @@ import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
 import AddAdmin from "./pages/Tutorial/AddAdmin";
+import AdminAuth from "./pages/Admin/AdminAuth";
+import QuestionMain from "./Question/QuestionMain";
 import {Token} from "./Context/Token/Token";
+import QuestionWrite from "./Question/QuestionWrite";
+import QuestionDetail from "./Question/QuestionDetail";
+import TutorialCreateForm from "./pages/Tutorial/TutorialCreateForm";
+import TutorialUpdateForm from "./pages/Tutorial/TutorialUpdateForm";
+import TutorialSubCreateForm from "./pages/Tutorial/TutorialSubCreateForm";
+import TutorialSubUpdateForm from "./pages/Tutorial/TutorialSubUpdateForm";
+import TutorialQuizCreateForm from "./pages/Tutorial/TutorialQuizCreateForm";
+import TutorialQuizUpdateForm from "./pages/Tutorial/TutorialQuizUpdateForm";
+import Compile from "./pages/Compile/Compile";
 
 
 
@@ -42,10 +52,18 @@ function App() {
                         {/*home*/}
                         <Route index element={<Home />} />
                         <Route path="home" exact={true} element={<Home />}/>
+                        {/* compile */}
+                        <Route path="compile" exact={true} element={<Compile/>}/>
                         {/*tutorial*/}
                         <Route path="tutorial" exact={true} element={<Tutorial/>}/>
-                        <Route path="tutorial/sub/:number" exact={true} element={<TutorialSub/>}/>
-                        <Route path="tutorial/quiz/:number" exact={true} element={<TutorialQuiz/>}/>
+                        <Route path="tutorial/:id/sub/:subId" exact={true} element={<TutorialSub/>}/>
+                        <Route path="tutorial/quiz/:id" exact={true} element={<TutorialQuiz/>}/>
+                        <Route path="tutorial/createForm" exact={true} element={<TutorialCreateForm/>}/>
+                        <Route path="tutorial/updateForm" exact={true} element={<TutorialUpdateForm/>}/>
+                        <Route path="tutorial/sub/createForm" exact={true} element={<TutorialSubCreateForm/>}/>
+                        <Route path="tutorial/sub/updateForm" exact={true} element={<TutorialSubUpdateForm/>}/>
+                        <Route path="tutorial/quiz/createForm" exact={true} element={<TutorialQuizCreateForm/>}/>
+                        <Route path="tutorial/quiz/updateForm" exact={true} element={<TutorialQuizUpdateForm/>}/>
                         <Route path="addAdmin" exact={true} element={<AddAdmin/>}/>
                         {/*reference*/}
                         <Route path="reference" exact={true} element={<Reference/>}/>
@@ -56,6 +74,10 @@ function App() {
                         <Route path="exercise/:no" exact={true}  element={<ExerciseDetail/>}/>
                         <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
                         <Route path="exercise/:no/update" exact={true}  element={<ExerciseUpdateForm/>}/>
+                        {/*question*/}
+                        <Route path="/question" exact={true} element={<QuestionMain/>}/>
+                        <Route path="/question/:id" exact={true} element={<QuestionDetail/>}/>
+                        <Route path="/question/add" exact={true} element={<QuestionWrite/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
                         <Route path="logout" exact={true}/>
@@ -69,6 +91,8 @@ function App() {
                         <Route path="info" exact={true} element={<InfoMain/>}/>
                         <Route path="info/updatePwd" exact={true} element={<PwdUpdate/>}/>
                         <Route path="info/solved" exact={true} element={<SolvedExercise/>}/>
+                        {/*admin*/}
+                        <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
                     </Routes>
             </main>
             </Token.Provider>

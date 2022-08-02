@@ -1,8 +1,7 @@
 import Form from 'react-bootstrap/Form';
 
 function TutorialQuizQuestionList({questions, setAnswer, correctList}) {  
-    let key = 0;
-    console.log(correctList);
+    let key = 0;    
     const questionList = questions.map(
         question => {
             key++;
@@ -12,7 +11,7 @@ function TutorialQuizQuestionList({questions, setAnswer, correctList}) {
             
             return (
             <Form key={key}>
-                <h3 style={{color:color}}>{question.title}</h3>
+                <h3 style={{color:color}}>{question.number}. {question.title}</h3>
                 <div key={key} className="mb-3">
                 <Form.Check
                     label={question.choice1}

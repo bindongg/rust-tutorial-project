@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import TutorialQuizQuestionList from "./components/TutorialQuestionList";
+import { Token } from "../../Context/Token/Token";
 
 function TutorialQuiz() {
-    const {id} = useLocation().state;
+    const {id} = useParams();    
+    const {token,setToken} = useContext(Token);
     const [tutorialQuiz, setTutorialQuiz] = useState({
         id: "",
         name: "",
@@ -13,10 +15,12 @@ function TutorialQuiz() {
     });
     const headers = {
         'Content-Type' : 'application/json',
-        'Authorization' : localStorage.getItem("jwt")
+        'Authorization' : token
       }
     const [answers, setAnswers] = useState([]);
     const [correctList, setCorrectList] = useState([]);
+    const navigate = useNavigate();
+    const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
     useEffect( () => {
     const getTutorialQuiz = async () => {
@@ -35,9 +39,8 @@ function TutorialQuiz() {
     const submitQuiz = (e) => {
         e.preventDefault();
         if (answers.length === tutorialQuiz.tutorialQuizQuestions.length) {
-            axios.post(`http://localhost:8080/tutorial/quiz/${id}/hdm`, {answers:answers},{headers : headers})
-            .then(function (response) { 
-                console.log(response);
+            axios.post(`http://localhost:8080/tutorial/quiz/${id}`, {answers:answers},{headers : headers})
+            .then(function (response) {                 
                 setCorrectList([...response.data.data.correctList]);
                 alert(response.data.data.message);
             });
@@ -46,12 +49,26 @@ function TutorialQuiz() {
             alert("정답을 모두 체크해주세요");
         }
     }
+    const updateSub = () => {      
+        navigate("/tutorial/quiz/updateForm", {state: {tutorialQuiz : tutorialQuiz}});
+    }
+    const deleteSub = () => {
+        axios.delete(`http://localhost:8080/tutorial/quiz/${tutorialQuiz.id}`, {headers : headers}
+        ).then(function(response) {
+            alert(response.data.data);
+            navigate(-1);
+        })
+    }
 
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
                 <br/>
                 <h1>{tutorialQuiz.name}</h1>
+                <div>
+                    <Button variant="warning" style={buttonStyle} onClick={updateSub}>수정</Button>
+                    <Button variant="danger" style={buttonStyle} onClick={deleteSub}>삭제</Button>
+                </div>
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <TutorialQuizQuestionList questions={tutorialQuiz.tutorialQuizQuestions} setAnswer={setAnswer} correctList={correctList}></TutorialQuizQuestionList>

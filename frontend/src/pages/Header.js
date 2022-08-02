@@ -1,10 +1,11 @@
 import React, {useContext} from 'react';
-import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
+import {Navbar, NavDropdown, Nav, Container, NavLink} from "react-bootstrap";
 import {Token} from "../Context/Token/Token";
 import {decodeToken} from "react-jwt";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {logout} from "../Common/Modules/Common";
+import './Header.css';
 
 const config = {
     headers: {
@@ -13,8 +14,9 @@ const config = {
 };
 
 function Header(){
-    const {token,setToken} = useContext(Token)
+    const {token,setToken} = useContext(Token);
     const username = (token === null ? null : (decodeToken(token).username));
+    const role = (token === null ? null : (decodeToken(token).role));
 
     const navigate = useNavigate();
 
@@ -37,7 +39,7 @@ function Header(){
     }
 
     return (
-            <Navbar className="fixed-top" bg="light" expand="lg">
+            <Navbar className="fixed-top" bg="light">                
                 <Container>
                     <Navbar.Brand href="/">
                         <img
@@ -56,8 +58,9 @@ function Header(){
                             <NavDropdown.Item href="/exercise/tag">분류별 문제</NavDropdown.Item>
                             <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
                         </NavDropdown>
+                        <Nav.Link href="/question">QnA</Nav.Link>
+                        <Nav.Link href="/compile">Online Compiler</Nav.Link>
                     </Nav>
-
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
@@ -77,7 +80,16 @@ function Header(){
                                     : (<NavDropdown title={username}>
                                         <NavDropdown.Item href="/info">사용자 정보</NavDropdown.Item>
                                         <NavDropdown.Item href="/info/solved">시도한 문제</NavDropdown.Item>
-                                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                                        {
+                                            role === "ROLE_MANAGER" || role === "ROLE_ADMIN"
+                                                ? (<NavDropdown.Item href="#">manager</NavDropdown.Item>)
+                                                : (<></>)
+                                        }
+                                        {
+                                            role === "ROLE_ADMIN"
+                                                ? (<NavDropdown.Item href="/admin/auth">admin</NavDropdown.Item>)
+                                                : (<></>)
+                                        }
                                         <NavDropdown.Divider />
                                         <NavDropdown.Item onClick={Logout}>logout</NavDropdown.Item>
                                     </NavDropdown>)

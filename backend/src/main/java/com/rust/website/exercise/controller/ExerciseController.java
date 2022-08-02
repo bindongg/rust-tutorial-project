@@ -1,13 +1,16 @@
 package com.rust.website.exercise.controller;
 
+import com.rust.website.common.config.jwt.JwtProperties;
+import com.rust.website.common.config.jwt.JwtUtil;
 import com.rust.website.exercise.model.entity.Exercise;
 import com.rust.website.exercise.service.ExerciseService;
-import com.rust.website.tutorial.model.model.CompileInput;
+import com.rust.website.tutorial.model.dto.CompileInputDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -16,9 +19,10 @@ public class ExerciseController {
     private final ExerciseService exerciseService;
 
     @GetMapping("/exercise")
-    public ResponseDTO<List<Exercise>> getExercises(@RequestParam String user_id)
+    public ResponseDTO<List<Exercise>> getExercises(HttpServletRequest request)
     {
-            return new ResponseDTO<List<Exercise>>(HttpStatus.OK.value(), exerciseService.getExercises(user_id));
+        String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
+        return new ResponseDTO<List<Exercise>>(HttpStatus.OK.value(), exerciseService.getExercises(userId));
     }
 
     @GetMapping("/exercise/{id}")
@@ -27,10 +31,11 @@ public class ExerciseController {
         return new ResponseDTO<Exercise>(HttpStatus.OK.value(), exerciseService.getExercise(id));
     }
 
-    @PostMapping("/exercise/compile/{id}/{user_id}")
-    public ResponseDTO<String> compileUserCode(@RequestBody CompileInput compileInput, @PathVariable int id, @PathVariable String user_id)
+    @PostMapping("/exercise/compile/{id}")
+    public ResponseDTO<String> compileUserCode(@RequestBody CompileInputDTO compileInputDTO, @PathVariable int id, HttpServletRequest request)
     {
-        return exerciseService.compileUserCode(compileInput, id, user_id);
+        String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
+        return exerciseService.compileUserCode(compileInputDTO, id, userId);
     }
 
     @PostMapping("/exercise")

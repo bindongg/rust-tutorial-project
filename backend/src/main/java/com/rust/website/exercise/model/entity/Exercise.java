@@ -26,7 +26,8 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int number;
 
     @Column(nullable = false, length = 100)

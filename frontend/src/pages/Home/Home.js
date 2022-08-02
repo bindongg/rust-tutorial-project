@@ -12,12 +12,11 @@ function Home(){
 
     const {token,setToken} = useContext(Token);
 
-
     function temp()
     {
         let token = localStorage.getItem("jwt");
         let res = decodeToken(token);
-        alert(res.username);
+        alert(res.role);
     }
 
     return (
