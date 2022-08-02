@@ -5,6 +5,7 @@ import {decodeToken} from "react-jwt";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {logout} from "../Common/Modules/Common";
+import './Header.css';
 
 const config = {
     headers: {
@@ -13,7 +14,7 @@ const config = {
 };
 
 function Header(){
-    const {token,setToken} = useContext(Token)
+    const {token,setToken} = useContext(Token);
     const username = (token === null ? null : (decodeToken(token).username));
 
     const navigate = useNavigate();
@@ -37,7 +38,8 @@ function Header(){
     }
 
     return (
-            <Navbar className="fixed-top" bg="light" expand="lg">
+            // <Navbar className="fixed-top" bg="light" expand="lg">                
+            <Navbar className="fixed-top" bg="light">                
                 <Container>
                     <Navbar.Brand href="/">
                         <img
@@ -56,6 +58,7 @@ function Header(){
                             <NavDropdown.Item href="/exercise/tag">분류별 문제</NavDropdown.Item>
                             <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
                         </NavDropdown>
+                        <Nav.Link href="/compile">Online Compiler</Nav.Link>
                     </Nav>
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

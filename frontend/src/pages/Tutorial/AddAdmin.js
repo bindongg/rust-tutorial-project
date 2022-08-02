@@ -6,12 +6,12 @@ function AddAdmin() {
     
     useEffect( () => {
         axios.post(`http://localhost:8080/test/admin`, {
-            "userId": "hdm",
+            "userId": "admin",
             "userPassword": "1234",
-            "userEmail": "bindong@naver.com"
+            "userEmail": "mail"
         })
             .then(function (response) { 
-                alert("hdm 1234 회원가입 성공");
+                alert("admin 1234 회원가입 성공");
             });   
         }, []);
 }
