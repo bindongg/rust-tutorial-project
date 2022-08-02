@@ -39,7 +39,6 @@ function Header(){
     }
 
     return (
-            // <Navbar className="fixed-top" bg="light" expand="lg">                
             <Navbar className="fixed-top" bg="light">                
                 <Container>
                     <Navbar.Brand href="/">
@@ -60,10 +59,7 @@ function Header(){
                             <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
                         </NavDropdown>
                         <Nav.Link href="/question">QnA</Nav.Link>
-<<<<<<< HEAD
                         <Nav.Link href="/compile">Online Compiler</Nav.Link>
-=======
->>>>>>> 897ed1e780ae063e88980904653d6b7048d0038f
                     </Nav>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
