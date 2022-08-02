@@ -17,10 +17,12 @@
     "react-dom": "^18.1.0",
     "react-hook-form": "^7.33.1",
     "react-jwt": "^1.1.6",
+    "react-markdown": "^8.0.3",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.3",
     "react-syntax-highlighter": "^15.5.0",
+    "remark-gfm": "^3.0.1",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
