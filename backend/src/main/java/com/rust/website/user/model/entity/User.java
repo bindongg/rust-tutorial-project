@@ -1,5 +1,6 @@
 package com.rust.website.user.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rust.website.exercise.model.entity.ExerciseTry;
 import com.rust.website.tutorial.model.entity.TutorialDone;
@@ -30,12 +31,15 @@ public class User {
     private String email;
 
     @Column(nullable = false, length = 100)
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private UserRoleType role;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private UserAuthState authState;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -47,11 +51,6 @@ public class User {
     private List<TutorialDone> tutorialDone;
 
     @CreationTimestamp
+    @JsonIgnore
     private Timestamp date;
-
-
-    //@LastModifiedDate
-    //private Timestamp updateDate;
-
-
 }

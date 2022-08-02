@@ -6,4 +6,5 @@ public interface JwtProperties {
     String TOKEN_PREFIX = "Bearer ";
     String HEADER_STRING = "authorization";
     String CLAIM_NAME = "username";
+    String CLAIM_NAME2 = "role";
 }

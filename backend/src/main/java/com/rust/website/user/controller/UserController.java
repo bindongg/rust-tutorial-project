@@ -119,6 +119,13 @@ public class UserController {
         return new ResponseDTO<>(HttpStatus.OK.value(), "OK");
     }
 
+    @PostMapping("/admin/auth")
+    public ResponseDTO<String> updateAuthority(@RequestBody Map<String,String> getNewAuthMap)
+    {
+        userService.updateAuthority(getNewAuthMap.get("id"), getNewAuthMap.get("role"));
+        return new ResponseDTO<>(200,"OK");
+    }
+
     @PostMapping("/test/admin")
     public void test1(@RequestBody RegisterDTO registerDTO) {
         User user = User.builder()
@@ -131,8 +138,20 @@ public class UserController {
         userService.test(user);
     }
 
-    @PostMapping("/test/user")
+    @PostMapping("/test/manager")
     public void test2(@RequestBody RegisterDTO registerDTO) {
+        User user = User.builder()
+                .id(registerDTO.getUserId())
+                .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))
+                .email(registerDTO.getUserEmail())
+                .role(UserRoleType.ROLE_MANAGER)
+                .authState(UserAuthState.ACTIVE)
+                .build();
+        userService.test(user);
+    }
+
+    @PostMapping("/test/user")
+    public void test3(@RequestBody RegisterDTO registerDTO) {
         User user = User.builder()
                 .id(registerDTO.getUserId())
                 .password(bCryptPasswordEncoder.encode(registerDTO.getUserPassword()))

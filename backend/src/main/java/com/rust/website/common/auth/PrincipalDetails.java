@@ -1,6 +1,7 @@
 package com.rust.website.common.auth;
 
 import com.rust.website.user.model.entity.User;
+import com.rust.website.user.model.myEnum.UserRoleType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -36,6 +37,11 @@ public class PrincipalDetails implements UserDetails {
     public String getEmail()
     {
         return user.getEmail();
+    }
+
+    public String getRole()
+    {
+        return user.getRole().toString();
     }
 
     @Override
