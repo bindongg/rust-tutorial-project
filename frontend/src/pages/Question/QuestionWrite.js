@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { EditorState, convertToRaw } from 'draft-js';
 import {Editor} from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
-import {Token} from "../Context/Token/Token";
+import {Token} from "../../Context/Token/Token";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import {logout} from "../Common/Modules/Common";
+import {logout} from "../../Common/Modules/Common";
 
 
 function QuestionWrite()
