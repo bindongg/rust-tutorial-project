@@ -3,6 +3,7 @@ import "./sidebar.css";
 import {NavLink} from "react-bootstrap";
 import axios from "axios";
 import ReferenceSidebar from "./component/ReferenceSidebar";
+import MarkdownContents from "./MarkdownContents";
 
 function Reference() {
     const [titles, setTitles] = useState([]);
@@ -25,72 +26,9 @@ function Reference() {
                     <div className="container-fluid">
                         <div id="page-content-wrapper">
                             <h1>간단한 사이드바</h1>
-                            <p>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                            </p>
+                            <div>
+                                <MarkdownContents/>
+                            </div>
                         </div>
                     </div>
                 </div>
