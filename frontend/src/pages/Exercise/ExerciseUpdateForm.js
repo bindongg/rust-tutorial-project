@@ -28,7 +28,7 @@ function ExerciseUpdateForm() {
         console.log('data', data)
         let problemURL = window.location.pathname;
         let problemNum = problemURL[problemURL.length-1];
-        return  axios.patch("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise/"+problemNum, //TODO: patch -> put
+        return  axios.patch("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise/"+problemNum, //TODO: patch -> put
             {data: data},
             {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
             console.log('register result', result)
