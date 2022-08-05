@@ -1,12 +1,17 @@
 import React, {useEffect, useState} from "react";
-import { Table } from "react-bootstrap";
+import {NavLink, Table} from "react-bootstrap";
 import axios from "axios";
 import ExerciseList from "./components/ExerciseList";
 import Button from 'react-bootstrap/Button';
+import {useNavigate} from "react-router";
 
 function Exercise(){
   const [isLoading, setIsLoading] = useState(true);
   const [exercises, setExercises] = useState([]);
+  const navigate = useNavigate();
+  const moveTo = (href) => {
+    navigate(href);
+  }
 
   useEffect( () => {
     const getExercises = async () => {
@@ -21,7 +26,7 @@ function Exercise(){
     return (
       <>
         <div className="col-10 mx-auto pt-5">
-          <Button href="exercise/add" variant="secondary">Add Exercise</Button>
+          <Button variant="secondary" onClick={() => moveTo("add") }>Add Exercise</Button>
           <Table striped bordered hover>
             <thead>
             <tr>
