@@ -2,8 +2,11 @@ package com.rust.website.question.service;
 
 import com.rust.website.common.config.jwt.JwtProperties;
 import com.rust.website.common.config.jwt.JwtUtil;
+import com.rust.website.common.dto.ReplyDTO;
 import com.rust.website.question.model.entity.Question;
+import com.rust.website.question.model.entity.Reply;
 import com.rust.website.question.repository.QuestionRepository;
+import com.rust.website.question.repository.ReplyRepository;
 import com.rust.website.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +20,8 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
 
+    private final ReplyRepository replyRepository;
+
     @Transactional
     public void add(String title, String content, String username)
     {
@@ -27,6 +32,17 @@ public class QuestionService {
                 .done(false)
                 .build();
         questionRepository.save(question);
+    }
+
+    @Transactional
+    public void addReply(ReplyDTO replyDTO)
+    {
+        Reply reply = Reply.builder()
+                .content(replyDTO.getContent())
+                .question(questionRepository.findById(replyDTO.getParent()).orElseThrow(()->new IllegalArgumentException("No such entity")))
+                .user(userRepository.findById(replyDTO.getUserId()).orElseThrow(()->new IllegalArgumentException("No such Entity")))
+                .build();
+        replyRepository.save(reply);
     }
 
     @Transactional(readOnly = true)

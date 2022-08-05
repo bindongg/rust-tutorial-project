@@ -4,10 +4,13 @@ import com.rust.website.common.config.jwt.JwtProperties;
 import com.rust.website.common.config.jwt.JwtUtil;
 import com.rust.website.common.dto.QuestionDTO;
 import com.rust.website.common.dto.QuestionResponseDTO;
+import com.rust.website.common.dto.ReplyDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.question.model.entity.Question;
+import com.rust.website.question.model.entity.Reply;
 import com.rust.website.question.service.QuestionService;
 import com.rust.website.user.repository.UserRepository;
+import com.rust.website.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +25,8 @@ import java.util.Map;
 @RestController
 public class QuestionController {
     private final QuestionService questionService;
+
+    private final UserService userService;
 
     @GetMapping("/question")
     public QuestionResponseDTO<List<Question>> getQuestion(Pageable pageable)
@@ -41,5 +46,12 @@ public class QuestionController {
     public ResponseDTO<Question> getQuestionById(@PathVariable int id)
     {
         return new ResponseDTO<>(200,questionService.getQuestion(id));
+    }
+
+    @PostMapping("/user/reply/add")
+    public ResponseDTO<String> addReply(@RequestBody ReplyDTO replyDTO)
+    {
+        questionService.addReply(replyDTO);
+        return new ResponseDTO<>(200,"OK");
     }
 }

@@ -1,5 +1,7 @@
 package com.rust.website.question.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rust.website.user.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,12 +25,19 @@ public class Reply {
     @Lob
     private String content;
 
-    @Column
-    private int parent;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"exerciseTry", "tutorialDone", "email"})
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
+    @JsonIgnoreProperties({"title","user","reply","content","done","createDate"})
     private Question question;
+
+    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
+    private List<SubReply> subReply;
+
 
     @CreationTimestamp
     private Timestamp createDate;

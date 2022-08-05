@@ -1,11 +1,13 @@
 import {Token} from "../Context/Token/Token";
 import {useContext, useEffect, useState} from "react";
-import axios from "axios";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {logout} from "../Common/Modules/Common";
 import Button from "react-bootstrap/Button";
 import {Col, Container, Form, Row} from "react-bootstrap";
-import {Editor} from "react-draft-wysiwyg";
+import htmlToDraft from "html-to-draftjs";
+import {ContentState, convertFromHTML} from "draft-js";
+import {decodeToken} from "react-jwt";
+import ReplyList from "./Reply/ReplyList";
+import axios from "axios";
 
 
 function QuestionDetail()
@@ -23,22 +25,37 @@ function QuestionDetail()
 
     const location = useLocation();
 
-    const [title] = useState(location.state.title);
-    const [content] = useState(location.state.content);
+    const {id} = useParams();
+    const [author] = useState(location.state.author);
+    const [title,setTitle] = useState("");
+    const [content,setContent] = useState("");
+    const [reply,setReply] = useState(null);
 
+    const username = (token === null ? null : (decodeToken(token).username));
 
+    useEffect(()=>{
+        axios.get(`http://localhost:8080/question/${id}`)
+            .then((response)=>{
+                setContent(response.data.data.content);
+                setTitle(response.data.data.title);
+                setReply([...response.data.data.reply]);
+            })
+            .catch((error)=>{
+
+            })
+    },[]);
 
     return(
         <>
             <Container>
-                <h3 className="text-black mt-5 p-3 rounded">{title}</h3>
+                <h1 className="text-black mt-5 p-3 rounded">{title}</h1>
+                {username === author ? <span><Button>수정하기</Button>&nbsp;&nbsp;&nbsp;<Button>삭제하기</Button></span> : <></>}<h6 className="text-lg-end">작성자: {author}</h6>
                 <Row className="mt-7">
                     <Col lg={12} md={10} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
-                        <div>
-                            {content}
-                        </div>
+                        <div dangerouslySetInnerHTML={{__html: content}}/>
                     </Col>
                 </Row>
+                <ReplyList id={id} reply={reply}/>
             </Container>
         </>
     );

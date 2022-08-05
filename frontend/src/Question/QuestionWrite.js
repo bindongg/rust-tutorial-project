@@ -9,7 +9,7 @@ import draftToHtml from 'draftjs-to-html';
 import {Token} from "../Context/Token/Token";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {logout} from "../Common/Modules/Common";
-
+import Loading from "../pages/Loading";
 
 function QuestionWrite()
 {
@@ -21,6 +21,8 @@ function QuestionWrite()
             "authorization": token
         },
     };
+
+    const [loadingState,setLoadingState] = useState(false);
     const { register, handleSubmit, formState: {errors} } = useForm();
 
     const [state, setState] = useState({editorState: EditorState.createEmpty()})
@@ -33,6 +35,7 @@ function QuestionWrite()
 
     function onSubmit(data)
     {
+        setLoadingState(true);
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
         axios.post("http://localhost:8080/user/question/add",{...data},config)
             .then((response)=>{
@@ -54,6 +57,11 @@ function QuestionWrite()
     }
     return (
         <>
+            {
+                loadingState === true
+                    ? (<Loading/>)
+                    : (<></>)
+            }
             <Container>
                 <h3 className="text-black mt-5 p-3 text-center rounded">질문 작성</h3>
                 <Row className="mt-7">

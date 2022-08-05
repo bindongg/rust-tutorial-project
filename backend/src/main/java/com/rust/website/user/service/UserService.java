@@ -222,6 +222,12 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public User getUser(String id)
+    {
+        return userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("No such Entity"));
+    }
+
     @Transactional
     public void test(User user)
     {
