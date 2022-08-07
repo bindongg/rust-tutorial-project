@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TutorialRepository extends JpaRepository<Tutorial, Integer> {
-    @Query(value = "select * from tutorial order by number asc limit ?1", nativeQuery = true)
+    @Query(value = "select * from Tutorial order by number asc limit ?1", nativeQuery = true)
     public List<Tutorial> getTutorials(int tutorialNum);
+    @Query(value = "select * from Tutorial order by number", nativeQuery = true)
+    public List<Tutorial> getAllTutorials();
     public Optional<Tutorial> findByNumber(int number);
 }

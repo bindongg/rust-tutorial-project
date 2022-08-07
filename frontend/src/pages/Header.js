@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import {Navbar, NavDropdown, Nav, Container, NavLink} from "react-bootstrap";
+import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 import {Token} from "../Context/Token/Token";
 import {decodeToken} from "react-jwt";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import {logout} from "../Common/Modules/Common";
 import './Header.css';
 
@@ -41,7 +41,7 @@ function Header(){
     return (
             <Navbar className="fixed-top" bg="light">                
                 <Container>
-                    <Navbar.Brand href="/">
+                    <NavLink className="navbar-brand" to="/">
                         <img
                             src="rust-logo-64blk.png"
                             width="40"
@@ -49,49 +49,50 @@ function Header(){
                             className="d-inline-block align-top"
                             alt="React Bootstrap logo"
                         />
-                    </Navbar.Brand>
+                    </NavLink>
                     <Nav className="me-auto">
-                        <Nav.Link href="/tutorial">Tutorial</Nav.Link>
-                        <Nav.Link href="/reference">Reference</Nav.Link>
+                        <NavLink className={"nav-link"} to="/tutorial">Tutorial</NavLink>
+                        <NavLink className={"nav-link"} to="/reference">Reference</NavLink>
                         <NavDropdown title="Exercise" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="/exercise">전체 문제</NavDropdown.Item>
-                            <NavDropdown.Item href="/exercise/tag">분류별 문제</NavDropdown.Item>
-                            <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
+                            <NavLink className={"nav-link"} to="/exercise">전체 문제</NavLink>
+                            <NavLink className={"nav-link"} to="/exercise/tag">분류별 문제</NavLink>
+                            <NavLink className={"nav-link"} to="/exercise/level">난이도별 문제</NavLink>
+                            <NavLink className={"nav-link"} to="/exercise/level">QnA</NavLink>
                         </NavDropdown>
-                        <Nav.Link href="/question">QnA</Nav.Link>
-                        <Nav.Link href="/compile">Online Compiler</Nav.Link>
+                        <NavLink className={"nav-link"} to="/question">QnA</NavLink>
+                        <NavLink className={"nav-link"} to="/compile">Online Compiler</NavLink>
                     </Nav>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             {
                                 token === null
-                                    ? (<Nav.Link href="/login">Login</Nav.Link>)
+                                    ? (<NavLink className={"nav-link"} to="/login">Login</NavLink>)
                                     : (<></>)
                             }
                             {
                                 token === null
-                                    ? (<Nav.Link href="/register">Register</Nav.Link>)
+                                    ? (<NavLink className={"nav-link"} to="/register">Register</NavLink>)
                                     : (<></>)
                             }
                             {
                                 token === null
                                     ? (<></>)
                                     : (<NavDropdown title={username}>
-                                        <NavDropdown.Item href="/info">사용자 정보</NavDropdown.Item>
-                                        <NavDropdown.Item href="/info/solved">시도한 문제</NavDropdown.Item>
+                                        <NavLink className={"nav-link"} to="/info">사용자 정보</NavLink> 
+                                        <NavLink className={"nav-link"} to="/info/solved">시도한 문제</NavLink>
                                         {
                                             role === "ROLE_MANAGER" || role === "ROLE_ADMIN"
-                                                ? (<NavDropdown.Item href="#">manager</NavDropdown.Item>)
+                                                ? (<NavLink className={"nav-link"} to="#">manager</NavLink>)
                                                 : (<></>)
                                         }
                                         {
                                             role === "ROLE_ADMIN"
-                                                ? (<NavDropdown.Item href="/admin/auth">admin</NavDropdown.Item>)
+                                                ? (<NavLink className={"nav-link"} to="/admin/auth">admin</NavLink>)
                                                 : (<></>)
                                         }
-                                        <NavDropdown.Divider />
-                                        <NavDropdown.Item onClick={Logout}>logout</NavDropdown.Item>
+                                        <NavDropdown.Divider />                                        
+                                        <NavLink className={"nav-link"} to="#" onClick={e => Logout(e)}>logout</NavLink>
                                     </NavDropdown>)
                             }
                         </Nav>

@@ -19,10 +19,18 @@ function TutorialQuizUpdateForm() {
 
     const onSubmit = (data) => {
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
-        axios.patch(`http://localhost:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers}
-        ).then(function(response) {
-            alert(response.data.data);
+        axios.patch(`http://localhost:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers})
+        .then((response) => 
+        {
+            if (response.data.code === 200)
+            {
+                alert(response.data.data);
+            }
             navigate(-1);
+        })
+        .catch((Error) =>
+        {
+            alert(Error.response.status + " error");
         })
     }
     const addQuestion = () => {
