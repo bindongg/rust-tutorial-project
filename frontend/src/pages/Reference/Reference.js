@@ -3,13 +3,14 @@ import "./sidebar.css";
 import {NavLink} from "react-bootstrap";
 import axios from "axios";
 import ReferenceSidebar from "./component/ReferenceSidebar";
+import MarkdownContents from "./MarkdownContents";
 
 function Reference() {
     const [titles, setTitles] = useState([]);
 
     useEffect( () => {
         const getTitles = async () => {
-            const titles = await axios.get("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/reference");
+            const titles = await axios.get("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/reference");
             setTitles(titles.data.data);
         }
         // 실행함으로써 데이타를 fetching합니다.
@@ -25,72 +26,9 @@ function Reference() {
                     <div className="container-fluid">
                         <div id="page-content-wrapper">
                             <h1>간단한 사이드바</h1>
-                            <p>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                                hello<br/>
-                            </p>
+                            <div>
+                                <MarkdownContents/>
+                            </div>
                         </div>
                     </div>
                 </div>
