@@ -33,7 +33,7 @@ public class Question {
     @JsonIgnoreProperties({"exerciseTry", "tutorialDone", "email"})
     private User user;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question_", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Reply> reply;
 
     @Column

@@ -2,17 +2,19 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { EditorState, convertToRaw } from 'draft-js';
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {EditorState, convertToRaw, ContentState, convertFromHTML} from 'draft-js';
 import {Editor} from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
-import {Token} from "../Context/Token/Token";
+import {Token} from "../../Context/Token/Token";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import {logout} from "../Common/Modules/Common";
-import Loading from "../pages/Loading";
+import {logout} from "../../Common/Modules/Common";
+import Loading from "../Loading";
 
-function QuestionWrite()
+function QuestionUpdate()
 {
+    const {id} = useParams();
+
     const {token,setToken} = useContext(Token);
     const navigate = useNavigate();
     const config = {
@@ -21,14 +23,20 @@ function QuestionWrite()
             "authorization": token
         },
     };
+    const location = useLocation();
+
+    const content = location.state.content;
+    const title = location.state.title;
 
     const [loadingState,setLoadingState] = useState(false);
     const { register, handleSubmit, formState: {errors} } = useForm();
+    const [tempState, setTempState] = useState({editorState: EditorState.createWithContent(
+            ContentState.createFromBlockArray(convertFromHTML(content)
+            )),  })
+    const { editorState } = tempState;
 
-    const [state, setState] = useState({editorState: EditorState.createEmpty()})
-    const { editorState } = state;
     const onEditorStateChange = (editorState) => {
-        setState({
+        setTempState({
             editorState,
         });
     };
@@ -37,11 +45,11 @@ function QuestionWrite()
     {
         setLoadingState(true);
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.post("http://localhost:8080/user/question/add",{...data},config)
+        axios.put("http://localhost:8080/user/question/update",{id: id, title: data.title, content: data.content},config)
             .then((response)=>{
                 if(response.data.code === 200)
                 {
-                    navigate("/question");
+                    navigate(`/question/${id}`);
                 }
                 else
                 {
@@ -54,23 +62,32 @@ function QuestionWrite()
                     logout(token,setToken,navigate);
                 }
             })
+            .finally(()=>{
+                setLoadingState(false);
+            })
     }
-    return (
+
+    return(
         <>
-            {
-                loadingState === true
-                    ? (<Loading/>)
-                    : (<></>)
-            }
+        {
+            loadingState === true
+            ? (<Loading/>)
+            : (<></>)
+        }
             <Container>
                 <h3 className="text-black mt-5 p-3 text-center rounded">질문 작성</h3>
                 <Row className="mt-7">
                     <Col lg={12} md={10} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
-                        <Form onSubmit={handleSubmit(onSubmit)} >
+                        <Form onSubmit={handleSubmit(onSubmit)}>
                             <Form.Group className="mb-3">
                                 <Form.Label>제목</Form.Label>
-                                <input className="form-control" {...register("title",  {required: {value: true, message: "제목을 입력하세요"}})}/>
-                                {errors.title && <p style={{color:'red', fontSize:"13px"}}>{errors.title.message}</p>}
+                                <input className="form-control" defaultValue={title} {...register("title", {
+                                    required: {
+                                        value: true,
+                                        message: "제목을 입력하세요"
+                                    }
+                                })}/>
+                                {errors.title && <p style={{color: 'red', fontSize: "13px"}}>{errors.title.message}</p>}
                             </Form.Group>
                             <Editor
                                 editorState={editorState}
@@ -97,4 +114,4 @@ function QuestionWrite()
     );
 }
 
-export default QuestionWrite;
+export default QuestionUpdate;

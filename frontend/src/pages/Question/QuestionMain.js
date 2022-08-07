@@ -1,11 +1,11 @@
 import Button from "react-bootstrap/Button";
 import {NavLink, Table} from "react-bootstrap";
 import React, {useContext, useEffect, useState} from "react";
-import {Token} from "../Context/Token/Token";
+import {Token} from "../../Context/Token/Token";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
-import {logout} from "../Common/Modules/Common";
-import Page from "../Common/Page/Page";
+import {logout} from "../../Common/Modules/Common";
+import Page from "../../Common/Page/Page";
 
 function QuestionMain()
 {
@@ -68,7 +68,7 @@ function QuestionMain()
                                             (<tr key={index}>
                                                 <td>{question.id}</td>
                                                 <td onClick={()=>{
-                                                    navigate(`/question/${question.id}`, {state: {author: question.user.id, title: question.title}})
+                                                    navigate(`/question/${question.id}`)
                                                 }}>{question.title}</td>
                                                 <td>{question.user.id}</td>
                                                 <td>{question.done}</td>

@@ -33,9 +33,9 @@ public class Reply {
     @ManyToOne
     @JoinColumn(name = "question_id")
     @JsonIgnoreProperties({"title","user","reply","content","done","createDate"})
-    private Question question;
+    private Question question_;
 
-    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SubReply> subReply;
 
 

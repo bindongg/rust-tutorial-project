@@ -3,10 +3,10 @@ import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useContext} from "react";
-import {Token} from "../../Context/Token/Token";
+import {Token} from "../../../Context/Token/Token";
 import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
-import {logout} from "../../Common/Modules/Common";
+import {logout} from "../../../Common/Modules/Common";
 import Reply from "./Reply";
 
 function ReplyList(props)
@@ -40,9 +40,6 @@ function ReplyList(props)
                 }
             })
     }
-    useEffect(()=>{
-        console.log(props.reply);
-    },[])
 
     return (
         <>

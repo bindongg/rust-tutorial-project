@@ -31,7 +31,7 @@ public class SubReply {
 
     @ManyToOne
     @JoinColumn(name = "reply_id")
-    @JsonIgnoreProperties({"content", "question", "subReply", "createDate", "user"})
+    @JsonIgnoreProperties({"content", "question_", "subReply", "createDate", "user"})
     private Reply reply;
 
     @CreationTimestamp
