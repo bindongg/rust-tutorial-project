@@ -3,7 +3,7 @@ import React from "react";
 
 function ReferenceSidebar({titles}){
 
-    const list = titles.map(title => (<li key = {title.number} ><NavLink className="nav-link" to={"/reference/" + title.number}>{title.name}</NavLink></li>))
+    const list = titles.map(title => (<li key = {title.number} ><NavLink className="nav-link" to={"/reference/" + title.number} state={titles} >{title.name}</NavLink></li>))
     return(
         <div id="sidebar-wrapper">
             <ul className="sidebar-nav">
