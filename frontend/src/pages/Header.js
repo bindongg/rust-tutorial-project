@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import {Navbar, NavDropdown, Nav, Container, NavLink} from "react-bootstrap";
+import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 import {Token} from "../Context/Token/Token";
 import {decodeToken} from "react-jwt";
 import axios from "axios";
-import {Link, useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {logout} from "../Common/Modules/Common";
 import './Header.css';
 
@@ -51,27 +51,27 @@ function Header(){
                         />
                     </Navbar.Brand>
                     <Nav className="me-auto">
-                        <Nav.Link href="/tutorial">Tutorial</Nav.Link>
-                        <Nav.Link href="/reference">Reference</Nav.Link>
+                        <NavLink className="nav-link" to="/tutorial">Tutorial</NavLink>
+                        <NavLink className="nav-link" to="/reference">Reference</NavLink>
                         <NavDropdown title="Exercise" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="/exercise">전체 문제</NavDropdown.Item>
-                            <NavDropdown.Item href="/exercise/tag">분류별 문제</NavDropdown.Item>
-                            <NavDropdown.Item href="/exercise/level">난이도별 문제</NavDropdown.Item>
+                            <NavDropdown.Item><NavLink className="nav-link" to="/exercise">전체 문제</NavLink></NavDropdown.Item>
+                            <NavDropdown.Item><NavLink className="nav-link" to="/exercise/tag">분류별 문제</NavLink></NavDropdown.Item>
+                            <NavDropdown.Item><NavLink className="nav-link" to="/exercise/level">난이도별 문제</NavLink></NavDropdown.Item>
                         </NavDropdown>
-                        <Nav.Link href="/question">QnA</Nav.Link>
-                        <Nav.Link href="/compile">Online Compiler</Nav.Link>
+                        <NavLink className="nav-link" to="/question">QnA</NavLink>
+                        <NavLink className="nav-link" to="/compile">Online Compiler</NavLink>
                     </Nav>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             {
                                 token === null
-                                    ? (<Nav.Link href="/login">Login</Nav.Link>)
+                                    ? (<NavLink className="nav-link" to="/login">Login</NavLink>)
                                     : (<></>)
                             }
                             {
                                 token === null
-                                    ? (<Nav.Link href="/register">Register</Nav.Link>)
+                                    ? (<NavLink className="nav-link" to="/register">Register</NavLink>)
                                     : (<></>)
                             }
                             {
@@ -80,7 +80,7 @@ function Header(){
                                     : (<NavDropdown title={username}>
                                         <NavDropdown.Item href="/info">사용자 정보</NavDropdown.Item>
                                         <NavDropdown.Item href="/info/solved">시도한 문제</NavDropdown.Item>
-                                        {
+                                        { //여기는 일부러 냅둠
                                             role === "ROLE_MANAGER" || role === "ROLE_ADMIN"
                                                 ? (<NavDropdown.Item href="#">manager</NavDropdown.Item>)
                                                 : (<></>)

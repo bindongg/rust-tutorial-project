@@ -1,5 +1,5 @@
 import {Button, Col, Row} from "react-bootstrap";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {logout} from "../../../Common/Modules/Common";
 import axios from "axios";
 import {Token} from "../../../Context/Token/Token";
@@ -10,6 +10,7 @@ function Reply(props)
 {
     const {token,setToken} = useContext(Token);
     const navigate = useNavigate();
+    const username = token === null || token === undefined ? "" : decodeToken(token).username;
     const [subReplyAreaState,setSubReplyAreaState] = useState(false);
     const [subReplyContent,setSubReplyContent] = useState("");
 
@@ -27,7 +28,15 @@ function Reply(props)
 
     function delReply()
     {
-        axios.delete(`http://localhost:8080/user/reply/delete/${props.reply.id}`,config)
+        axios.delete(`http://localhost:8080/user/reply/delete`, {
+            data: {
+                author: props.reply.user.id,
+                id: props.reply.id,
+            }, headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                "authorization": token
+            }
+        })
             .then((response)=>{
                 if(response.data.code === 200)
                 {
@@ -48,7 +57,15 @@ function Reply(props)
 
     function delSubReply(e)
     {
-        axios.delete(`http://localhost:8080/user/subReply/delete/${e.target.value}`,config)
+        axios.delete(`http://localhost:8080/user/subReply/delete`,{
+            data: {
+                id: e.target.id,
+                author: e.target.value
+            }, headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                "authorization": token
+            }
+        })
             .then((response)=>{
                 if(response.data.code === 200)
                 {
@@ -73,13 +90,12 @@ function Reply(props)
         if(subReplyContent !== "") {
             axios.post("http://localhost:8080/user/subReply/add", {
                 content: subReplyContent,
-                userId: decodeToken(token).username,
+                userId: username,
                 parent: props.reply.id
             }, config)
                 .then((response) => {
                     if (response.data.code === 200) {
                         window.location.replace(`/question/${props.reply.question_.id}`);
-                        //navigate(`/question/${props.reply.question_.id}`);
                     } else {
                         alert("failed");
                     }
@@ -102,7 +118,7 @@ function Reply(props)
                 <Button type="button" className="btn btn-primary btn-sm" onClick={changeState}>대댓글</Button>
                 &nbsp;&nbsp;
                 {
-                    props.reply.user.id === decodeToken(token).username
+                    props.reply.user.id === username
                         ? (<Button type="button" className="btn btn-primary btn-sm" onClick={delReply}>삭제</Button>)
                         : (<></>)
                 }
@@ -126,8 +142,8 @@ function Reply(props)
                                     <span>{subReply.content}</span>
                                 </div>
                                 {
-                                    subReply.user.id === decodeToken(token).username
-                                        ? (<Button value={subReply.id} type="button" className="btn btn-primary btn-sm"
+                                    subReply.user.id === username
+                                        ? (<Button value={(subReply.user.id).toString()} id={subReply.id} type="button" className="btn btn-primary btn-sm"
                                                    onClick={delSubReply}>삭제</Button>)
                                         : (<></>)
                                 }

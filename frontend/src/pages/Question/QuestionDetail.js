@@ -38,7 +38,7 @@ function QuestionDetail()
                     setAuthor(response.data.data.user.id);
                     setContent(response.data.data.content);
                     setTitle(response.data.data.title);
-                    setReply([...response.data.data.reply]);
+                    setReply(response.data.data.reply);
                 }
                 else
                 {
@@ -46,7 +46,7 @@ function QuestionDetail()
                 }
             })
             .catch((error)=>{
-
+                alert("error");
             })
     },[]);
 
@@ -79,7 +79,7 @@ function QuestionDetail()
                     username === author
                         ?
                         (<span>
-                            <Button className="btn btn-secondary btn-sm" type="button" onClick={()=>{navigate(`/question/update/${id}`,{state: {title: title, content: content}})}}>수정하기</Button>
+                            <Button className="btn btn-secondary btn-sm" type="button" onClick={()=>{navigate(`/question/update/${id}`,{state: {author: author, title: title, content: content}})}}>수정하기</Button>
                             <Button className="btn btn-secondary btn-sm" type="button" onClick={delQuestion}>삭제하기</Button>
                         </span>)
                         : (<></>)

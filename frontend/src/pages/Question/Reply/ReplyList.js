@@ -20,6 +20,8 @@ function ReplyList(props)
         },
     };
 
+    const username = token === null || token === undefined ? "" : decodeToken(token).username;
+
     const [replyState,setReplyState] = useState("");
 
     function onChangeReply(e)
@@ -29,9 +31,16 @@ function ReplyList(props)
 
     function add()
     {
-        axios.post("http://localhost:8080/user/reply/add",{content: replyState, parent: props.id, userId: decodeToken(token).username}, config)
+        axios.post("http://localhost:8080/user/reply/add",{content: replyState, parent: props.id, userId: username}, config)
             .then((response)=>{
-                window.location.replace(`/question/${props.id}`);
+                if(response.data.code === 200)
+                {
+                    window.location.replace(`/question/${props.id}`);
+                }
+                else
+                {
+                    alert("failed");
+                }
             })
             .catch((error)=>{
                 if(error.response.status === 401 || error.response.status === 403)

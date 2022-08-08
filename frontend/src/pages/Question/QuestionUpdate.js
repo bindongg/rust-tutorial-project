@@ -25,6 +25,7 @@ function QuestionUpdate()
     };
     const location = useLocation();
 
+    const author = location.state.author;
     const content = location.state.content;
     const title = location.state.title;
 
@@ -45,7 +46,7 @@ function QuestionUpdate()
     {
         setLoadingState(true);
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.put("http://localhost:8080/user/question/update",{id: id, title: data.title, content: data.content},config)
+        axios.put("http://localhost:8080/user/question/update",{author: author,id: id,title: data.title,content: data.content},config)
             .then((response)=>{
                 if(response.data.code === 200)
                 {

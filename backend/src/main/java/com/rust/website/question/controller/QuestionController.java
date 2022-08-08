@@ -8,6 +8,7 @@ import com.rust.website.question.model.entity.Question;
 import com.rust.website.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,24 +62,47 @@ public class QuestionController { //delete 하는 메소드 경우 나중에 받
         return new ResponseDTO<>(200,null);
     }
 
-    @DeleteMapping("/user/reply/delete/{id}")
-    public ResponseDTO<String> deleteReply(@PathVariable int id)
+    @DeleteMapping("/user/reply/delete")
+    public ResponseDTO<String> deleteReply(@RequestBody Map<String,Object> mp, HttpServletRequest request)
     {
-        questionService.deleteReply(id);
+        if(JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME).equals(mp.get("author")))
+        {
+            questionService.deleteReply(Integer.parseInt(mp.get("id").toString()));
+        }
+        else
+        {
+            throw new IllegalArgumentException();
+        }
+
         return new ResponseDTO<>(200,null);
     }
 
-    @DeleteMapping("/user/subReply/delete/{id}")
-    public ResponseDTO<String> deleteSubReply(@PathVariable int id)
+    @DeleteMapping("/user/subReply/delete")
+    public ResponseDTO<String> deleteSubReply(@RequestBody Map<String,Object> mp, HttpServletRequest request)
     {
-        questionService.deleteSubReply(id);
+        if(JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME).equals(mp.get("author").toString()))
+        {
+            questionService.deleteSubReply(Integer.parseInt(mp.get("id").toString()));
+        }
+        else throw new IllegalArgumentException();
         return new ResponseDTO<>(200,null);
     }
 
     @PutMapping("/user/question/update")
-    public ResponseDTO<String> updateQuestion(@RequestBody Map<String,Object> mp)
+    public ResponseDTO<String> updateQuestion(@RequestBody Map<String,Object> mp, HttpServletRequest request)
     {
-        questionService.updateQuestion(Integer.parseInt(mp.get("id").toString()),mp.get("title").toString(),mp.get("content").toString());
+        if(JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME).equals(mp.get("author").toString()))
+        {
+            questionService.updateQuestion(Integer.parseInt(mp.get("id").toString()),mp.get("title").toString(),mp.get("content").toString());
+        }
+        else throw new IllegalArgumentException();
         return new ResponseDTO<>(200,null);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseDTO<Object> illegalArgumentExceptionHandler()
+    {
+        System.out.println("IllegalArgumentExceptionHandler");
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), null);
     }
 }
