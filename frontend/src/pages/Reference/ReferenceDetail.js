@@ -21,7 +21,7 @@ function ReferenceDetail(props) {
     }
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
-    const titles = useLocation().state; // 목차 전달을 위함
+    const [titles, setTitles] = useState(useLocation().state); //목차 전달을 위함
 
     useEffect( () => {
     const getReferenceDetail = async (nextSub, preSub) => {
