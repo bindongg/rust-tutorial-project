@@ -3,6 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import {  useNavigate, useParams } from "react-router-dom";
 import { Token } from "../../Context/Token/Token";
+import remarkGfm from "remark-gfm";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import {dark} from "react-syntax-highlighter/src/styles/hljs";
+import ReactMarkdown from "react-markdown";
 
 function ReferenceDetail(props) {
     const {id} = useParams();
@@ -59,8 +63,27 @@ function ReferenceDetail(props) {
                 <Button variant="danger" style={buttonStyle} onClick={deleteDetail}>삭제</Button>
             </div>
 
-            <div className="col-8 mx-auto border-top border-bottom m-3 p-2"
-            dangerouslySetInnerHTML={{__html: referenceDetail.content}}>
+            <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
+                <ReactMarkdown children={referenceDetail.content}
+                               remarkPlugins={[remarkGfm]}
+                               components={{
+                                   code({node, inline, className, children, ...props}) {
+                                       const match = /language-(\w+)/.exec(className || '')
+                                       return !inline && match ? (
+                                           <SyntaxHighlighter
+                                               children={String(children).replace(/\n$/, '')}
+                                               style={dark}
+                                               language={match[1]}
+                                               PreTag="div"
+                                               {...props}
+                                           />
+                                       ) : (
+                                           <code className={className} {...props}>
+                                               {children}
+                                           </code>
+                                       )
+                                   }
+                               }}/>
             </div> {/*TODO: 마크다운으로 받도록 수정*/}
             <br/>
             <div className="col-8 mx-auto">
