@@ -29,6 +29,17 @@ function ReferenceDetail(props) {
         getReferenceDetail(nextDetail, preDetail);
     }, [id]);
 
+    const updateDetail = () => {
+        navigate(`/reference/${referenceDetail.id}/update`, {state: {referenceDetail : referenceDetail}});
+    }
+    const deleteDetail = () => {
+        axios.delete(`http://localhost:8080/reference/${referenceDetail.id}`, {headers : headers}
+        ).then(function(response) {
+            alert(response.data.data);
+            navigate(-1);
+        })
+    }
+
     const goPre = () => {
         navigate(`/reference/${preDetail.id}`);
     }
@@ -43,6 +54,11 @@ function ReferenceDetail(props) {
                 <br/>
                 <h1>{referenceDetail.name}</h1>
             </div>
+            <div className="col-4 ms-auto m-1">
+                <Button variant="warning" style={buttonStyle} onClick={updateDetail}>수정</Button>
+                <Button variant="danger" style={buttonStyle} onClick={deleteDetail}>삭제</Button>
+            </div>
+
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2"
             dangerouslySetInnerHTML={{__html: referenceDetail.content}}>
             </div> {/*TODO: 마크다운으로 받도록 수정*/}
