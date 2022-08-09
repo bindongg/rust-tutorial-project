@@ -19,8 +19,8 @@ import Exercise from "./pages/Exercise/Exercise";
 import ExerciseByTag from "./pages/Exercise/ExerciseByTag";
 import ExerciseDetail from "./pages/Exercise/ExerciseDetail";
 import ExerciseByLevel from "./pages/Exercise/ExerciseByLevel";
-import ExerciseAddForm from "./pages/Exercise/ExerciseAddForm";
-import ExerciseUpdateForm from "./pages/Exercise/ExerciseUpdateForm";
+import ExerciseCreate from "./pages/Exercise/ExerciseCreate";
+import ExerciseUpdate from "./pages/Exercise/ExerciseUpdate";
 import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
@@ -77,9 +77,9 @@ function App() {
                         <Route path="exercise" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/tag" exact={true} element={<ExerciseByTag/>}/>
                         <Route path="exercise/level" exact={true} element={<ExerciseByLevel/>}/>
-                        <Route path="exercise/:no" exact={true}  element={<ExerciseDetail/>}/>
-                        <Route path="exercise/add" exact={true}  element={<ExerciseAddForm/>}/>
-                        <Route path="exercise/:no/update" exact={true}  element={<ExerciseUpdateForm/>}/>
+                        <Route path="exercise/:id" exact={true}  element={<ExerciseDetail/>}/>
+                        <Route path="exercise/add" exact={true}  element={<ExerciseCreate/>}/>
+                        <Route path="exercise/:id/update" exact={true}  element={<ExerciseUpdate/>}/>
                         {/*question*/}
                         <Route path="/question" exact={true} element={<QuestionMain/>}/>
                         <Route path="/question/:id" exact={true} element={<QuestionDetail/>}/>
