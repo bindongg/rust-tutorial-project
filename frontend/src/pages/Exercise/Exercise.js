@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {NavLink, Table} from "react-bootstrap";
 import axios from "axios";
 import ExerciseList from "./components/ExerciseList";
 import Button from 'react-bootstrap/Button';
 import {useNavigate} from "react-router";
+import {Token} from "../../Context/Token/Token";
 
 function Exercise(){
   const [isLoading, setIsLoading] = useState(true);
@@ -12,10 +13,15 @@ function Exercise(){
   const moveTo = (href) => {
     navigate(href);
   }
+  const {token,setToken} = useContext(Token);
+  const headers = {
+    'Content-Type' : 'application/json; charset=utf-8',
+    'Authorization' : token
+  };
 
   useEffect( () => {
     const getExercises = async () => {
-      const exercises = await axios.get("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise?user_id=testid");
+      const exercises = await axios.get("http://localhost:8080/exercise", {headers : headers});
       setExercises(exercises.data.data);
     }
     // 실행함으로써 데이타를 fetching합니다.

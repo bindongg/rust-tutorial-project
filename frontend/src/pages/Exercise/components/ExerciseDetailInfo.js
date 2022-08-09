@@ -1,12 +1,21 @@
-import React, {Component, useState} from "react";
-import {Link, NavLink} from "react-router-dom";
+import React, {Component, useContext, useState} from "react";
+import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button} from "react-bootstrap";
 import axios from "axios";
+import {Token} from "../../../Context/Token/Token";
 
 function ExerciseDetailInfo({index, title,tag, Content, Testcases}){
-    let problemURL = window.location.pathname;
-    let problemNum = problemURL[problemURL.length-1];
+    // let problemURL = window.location.pathname;
+    // let problemNum = problemURL[problemURL.length-1];
+    const {id} = useParams();
+    const {token,setToken} = useContext(Token);
+    const headers = {
+        'Content-Type' : 'application/json; charset=utf-8',
+        'Authorization' : token
+    };
+    const navigate = useNavigate();
+    // const [exerciseDetail, setExerciseDetail] = useState({});
     const exerciseDetail = {
         title: title,
         tag: tag,
@@ -19,12 +28,17 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases}){
 `);
 
     const compileCode = (data) => {
-        console.log('code: ', {rustCode})
-        return  axios.post("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise/compile/"+ problemNum,
-            {code: rustCode},
-            {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
-            console.log('register result', result)
-        }).catch()
+        console.log('code: ', {rustCode});
+        // return  axios.post(`https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise/compile/${id}`,
+        //     {code: rustCode},
+        //     {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
+        //     console.log('register result', result)
+        // }).catch()
+        axios.post(`http://localhost:8080//exercise/compile/${id}`, {...rustCode}, {headers : headers}
+        ).then(function(response) {
+            alert(response.data.data);
+            navigate(-1);
+        })
     }
 
 
@@ -34,7 +48,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases}){
                 <h1>{title}</h1>
             </div>
             <div className="col-8 mx-auto">
-                <NavLink className="nav-link" to={`/exercise/${problemNum}/update`} state={{exerciseDetail: exerciseDetail}}>Update Exercise</NavLink>
+                <NavLink className="nav-link" to={`/exercise/${id}/update`} state={{exerciseDetail: exerciseDetail}}>Update Exercise</NavLink>
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3 style={{display:"inline-flex"}}>문제 &nbsp;</h3>

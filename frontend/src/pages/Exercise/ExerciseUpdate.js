@@ -1,17 +1,24 @@
-import React, { useState} from "react";
+import React, { useContext, useState} from "react";
 import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import {useHistory, useLocation} from "react-router-dom"
+import {useHistory, useLocation, useNavigate, useParams} from "react-router-dom"
+import {Token} from "../../Context/Token/Token";
 
 
-function ExerciseUpdateForm() {
-
+function ExerciseUpdate() {
+    const {id} = useParams();
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
 
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
     const { register, watch, reset,handleSubmit } = useForm();
+    const navigate = useNavigate();
+    const {token,setToken} = useContext(Token);
+    const headers = {
+        'Content-Type' : 'application/json; charset=utf-8',
+        'Authorization' : token
+    };
 
     const onEditChange = (e) => {
         setEditedExercise({ //문법
@@ -25,15 +32,21 @@ function ExerciseUpdateForm() {
     const onInvalid = (data) => console.log(data, "onInvalid");
 
     const onSubmit = (data) => {
-        console.log('data', data)
-        let problemURL = window.location.pathname;
-        let problemNum = problemURL[problemURL.length-1];
-        return  axios.patch("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise/"+problemNum, //TODO: patch -> put
-            {data: data},
-            {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
-            console.log('register result', result)
-            // history.push("/login")
-        }).catch()
+        data.number = data.number * 1;
+        console.log('data', data);
+        // let problemURL = window.location.pathname;
+        // let problemNum = problemURL[problemURL.length-1];
+        // return  axios.patch("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise/"+problemNum, //TODO: patch -> put
+        //     {data: data},
+        //     {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
+        //     console.log('register result', result)
+        //     // history.push("/login")
+        // }).catch()
+        axios.patch(`http://localhost:8080/exercise/${id}`, {...data}, {headers : headers}
+        ).then(function(response) {
+            alert(response.data.data);
+            navigate(-1);
+        })
     }
 
     const exerciseTestCases = exerciseDetail.Testcases;
@@ -133,4 +146,4 @@ function ExerciseUpdateForm() {
     );
 }
 
-export default ExerciseUpdateForm;
+export default ExerciseUpdate;
