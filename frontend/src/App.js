@@ -39,6 +39,7 @@ import TutorialQuizUpdateForm from "./pages/Tutorial/TutorialQuizUpdateForm";
 import Compile from "./pages/Compile/Compile";
 import ReferenceCreate from "./pages/Reference/ReferenceCreate";
 import ReferenceDetail from "./pages/Reference/ReferenceDetail";
+import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
 
 
 
@@ -71,6 +72,7 @@ function App() {
                         <Route path="reference" exact={true} element={<Reference/>}/>
                         <Route path="reference/create" exact={true} element={<ReferenceCreate/>}/>
                         <Route path="reference/:id" exact={true} element={<ReferenceDetail/>}/>
+                        <Route path="reference/:id/update" exact={true} element={<ReferenceUpdate/>}/>
                         {/*exercise*/}
                         <Route path="exercise" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/tag" exact={true} element={<ExerciseByTag/>}/>
