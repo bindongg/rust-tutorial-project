@@ -5,7 +5,7 @@ import {Button} from "react-bootstrap";
 import axios from "axios";
 import {Token} from "../../../Context/Token/Token";
 
-function ExerciseDetailInfo({index, title,tag, Content, Testcases}){
+function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
     // let problemURL = window.location.pathname;
     // let problemNum = problemURL[problemURL.length-1];
     const {id} = useParams();
@@ -20,7 +20,8 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases}){
         title: title,
         tag: tag,
         Content: Content,
-        Testcases: Testcases
+        Testcases: Testcases,
+        difficulty: difficulty
     }
     const [rustCode, setRustCode] = useState(`fn main() {
   println!("Hello World!");

@@ -34,14 +34,6 @@ function ExerciseUpdate() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         console.log('data', data);
-        // let problemURL = window.location.pathname;
-        // let problemNum = problemURL[problemURL.length-1];
-        // return  axios.patch("https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise/"+problemNum, //TODO: patch -> put
-        //     {data: data},
-        //     {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
-        //     console.log('register result', result)
-        //     // history.push("/login")
-        // }).catch()
         axios.patch(`http://localhost:8080/exercise/${id}`, {...data}, {headers : headers}
         ).then(function(response) {
             alert(response.data.data);
@@ -85,7 +77,7 @@ function ExerciseUpdate() {
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="exerciseLevel">
                                     <Form.Label>문제 난이도</Form.Label>
-                                    <Form.Select aria-label="exercise level"  {...register("difficulty")} >
+                                    <Form.Select aria-label="exercise level"  defaultValue={exerciseDetail.difficulty}  onChange={onEditChange} {...register("difficulty")} >
                                         <option>난이도를 선택해주세요</option>
                                         <option value="STAR1">STAR1</option>
                                         <option value="STAR2">STAR2</option>

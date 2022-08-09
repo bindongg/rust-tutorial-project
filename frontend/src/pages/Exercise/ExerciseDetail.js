@@ -18,6 +18,7 @@ function ExerciseDetail() {
              let exerciseDetail = await axios.get(`http://localhost:8080/exercise/${id}`, {headers : headers});
             exerciseDetail = exerciseDetail.data.data;
             setExerciseDetail({...exerciseDetail});
+            console.log({exerciseDetail});
         }
         // 실행함으로써 데이타를 fetching합니다.
         getExerciseDetail();
@@ -26,7 +27,7 @@ function ExerciseDetail() {
 
     return (
         <>
-            <ExerciseDetailInfo number={exerciseDetail.id}  title={exerciseDetail.name} tag= {exerciseDetail.tag}
+            <ExerciseDetailInfo id={exerciseDetail.id}  title={exerciseDetail.name} tag= {exerciseDetail.tag} difficulty = {exerciseDetail.difficulty}
                                  Content={exerciseDetail.exerciseContent} Testcases={exerciseDetail.exerciseTestcases}
             />
         </>
