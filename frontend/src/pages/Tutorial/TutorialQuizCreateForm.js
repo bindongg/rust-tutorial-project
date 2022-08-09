@@ -19,7 +19,7 @@ function TutorialQuizCreateForm() {
 
     const onSubmit = (data) => {
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
-        axios.post(`http://localhost:8080/tutorial/${tutorial.id}/quiz`, {...data}, {headers : headers})
+        axios.post(`http://54.180.10.223:8080/tutorial/${tutorial.id}/quiz`, {...data}, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)

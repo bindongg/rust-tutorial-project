@@ -22,7 +22,7 @@ function Header(){
 
     function Logout()
     {
-        axios.post("http://localhost:8080/logout",null, {headers: {authorization: token}})
+        axios.post("http://54.180.10.223:8080/logout",null, {headers: {authorization: token}})
             .then(
                 (response)=>{
                     if(response.status === 200)

@@ -21,7 +21,7 @@ function TutorialList({tutorials, rerender, setRerender}) {
         navigate("/tutorial/updateForm", {state: {tutorial : tutorial}});
     }
     const deleteTutorial = (tutorial) => {
-        axios.delete(`http://localhost:8080/tutorial/${tutorial.id}`, {headers : headers})
+        axios.delete(`http://54.180.10.223:8080/tutorial/${tutorial.id}`, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)

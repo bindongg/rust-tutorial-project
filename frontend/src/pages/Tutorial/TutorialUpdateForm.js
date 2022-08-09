@@ -20,7 +20,7 @@ function TutorialUpdateForm() {
         
     const onSubmit = (data) => {
         data.number = data.number * 1;
-        axios.patch(`http://localhost:8080/tutorial/${tutorial.id}`, {...data}, {headers : headers})
+        axios.patch(`http://54.180.10.223:8080/tutorial/${tutorial.id}`, {...data}, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)

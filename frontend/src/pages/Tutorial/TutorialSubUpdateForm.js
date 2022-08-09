@@ -24,7 +24,7 @@ function TutorialSubUpdateForm() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.patch(`http://localhost:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
+        axios.patch(`http://54.180.10.223:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
         .then((response) => 
         {
             if (response.data.code === 200)

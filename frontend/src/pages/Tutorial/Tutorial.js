@@ -19,7 +19,7 @@ function Tutorial(props) {
   const [rerender, setRerender] = useState(0);
 
   useEffect( () => {
-    axios.get("http://localhost:8080/tutorial", {headers : headers})
+    axios.get("http://54.180.10.223:8080/tutorial", {headers : headers})
         .then((response) => 
         {
             if (response.data.code === 200)

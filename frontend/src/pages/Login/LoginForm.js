@@ -30,7 +30,7 @@ function LoginForm() {
 
     function logIn()
     {
-        axios.post("http://localhost:8080/login",{userId: userId, userPassword: userPwd}, config)
+        axios.post("http://54.180.10.223:8080/login",{userId: userId, userPassword: userPwd}, config)
             .then((response)=>{
                 if(response.status === 200)
                 {

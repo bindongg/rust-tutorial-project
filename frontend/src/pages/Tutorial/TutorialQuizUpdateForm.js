@@ -19,7 +19,7 @@ function TutorialQuizUpdateForm() {
 
     const onSubmit = (data) => {
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
-        axios.patch(`http://localhost:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers})
+        axios.patch(`http://54.180.10.223:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers})
         .then((response) => 
         {
             if (response.data.code === 200)

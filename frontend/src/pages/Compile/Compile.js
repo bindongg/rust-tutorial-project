@@ -17,7 +17,7 @@ function Compile() {
   const [output, setOutput] = useState();
 
   const compileCode = (data) => {
-    axios.post("http://localhost:8080/tutorial/compile",
+    axios.post("http://54.180.10.223:8080/tutorial/compile",
         {code : code, stdIn : input},
         {headers : headers})
         .then(response => { 

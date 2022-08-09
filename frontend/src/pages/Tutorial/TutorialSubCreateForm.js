@@ -27,7 +27,7 @@ function TutorialSubCreateForm() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.post(`http://localhost:8080/tutorial/${tutorial.id}/sub`, {...data}, {headers : headers})
+        axios.post(`http://54.180.10.223:8080/tutorial/${tutorial.id}/sub`, {...data}, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)
