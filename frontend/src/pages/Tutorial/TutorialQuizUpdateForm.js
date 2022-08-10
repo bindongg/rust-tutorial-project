@@ -3,11 +3,13 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { IP } from "../../Context/IP";
 import { Token } from "../../Context/Token/Token";
 
 function TutorialQuizUpdateForm() {
     const {tutorialQuiz} = useLocation().state;
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -19,7 +21,7 @@ function TutorialQuizUpdateForm() {
 
     const onSubmit = (data) => {
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
-        axios.patch(`http://54.180.10.223:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers})
+        axios.patch(`http://${ip}:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers})
         .then((response) => 
         {
             if (response.data.code === 200)

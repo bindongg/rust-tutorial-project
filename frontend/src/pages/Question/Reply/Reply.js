@@ -5,10 +5,12 @@ import axios from "axios";
 import {Token} from "../../../Context/Token/Token";
 import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
+import { IP } from "../../../Context/IP";
 
 function Reply(props)
 {
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const navigate = useNavigate();
     const username = token === null || token === undefined ? "" : decodeToken(token).username;
     const [subReplyAreaState,setSubReplyAreaState] = useState(false);
@@ -28,7 +30,7 @@ function Reply(props)
 
     function delReply()
     {
-        axios.delete(`http://localhost:8080/user/reply/delete`, {
+        axios.delete(`http://${ip}:8080/user/reply/delete`, {
             data: {
                 author: props.reply.user.id,
                 id: props.reply.id,
@@ -57,7 +59,7 @@ function Reply(props)
 
     function delSubReply(e)
     {
-        axios.delete(`http://localhost:8080/user/subReply/delete`,{
+        axios.delete(`http://${ip}:8080/user/subReply/delete`,{
             data: {
                 id: e.target.id,
                 author: e.target.value
@@ -88,7 +90,7 @@ function Reply(props)
     function addSubReply()
     {
         if(subReplyContent !== "") {
-            axios.post("http://localhost:8080/user/subReply/add", {
+            axios.post(`http://${ip}:8080/user/subReply/add`, {
                 content: subReplyContent,
                 userId: username,
                 parent: props.reply.id

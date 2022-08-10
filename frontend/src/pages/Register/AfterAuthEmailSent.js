@@ -1,11 +1,11 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Row, Container, Col, Button} from "react-bootstrap";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 
 function AfterAuthEmailSent() {
     const location = useLocation();
-
+    const ip = useContext(ip);
     const id = location.state.id;
     const password = location.state.pwd;
     const email = location.state.email;
@@ -17,7 +17,7 @@ function AfterAuthEmailSent() {
     function register()
     {
         setBtnState(true);
-        axios.post("http://localhost:8080/register/resend",{id: id, authId: authId, password: password, email: email}, {withCredentials: true}).then((Response)=>{
+        axios.post(`http://${ip}:8080/register/resend`,{id: id, authId: authId, password: password, email: email}, {withCredentials: true}).then((Response)=>{
             if(Response.data.code === 200)
             {
                 setAuthId(Response.data.data);

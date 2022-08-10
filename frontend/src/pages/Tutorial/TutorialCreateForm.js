@@ -3,12 +3,14 @@ import { useContext } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { IP } from "../../Context/IP";
 import { Token } from "../../Context/Token/Token";
 
 
 
 function TutorialCreateForm() {
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -19,7 +21,7 @@ function TutorialCreateForm() {
         
     const onSubmit = (data) => {
         data.number = data.number * 1;
-        axios.post("http://54.180.10.223:8080/tutorial", {...data}, {headers : headers})
+        axios.post("http://${ip}:8080/tutorial", {...data}, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)
