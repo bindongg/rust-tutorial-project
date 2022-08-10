@@ -18,6 +18,9 @@ function Home(){
         let res = decodeToken(token);
         alert(res.role);
     }
+    const moveTo = (href) => {
+        navigate(href);
+    }
 
     return (
         <div className="App text-center">
@@ -26,15 +29,15 @@ function Home(){
                 <h1>Rust 학습 페이지에 오신 걸 환영합니다!</h1>
             </figure>
             <div className="d-grid gap-2 col-4 mx-auto">
-                <Button variant="secondary" href="/tutorial" size="lg">
+                <Button variant="secondary" onClick={() => moveTo("/tutorial")} size="lg">
                     Tutorial
                 </Button>
                 {""}
-                <Button variant="secondary" href="/reference" size="lg">
+                <Button variant="secondary" onClick={() => moveTo("/reference")} size="lg">
                     Reference
                 </Button>
                 {""}
-                <Button variant="secondary" href="/exercise" size="lg">
+                <Button variant="secondary" onClick={() => moveTo("/exercise")} size="lg">
                     Exercise
                 </Button>
                 {""}

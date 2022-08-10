@@ -1,13 +1,20 @@
-import React, { useState} from "react";
+import React, {useContext, useState} from "react";
 import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import { useHistory } from "react-router-dom"
+import {useHistory, useNavigate} from "react-router-dom"
+import {Token} from "../../Context/Token/Token";
 
 
-function ExerciseAddForm() {
-    const { register, watch, reset,handleSubmit } = useForm();
+function ExerciseCreate() {
+    const { register, watch, reset,handleSubmit, formState: {errors} } = useForm();
     const [testcaseNums, setTestcaseNums] = useState([1 ]);
+    const {token,setToken} = useContext(Token);
+    const headers = {
+        'Content-Type' : 'application/json; charset=utf-8',
+        'Authorization' : token
+    };
+    const navigate = useNavigate();
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
     const onValid = (data) => console.log(data, "onValid");
@@ -15,12 +22,12 @@ function ExerciseAddForm() {
 
     const onSubmit = (data) => {
         console.log('data', data)
-        return  axios.post("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise",
-            {data: data},
-            {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
-            console.log('register result', result)
-            // history.push("/login")
-        }).catch()
+        data.number = data.number * 1;
+        axios.post("http://localhost:8080/exercise", {...data}, {headers : headers}
+        ).then(function(response) {
+            alert(response.data.data);
+            navigate(-1);
+        })
     }
 
     const addTestcase = () => {
@@ -54,6 +61,11 @@ function ExerciseAddForm() {
                 <Row className="mt-7">
                     <Col lg={7} md={10} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
                         <Form onSubmit={handleSubmit(onSubmit)} onReset={reset} >
+                            <Form.Group className="mb-3" controlId="exerciseeNumber">
+                                <Form.Label>번호</Form.Label>
+                                <Form.Control placeholder="번호를 입력하세요" {...register("number",  {required: {value:true, message:"*번호를 입력하세요"} , pattern: {value: /^[0-9]+$/, message:"*번호는 숫자만 가능합니다"}})} />
+                                {errors.number && <p style={{color:'red', fontSize:"13px"}}>{errors.number.message}</p>}
+                            </Form.Group>
                             <Form.Group className="mb-3" controlId="exerciseTitle">
                                 <Form.Label>제목</Form.Label>
                                 <Form.Control type="title" placeholder="제목을 입력하세요" {...register("name")} />
@@ -85,27 +97,27 @@ function ExerciseAddForm() {
                                 </Form.Group>
                             </Row>
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-3" controlId="exerciseExplanation">
                                 <Form.Label>문제 설명</Form.Label>
                                 <Form.Control as="textarea" placeholder="문제 내용을 입력하세요" {...register("exerciseContent.description")} />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-3" controlId="exerciseInputExplanation">
                                 <Form.Label>1번 입력에 대한 설명</Form.Label>
                                 <Form.Control as="textarea" placeholder="1번 입력에 대한 설명을 입력하세요" {...register("exerciseContent.input_description")} />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-3" controlId="exerciseInputExample">
                                 <Form.Label>1번 입력값 예시</Form.Label>
                                 <Form.Control as="textarea" placeholder="1번 입력값 예시를 입력하세요" {...register("exerciseContent.input_value")} />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-3" controlId="exerciseOutputExplanation">
                                 <Form.Label>1번 출력에 대한 설명</Form.Label>
                                 <Form.Control as="textarea" placeholder="1번 출력에 대한 설명을 입력하세요" {...register("exerciseContent.output_description")} />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-3" controlId="exerciseOutputExample">
                                 <Form.Label>1번 출력값 예시</Form.Label>
                                 <Form.Control as="textarea" placeholder="1번 출력값 예시을 입력하세요" {...register("exerciseContent.output_value")} />
                             </Form.Group>
@@ -125,4 +137,4 @@ function ExerciseAddForm() {
     );
 }
 
-export default ExerciseAddForm;
+export default ExerciseCreate;

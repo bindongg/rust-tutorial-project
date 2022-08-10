@@ -10,14 +10,13 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class Reply {
+public class SubReply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -31,13 +30,9 @@ public class Reply {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "question_id")
-    @JsonIgnoreProperties({"title","user","reply","content","done","createDate"})
-    private Question question_;
-
-    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SubReply> subReply;
-
+    @JoinColumn(name = "reply_id")
+    @JsonIgnoreProperties({"content", "question_", "subReply", "createDate", "user"})
+    private Reply reply;
 
     @CreationTimestamp
     private Timestamp createDate;

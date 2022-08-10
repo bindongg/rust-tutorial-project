@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
+import { decodeToken } from "react-jwt";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Token } from "../../../Context/Token/Token";
 import TutorialSubList from "./TutorialSubList";
@@ -10,6 +11,7 @@ import TutorialSubList from "./TutorialSubList";
 function TutorialList({tutorials, rerender, setRerender}) {
     const navigate = useNavigate();
     const {token,setToken} = useContext(Token);
+    const role = (token === null ? null : (decodeToken(token).role));
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -19,11 +21,18 @@ function TutorialList({tutorials, rerender, setRerender}) {
         navigate("/tutorial/updateForm", {state: {tutorial : tutorial}});
     }
     const deleteTutorial = (tutorial) => {
-        axios.delete(`http://localhost:8080/tutorial/${tutorial.id}`, {headers : headers}
-        ).then(function(response) {
-            alert(response.data.data);
-            // navigate(0);
-            setRerender(rerender+1);
+        axios.delete(`http://54.180.10.223:8080/tutorial/${tutorial.id}`, {headers : headers})
+        .then((response) =>
+        {
+            if (response.data.code === 200)
+            {
+                alert(response.data.data);
+                setRerender(rerender+1);
+            }
+        })
+        .catch((Error) =>
+        {
+            alert(Error.response.status + " error");
         })
     }
     const createSub = (tutorial) => {
@@ -50,13 +59,21 @@ function TutorialList({tutorials, rerender, setRerender}) {
                     <br></br>
                     <div className="nav justify-content-between">
                         <div>
+                            {
+                            (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
                             <Button style={buttonStyle} onClick={() => createSub(tutorial)}>소주제 추가</Button>
-                            {!tutorial.tutorialQuiz && <Button style={buttonStyle} onClick={() => createQuiz(tutorial)}>퀴즈 추가</Button>}
+                            }
+                            {(!tutorial.tutorialQuiz && (role === "ROLE_ADMIN" || role === "ROLE_MANAGER")) && 
+                            <Button style={buttonStyle} onClick={() => createQuiz(tutorial)}>퀴즈 추가</Button>
+                            }
                         </div>
+                        {
+                        (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
                         <div>
                             <Button variant="warning" style={buttonStyle} onClick={() => updateTutorial(tutorial)}>수정</Button>
                             <Button variant="danger" style={buttonStyle} onClick={() => deleteTutorial(tutorial)}>삭제</Button>
                         </div>                    
+                        }
                     </div>
                 </Accordion.Body>
             </Accordion.Item>        

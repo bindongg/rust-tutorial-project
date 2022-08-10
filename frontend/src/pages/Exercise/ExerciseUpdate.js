@@ -1,17 +1,24 @@
-import React, { useState} from "react";
+import React, { useContext, useState} from "react";
 import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import {useHistory, useLocation} from "react-router-dom"
+import {useHistory, useLocation, useNavigate, useParams} from "react-router-dom"
+import {Token} from "../../Context/Token/Token";
 
 
-function ExerciseUpdateForm() {
-
+function ExerciseUpdate() {
+    const {id} = useParams();
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
 
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
     const { register, watch, reset,handleSubmit } = useForm();
+    const navigate = useNavigate();
+    const {token,setToken} = useContext(Token);
+    const headers = {
+        'Content-Type' : 'application/json; charset=utf-8',
+        'Authorization' : token
+    };
 
     const onEditChange = (e) => {
         setEditedExercise({ //문법
@@ -25,15 +32,13 @@ function ExerciseUpdateForm() {
     const onInvalid = (data) => console.log(data, "onInvalid");
 
     const onSubmit = (data) => {
-        console.log('data', data)
-        let problemURL = window.location.pathname;
-        let problemNum = problemURL[problemURL.length-1];
-        return  axios.patch("https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise/"+problemNum, //TODO: patch -> put
-            {data: data},
-            {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
-            console.log('register result', result)
-            // history.push("/login")
-        }).catch()
+        data.number = data.number * 1;
+        console.log('data', data);
+        axios.patch(`http://localhost:8080/exercise/${id}`, {...data}, {headers : headers}
+        ).then(function(response) {
+            alert(response.data.data);
+            navigate(-1);
+        })
     }
 
     const exerciseTestCases = exerciseDetail.Testcases;
@@ -72,7 +77,7 @@ function ExerciseUpdateForm() {
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="exerciseLevel">
                                     <Form.Label>문제 난이도</Form.Label>
-                                    <Form.Select aria-label="exercise level"  {...register("difficulty")} >
+                                    <Form.Select aria-label="exercise level"  defaultValue={exerciseDetail.difficulty}  onChange={onEditChange} {...register("difficulty")} >
                                         <option>난이도를 선택해주세요</option>
                                         <option value="STAR1">STAR1</option>
                                         <option value="STAR2">STAR2</option>
@@ -133,4 +138,4 @@ function ExerciseUpdateForm() {
     );
 }
 
-export default ExerciseUpdateForm;
+export default ExerciseUpdate;

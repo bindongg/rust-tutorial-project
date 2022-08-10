@@ -24,12 +24,19 @@ function TutorialSubUpdateForm() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.patch(`http://localhost:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers}
-        ).then(function(response) {
-            alert(response.data.data);
+        axios.patch(`http://54.180.10.223:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
+        .then((response) => 
+        {
+            if (response.data.code === 200)
+            {
+                alert(response.data.data);
+            }
             navigate(-1);
         })
-        
+        .catch((Error) => 
+        {
+            alert(Error.response.status + " error");
+        })
     }
     // editor 설정
     const [state, setState] = useState({editorState: EditorState.createWithContent(
@@ -65,19 +72,16 @@ function TutorialSubUpdateForm() {
                                 wrapperClassName="demo-wrapper"
                                 editorClassName="demo-editor"
                                 onEditorStateChange={onEditorStateChange}
-                                localization={{
+                                localization=
+                                {{
                                 locale: 'ko',
                                 }}
-                                
+                                wrapperStyle=
+                                {{
+                                    border: '1px solid #ced4da',
+                                    borderRadius: '.25rem'
+                                }}
                             />
-                            {/* <textarea
-                                disabled
-                                value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-                                />
-                            <textarea
-                            disabled
-                            value={editorState && draftToMarkdown(convertToRaw(editorState.getCurrentContent()))}
-                            /> */}
                             <br/>
                            <Button type="submit">제출하기</Button>
                         </Form>
