@@ -51,6 +51,7 @@ function Header(){
                         />
                     </NavLink>
                     <Nav className="me-auto">
+
                         <NavLink className={"nav-link"} to="/tutorial">Tutorial</NavLink>
                         <NavLink className={"nav-link"} to="/reference">Reference</NavLink>
                         <NavDropdown title="Exercise" id="basic-nav-dropdown">
@@ -67,12 +68,12 @@ function Header(){
                         <Nav className="ms-auto">
                             {
                                 token === null
-                                    ? (<NavLink className={"nav-link"} to="/login">Login</NavLink>)
+                                    ? (<NavLink className="nav-link" to="/login">Login</NavLink>)
                                     : (<></>)
                             }
                             {
                                 token === null
-                                    ? (<NavLink className={"nav-link"} to="/register">Register</NavLink>)
+                                    ? (<NavLink className="nav-link" to="/register">Register</NavLink>)
                                     : (<></>)
                             }
                             {
