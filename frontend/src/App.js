@@ -24,7 +24,6 @@ import ExerciseUpdate from "./pages/Exercise/ExerciseUpdate";
 import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
-import AddAdmin from "./pages/Tutorial/AddAdmin";
 import AdminAuth from "./pages/Admin/AdminAuth";
 import QuestionMain from "./pages/Question/QuestionMain";
 import {Token} from "./Context/Token/Token";
@@ -68,7 +67,6 @@ function App() {
                         <Route path="tutorial/sub/updateForm" exact={true} element={<TutorialSubUpdateForm/>}/>
                         <Route path="tutorial/quiz/createForm" exact={true} element={<TutorialQuizCreateForm/>}/>
                         <Route path="tutorial/quiz/updateForm" exact={true} element={<TutorialQuizUpdateForm/>}/>
-                        <Route path="addAdmin" exact={true} element={<AddAdmin/>}/>
                         {/*reference*/}
                         <Route path="reference" exact={true} element={<Reference/>}/>
                         <Route path="reference/create" exact={true} element={<ReferenceCreate/>}/>

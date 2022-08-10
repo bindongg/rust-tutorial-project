@@ -19,10 +19,18 @@ function TutorialCreateForm() {
         
     const onSubmit = (data) => {
         data.number = data.number * 1;
-        axios.post("http://localhost:8080/tutorial", {...data}, {headers : headers}
-        ).then(function(response) {
-            alert(response.data.data);
-            navigate(-1);
+        axios.post("http://54.180.10.223:8080/tutorial", {...data}, {headers : headers})
+        .then((response) =>
+        {
+            if (response.data.code === 200)
+            {
+                alert(response.data.data);
+                navigate(-1);
+            }
+        })
+        .catch((Error) =>
+        {
+            alert(Error.response.status + " error");
         })
     }
 
