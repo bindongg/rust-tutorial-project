@@ -10,10 +10,12 @@ import {Token} from "../../Context/Token/Token";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {logout} from "../../Common/Modules/Common";
 import Loading from "../Loading";
+import { IP } from "../../Context/IP";
 
 function QuestionWrite()
 {
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const navigate = useNavigate();
     const config = {
         headers: {
@@ -37,7 +39,7 @@ function QuestionWrite()
     {
         setLoadingState(true);
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.post("http://localhost:8080/user/question/add",{...data},config)
+        axios.post(`http://${ip}:8080/user/question/add`,{...data},config)
             .then((response)=>{
                 if(response.data.code === 200)
                 {

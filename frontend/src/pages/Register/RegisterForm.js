@@ -1,11 +1,13 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Row, Container, Col, Form, Button, InputGroup, FormControl, FormGroup} from "react-bootstrap";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom';
 import Loading from "../Loading";
+import { IP } from '../../Context/IP';
 
 
 function RegisterForm() {
+    const ip = useContext(IP);
     const [userId, setUserId] = useState("")
     const [userPassword, setUserPassword] = useState("")
     const [userPasswordCheck, setUserPasswordCheck] = useState("")
@@ -41,7 +43,7 @@ function RegisterForm() {
         let idSpecialEx = new RegExp(/[`~!@#$%^&*|\\\'\";:\/?]/gi);
         if(idWordEx.test(userId) && !(idSpecialEx.test(userId)))
         {
-            axios.post("http://localhost:8080/duplicateId", {id: userId}, {withCredentials: true}).then((Response) => {
+            axios.post(`http://${ip}:8080/duplicateId`, {id: userId}, {withCredentials: true}).then((Response) => {
                 if(Response.data.code === 200)
                 {
                     if (Response.data.data === true) {
@@ -111,7 +113,7 @@ function RegisterForm() {
     function register() //수정할것
     {
         let checkEmail = 1;
-        axios.post("http://localhost:8080/duplicateEmail",{email: userEmail}).then((Response)=>{
+        axios.post(`http://${ip}:8080/duplicateEmail`,{email: userEmail}).then((Response)=>{
             if(Response.data.code === 200)
             {
                 if (Response.data.data === true)
@@ -135,7 +137,7 @@ function RegisterForm() {
             if(check === 1)
             {
                 setLoadingState(true);
-                axios.post("http://localhost:8080/register",{userId: userId, userPassword: userPassword, userEmail: userEmail}).then((Response)=>{
+                axios.post(`http://${ip}:8080/register`,{userId: userId, userPassword: userPassword, userEmail: userEmail}).then((Response)=>{
                     if(Response.data.code === 200)
                     {
                         let authId = Response.data.data;

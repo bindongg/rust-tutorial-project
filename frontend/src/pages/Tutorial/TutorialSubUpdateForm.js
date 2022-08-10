@@ -10,10 +10,12 @@ import draftToMarkdown from 'draftjs-to-markdown';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { IP } from "../../Context/IP";
 
 function TutorialSubUpdateForm() {
     const {tutorialSub} = useLocation().state;
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -24,7 +26,7 @@ function TutorialSubUpdateForm() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.patch(`http://54.180.10.223:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
+        axios.patch(`http://${ip}:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
         .then((response) => 
         {
             if (response.data.code === 200)

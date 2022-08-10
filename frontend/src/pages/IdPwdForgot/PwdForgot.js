@@ -1,11 +1,12 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Row, Container, Col, Form, Button, FormGroup, InputGroup, FormControl} from "react-bootstrap";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import Loading from "../Loading";
+import { IP } from "../../Context/IP";
 
 function PwdForgot() {
-
+    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const [id,setId] = useState("");
@@ -26,7 +27,7 @@ function PwdForgot() {
     function send()
     {
         setLoadingState(true);
-        axios.post("http://localhost:8080/password",{id: id, email: email})
+        axios.post(`http://${ip}:8080/password`,{id: id, email: email})
             .then((response)=>
             {
                 if(response.data.code === 200)

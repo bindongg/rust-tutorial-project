@@ -5,11 +5,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { decodeToken } from "react-jwt";
 import { useNavigate, useParams } from "react-router-dom";
+import { IP } from "../../Context/IP";
 import { Token } from "../../Context/Token/Token";
 
 function TutorialSub(props) {
     const {id, subId} = useParams();
     const {token,setToken} = useContext(Token); 
+    const ip = useContext(IP);
     const role = (token === null ? null : (decodeToken(token).role));
     const [tutorialSub, setTutorialSub] = useState({
         id: "",
@@ -26,7 +28,7 @@ function TutorialSub(props) {
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
     useEffect( () => {
-        axios.get(`http://localhost:8080/tutorial/${id}/sub/${subId}`, {headers : headers})
+        axios.get(`http://${ip}:8080/tutorial/${id}/sub/${subId}`, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)
@@ -47,7 +49,7 @@ function TutorialSub(props) {
         navigate("/tutorial/sub/updateForm", {state: {tutorialSub : tutorialSub}});
     }
     const deleteSub = () => {
-        axios.delete(`http://localhost:8080/tutorial/sub/${tutorialSub.id}`, {headers : headers})
+        axios.delete(`http://${ip}:8080/tutorial/sub/${tutorialSub.id}`, {headers : headers})
         .then((response) => 
         {
             if (response.data.code === 200)

@@ -3,11 +3,13 @@ import axios from "axios";
 import ExerciseDetailInfo from "./components/ExerciseDetailInfo";
 import {useParams} from "react-router-dom";
 import {Token} from "../../Context/Token/Token";
+import { IP } from "../../Context/IP";
 
 function ExerciseDetail() {
     const {id} = useParams();
     const [exerciseDetail, setExerciseDetail] = useState({});
     const {token, setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json',
         'Authorization' : token
@@ -15,7 +17,7 @@ function ExerciseDetail() {
 
     useEffect( () => {
         const getExerciseDetail = async () => {
-             let exerciseDetail = await axios.get(`http://localhost:8080/exercise/${id}`, {headers : headers});
+             let exerciseDetail = await axios.get(`http://${ip}:8080/exercise/${id}`, {headers : headers});
             exerciseDetail = exerciseDetail.data.data;
             setExerciseDetail({...exerciseDetail});
             console.log({exerciseDetail});

@@ -8,10 +8,12 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import {dark} from "react-syntax-highlighter/src/styles/hljs";
 import ReactMarkdown from "react-markdown";
 import ReferenceSidebar from "./component/ReferenceSidebar";
+import { IP } from "../../Context/IP";
 
 function ReferenceDetail(props) {
     const {id} = useParams();
-    const {token,setToken} = useContext(Token); 
+    const {token,setToken} = useContext(Token);
+    const ip = useContext(IP); 
     const [referenceDetail, setReferenceDetail] = useState({});
     const [preDetail, setPreDetail] = useState(null);
     const [nextDetail, setNextDetail] = useState(null);
@@ -25,7 +27,7 @@ function ReferenceDetail(props) {
 
     useEffect( () => {
     const getReferenceDetail = async (nextSub, preSub) => {
-        let referenceDetail = await axios.get(`http://localhost:8080/reference/${id}`, {headers : headers});
+        let referenceDetail = await axios.get(`http://${ip}:8080/reference/${id}`, {headers : headers});
         referenceDetail = referenceDetail.data.data
         // console.log(referenceDetail);
         setReferenceDetail({...referenceDetail.ref});
@@ -39,7 +41,7 @@ function ReferenceDetail(props) {
         navigate(`/reference/${referenceDetail.id}/update`, {state: {referenceDetail : referenceDetail}});
     }
     const deleteDetail = () => {
-        axios.delete(`http://localhost:8080/reference/${referenceDetail.id}`, {headers : headers}
+        axios.delete(`http://${ip}:8080/reference/${referenceDetail.id}`, {headers : headers}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);

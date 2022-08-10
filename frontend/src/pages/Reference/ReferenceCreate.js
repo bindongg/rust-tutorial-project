@@ -5,11 +5,13 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Token } from "../../Context/Token/Token";
 import React from "react";
+import { IP } from "../../Context/IP";
 
 
 
 function ReferenceCreate() {
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -20,7 +22,7 @@ function ReferenceCreate() {
         
     const onSubmit = (data) => {
         data.number = data.number * 1;
-        axios.post("http://localhost:8080/reference", {...data}, {headers : headers}
+        axios.post(`http://${ip}:8080/reference`, {...data}, {headers : headers}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);

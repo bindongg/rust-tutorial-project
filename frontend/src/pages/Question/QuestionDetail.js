@@ -7,12 +7,13 @@ import {decodeToken} from "react-jwt";
 import ReplyList from "./Reply/ReplyList";
 import axios from "axios";
 import {logout} from "../../Common/Modules/Common";
+import { IP } from "../../Context/IP";
 
 
 function QuestionDetail()
 {
     const {token,setToken} = useContext(Token);
-
+    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const config = {
@@ -31,7 +32,7 @@ function QuestionDetail()
     const username = (token === null ? null : (decodeToken(token).username));
 
     useEffect(()=>{
-        axios.get(`http://localhost:8080/question/${id}`)
+        axios.get(`http://${ip}:8080/question/${id}`)
             .then((response)=>{
                 if(response.data.code === 200)
                 {
@@ -52,7 +53,7 @@ function QuestionDetail()
 
     function delQuestion()
     {
-        axios.delete(`http://localhost:8080/user/question/delete/${id}`,config)
+        axios.delete(`http://${ip}:8080/user/question/delete/${id}`,config)
             .then((response)=>{
                 if(response.data.code === 200)
                 {

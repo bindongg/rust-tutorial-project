@@ -6,10 +6,12 @@ import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {logout} from "../../Common/Modules/Common";
 import Page from "../../Common/Page/Page";
+import { IP } from "../../Context/IP";
 
 function QuestionMain()
 {
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const [questions,setQuestions] = useState(null);
@@ -21,7 +23,7 @@ function QuestionMain()
     const [page,setPage] = useState(0);
 
     useEffect(()=>{
-        axios.get("http://localhost:8080/question",{params: {page: page, size: recPerPage}})
+        axios.get(`http://${ip}:8080/question`,{params: {page: page, size: recPerPage}})
             .then((response)=>{
                 if(response.data.code === 200)
                 {

@@ -5,10 +5,12 @@ import { Button } from "react-bootstrap";
 import TutorialQuizQuestionList from "./components/TutorialQuestionList";
 import { Token } from "../../Context/Token/Token";
 import { decodeToken } from "react-jwt";
+import { IP } from "../../Context/IP";
 
 function TutorialQuiz() {
     const {id} = useParams();    
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const role = (token === null ? null : (decodeToken(token).role));
     const [tutorialQuiz, setTutorialQuiz] = useState({
         id: "",
@@ -26,7 +28,7 @@ function TutorialQuiz() {
 
     useEffect( () => {
     const getTutorialQuiz = async () => {
-        const tutorialQuiz = await axios.get(`http://54.180.10.223:8080/tutorial/quiz/${id}`, {headers : headers});        
+        const tutorialQuiz = await axios.get(`http://${ip}:8080/tutorial/quiz/${id}`, {headers : headers});        
         setTutorialQuiz({...tutorialQuiz.data.data});
     }    
     getTutorialQuiz();
@@ -41,7 +43,7 @@ function TutorialQuiz() {
     const submitQuiz = (e) => {
         e.preventDefault();
         if (answers.length === tutorialQuiz.tutorialQuizQuestions.length) {
-            axios.post(`http://54.180.10.223:8080/tutorial/quiz/${id}`, {answers:answers},{headers : headers})
+            axios.post(`http://${ip}:8080/tutorial/quiz/${id}`, {answers:answers},{headers : headers})
             .then((response) =>
             {
                 if (response.data.code === 200)
@@ -63,7 +65,7 @@ function TutorialQuiz() {
         navigate("/tutorial/quiz/updateForm", {state: {tutorialQuiz : tutorialQuiz}});
     }
     const deleteSub = () => {
-        axios.delete(`http://54.180.10.223:8080/tutorial/quiz/${tutorialQuiz.id}`, {headers : headers})
+        axios.delete(`http://${ip}:8080/tutorial/quiz/${tutorialQuiz.id}`, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)

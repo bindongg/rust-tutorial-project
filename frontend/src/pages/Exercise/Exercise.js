@@ -5,6 +5,7 @@ import ExerciseList from "./components/ExerciseList";
 import Button from 'react-bootstrap/Button';
 import {useNavigate} from "react-router";
 import {Token} from "../../Context/Token/Token";
+import { IP } from "../../Context/IP";
 
 function Exercise(){
   const [isLoading, setIsLoading] = useState(true);
@@ -14,6 +15,7 @@ function Exercise(){
     navigate(href);
   }
   const {token,setToken} = useContext(Token);
+  const ip = useContext(IP);
   const headers = {
     'Content-Type' : 'application/json; charset=utf-8',
     'Authorization' : token
@@ -21,7 +23,7 @@ function Exercise(){
 
   useEffect( () => {
     const getExercises = async () => {
-      const exercises = await axios.get("http://localhost:8080/exercise", {headers : headers});
+      const exercises = await axios.get(`http://${ip}:8080/exercise`, {headers : headers});
       setExercises(exercises.data.data);
     }
     // 실행함으로써 데이타를 fetching합니다.
