@@ -5,12 +5,14 @@ import { Token } from "../../Context/Token/Token";
 import TutorialList from "./components/TutorialList";
 import {Button} from "react-bootstrap";
 import { useNavigate } from "react-router";import { decodeToken } from "react-jwt";
+import { IP } from "../../Context/IP";
 ;
 
 
 function Tutorial(props) {
   const [tutorials, setTutorials] = useState([]);
   const {token,setToken} = useContext(Token);
+  const ip = useContext(IP);
   const role = (token === null ? null : (decodeToken(token).role));
   const headers = {
     'Content-Type' : 'application/json; charset=utf-8',
@@ -19,7 +21,7 @@ function Tutorial(props) {
   const [rerender, setRerender] = useState(0);
 
   useEffect( () => {
-    axios.get("http://54.180.10.223:8080/tutorial", {headers : headers})
+    axios.get(`http://${ip}:8080/tutorial`, {headers : headers})
         .then((response) => 
         {
             if (response.data.code === 200)

@@ -6,6 +6,7 @@ import axios from "axios";
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import {logout} from "../Common/Modules/Common";
 import './Header.css';
+import { IP } from '../Context/IP';
 
 const config = {
     headers: {
@@ -15,6 +16,7 @@ const config = {
 
 function Header(){
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const username = (token === null ? null : (decodeToken(token).username));
     const role = (token === null ? null : (decodeToken(token).role));
 
@@ -22,7 +24,7 @@ function Header(){
 
     function Logout()
     {
-        axios.post("http://54.180.10.223:8080/logout",null, {headers: {authorization: token}})
+        axios.post(`http://${ip}:8080/logout`,null, {headers: {authorization: token}})
             .then(
                 (response)=>{
                     if(response.status === 200)
