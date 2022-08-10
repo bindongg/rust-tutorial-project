@@ -1,11 +1,11 @@
 import Button from "react-bootstrap/Button";
 import {NavLink, Table} from "react-bootstrap";
 import React, {useContext, useEffect, useState} from "react";
-import {Token} from "../Context/Token/Token";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import {logout} from "../Common/Modules/Common";
-import Page from "../Common/Page/Page";
+import Page from "../../Common/Page/Page";
+import { Token } from "../../Context/Token/Token";
+import { logout } from "../../Common/Modules/Common";
 
 function QuestionMain()
 {

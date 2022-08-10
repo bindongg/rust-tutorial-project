@@ -1,27 +1,34 @@
-import React, {Component, useEffect, useState} from "react";
+import React, {Component, useContext, useEffect, useState} from "react";
 import axios from "axios";
 import ExerciseDetailInfo from "./components/ExerciseDetailInfo";
+import {useParams} from "react-router-dom";
+import {Token} from "../../Context/Token/Token";
 
 function ExerciseDetail() {
-    const [exerciseDetails, setExerciseDetails] = useState([]);
+    const {id} = useParams();
+    const [exerciseDetail, setExerciseDetail] = useState({});
+    const {token, setToken} = useContext(Token);
+    const headers = {
+        'Content-Type' : 'application/json',
+        'Authorization' : token
+    }
 
     useEffect( () => {
-        const getExerciseDetails = async () => {
-            //TODO 상세페이지 API 적용하기
-            let problemURL = window.location.pathname;
-            let problemNum = problemURL[problemURL.length-1];
-            const exerciseDetails = await axios.get(`https://c70c860f-2bc4-4f61-b0d4-ad3bd5305543.mock.pstmn.io/exercise/`+ problemNum);
-            setExerciseDetails(exerciseDetails.data.data);
+        const getExerciseDetail = async () => {
+             let exerciseDetail = await axios.get(`http://localhost:8080/exercise/${id}`, {headers : headers});
+            exerciseDetail = exerciseDetail.data.data;
+            setExerciseDetail({...exerciseDetail});
+            console.log({exerciseDetail});
         }
         // 실행함으로써 데이타를 fetching합니다.
-        getExerciseDetails();
+        getExerciseDetail();
 
-    }, []);
+    }, [id]);
 
     return (
         <>
-            <ExerciseDetailInfo number={exerciseDetails.number} tag= {exerciseDetails.tag} title={exerciseDetails.name}
-                                 Content={exerciseDetails.exerciseContent} Testcases={exerciseDetails.exerciseTestcases}
+            <ExerciseDetailInfo id={exerciseDetail.id}  title={exerciseDetail.name} tag= {exerciseDetail.tag} difficulty = {exerciseDetail.difficulty}
+                                 Content={exerciseDetail.exerciseContent} Testcases={exerciseDetail.exerciseTestcases}
             />
         </>
     );

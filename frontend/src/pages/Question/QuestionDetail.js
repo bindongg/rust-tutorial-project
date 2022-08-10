@@ -1,11 +1,10 @@
-import {Token} from "../Context/Token/Token";
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {logout} from "../Common/Modules/Common";
 import Button from "react-bootstrap/Button";
 import {Col, Container, Form, Row} from "react-bootstrap";
 import {Editor} from "react-draft-wysiwyg";
+import { Token } from "../../Context/Token/Token";
 
 
 function QuestionDetail()
