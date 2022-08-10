@@ -72,7 +72,7 @@ public class SecurityConfig{
 
                 .authorizeHttpRequests(authorize -> authorize
                         .mvcMatchers("/register/**", "/login", "/logout", "/duplicateId" , "/duplicateEmail",
-                                "/authConfirm/**", "/reference/**", "/id", "/password","/question","/test/**").permitAll()
+                                "/authConfirm/**", "/reference/**", "/id", "/password","/question/**","/test/**").permitAll()
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                         .mvcMatchers("/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")

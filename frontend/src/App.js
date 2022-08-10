@@ -40,6 +40,7 @@ import Compile from "./pages/Compile/Compile";
 import ReferenceCreate from "./pages/Reference/ReferenceCreate";
 import ReferenceDetail from "./pages/Reference/ReferenceDetail";
 import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
+import QuestionUpdate from "./pages/Question/QuestionUpdate";
 
 
 
@@ -84,6 +85,7 @@ function App() {
                         <Route path="/question" exact={true} element={<QuestionMain/>}/>
                         <Route path="/question/:id" exact={true} element={<QuestionDetail/>}/>
                         <Route path="/question/add" exact={true} element={<QuestionWrite/>}/>
+                        <Route path="/question/update/:id" exact={true} element={<QuestionUpdate/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
                         <Route path="logout" exact={true}/>

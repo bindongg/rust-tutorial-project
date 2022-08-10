@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -31,10 +30,10 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"exerciseTry", "tutorialDone"})
+    @JsonIgnoreProperties({"exerciseTry", "tutorialDone", "email"})
     private User user;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question_", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Reply> reply;
 
     @Column

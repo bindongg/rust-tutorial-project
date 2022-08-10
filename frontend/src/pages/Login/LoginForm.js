@@ -36,7 +36,7 @@ function LoginForm() {
                 {
                     localStorage.setItem("jwt", response.headers['authorization']);
                     setToken(localStorage.getItem("jwt"));
-                    navigate("/home");
+                    navigate(-1);
                 }
             })
             .catch((Error)=>{
