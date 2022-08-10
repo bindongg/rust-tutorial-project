@@ -15,6 +15,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
         'Authorization' : token
     };
     const navigate = useNavigate();
+    const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
     // const [exerciseDetail, setExerciseDetail] = useState({});
     const exerciseDetail = {
         title: title,
@@ -41,15 +42,26 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
             navigate(-1);
         })
     }
+    const updateDetail = () => {
+        navigate(`/exercise/${id}/update`, {state: {exerciseDetail: exerciseDetail}});
+    }
 
+    const deleteExercise = () => {
+        axios.delete(`http://localhost:8080/exercise/${id}`, {headers : headers}
+        ).then(function(response) {
+            alert(response.data.data);
+            navigate(-1);
+        })
+    }
 
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
                 <h1>{title}</h1>
             </div>
-            <div className="col-8 mx-auto">
-                <NavLink className="nav-link" to={`/exercise/${id}/update`} state={{exerciseDetail: exerciseDetail}}>Update Exercise</NavLink>
+            <div className="col-4 ms-auto m-1">
+                <Button variant="warning" style={buttonStyle} onClick={updateDetail}>수정</Button>
+                <Button variant="danger" style={buttonStyle} onClick={deleteExercise}>삭제</Button>
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3 style={{display:"inline-flex"}}>문제 &nbsp;</h3>
