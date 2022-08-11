@@ -53,9 +53,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String jwtToken = JwtUtil.makeJWT(principalDetails.getUsername(), principalDetails.getRole());
+        String refreshToken = JwtUtil.makeRefreshJWT(principalDetails.getUsername(), principalDetails.getRole());
 
         redisService.setRedisStringValue(principalDetails.getUsername(), JwtProperties.TOKEN_PREFIX+jwtToken);
+        redisService.setRedisRefreshStringValue("REFRESH_"+principalDetails.getUsername(), JwtProperties.TOKEN_PREFIX+refreshToken);
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
+        response.addHeader(JwtProperties.REFRESH_STRING, JwtProperties.TOKEN_PREFIX+refreshToken);
     }
 
 }

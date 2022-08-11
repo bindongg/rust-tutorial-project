@@ -2,7 +2,7 @@ import {Token} from "../../Context/Token/Token";
 import {useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import {Col, Container, Form, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {decodeToken} from "react-jwt";
 import ReplyList from "./Reply/ReplyList";
 import axios from "axios";
@@ -29,6 +29,8 @@ function QuestionDetail()
     const [content,setContent] = useState(null);
     const [reply,setReply] = useState(null);
 
+    const [refresh,setRefresh] = useState(false);
+
     const username = (token === null ? null : (decodeToken(token).username));
 
     useEffect(()=>{
@@ -49,7 +51,7 @@ function QuestionDetail()
             .catch((error)=>{
                 alert("error");
             })
-    },[]);
+    },[refresh]);
 
     function delQuestion()
     {
@@ -91,7 +93,7 @@ function QuestionDetail()
                         <div dangerouslySetInnerHTML={{__html: content}}/>
                     </Col>
                 </Row>
-                <ReplyList id={id} reply={reply}/>
+                <ReplyList id={id} reply={reply} refresh={refresh} setRefresh={setRefresh}/>
             </Container>
         </>
     );

@@ -1,6 +1,6 @@
 import {Col, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import axios from "axios";
 import {useContext} from "react";
 import {Token} from "../../../Context/Token/Token";
@@ -33,23 +33,33 @@ function ReplyList(props)
 
     function add()
     {
-        axios.post(`http://${ip}:8080/user/reply/add`,{content: replyState, parent: props.id, userId: username}, config)
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    window.location.replace(`/question/${props.id}`);
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .catch((error)=>{
-                if(error.response.status === 401 || error.response.status === 403)
-                {
-                    logout(token,setToken,navigate);
-                }
-            })
+        if(replyState === "")
+        {
+            alert("댓글을 입력하세요");
+        }
+        else {
+            axios.post(`http://${ip}:8080/user/reply/add`, {
+                content: replyState,
+                parent: props.id,
+                userId: username
+            }, config)
+                .then((response) => {
+                    if (response.data.code === 200) {
+                        //window.location.replace(`/question/${props.id}`);
+                        props.setRefresh(!(props.refresh));
+                    } else {
+                        alert("failed");
+                    }
+                })
+                .catch((error) => {
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        logout(token, setToken, navigate);
+                    }
+                })
+                .finally(() => {
+
+                })
+        }
     }
 
     return (
@@ -65,7 +75,7 @@ function ReplyList(props)
             {
                 props.reply === null
                     ? (<></>)
-                    : props.reply.map((reply,index)=>(<Reply key={index} reply={reply}/>))
+                    : props.reply.map((reply,index)=>(<Reply key={index} reply={reply} refresh={props.refresh} setRefresh={props.setRefresh}/>))
             }
         </>
     );

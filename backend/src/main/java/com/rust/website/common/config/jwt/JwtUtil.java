@@ -10,10 +10,20 @@ public class JwtUtil {
     {
         return JWT.create()
                     .withSubject(userName)
-                    .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
+                    .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME_ACCESS))
                     .withClaim(JwtProperties.CLAIM_NAME, userName)
                     .withClaim(JwtProperties.CLAIM_NAME2, role)
                     .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+    }
+
+    public static String makeRefreshJWT(String userName, String role)
+    {
+        return JWT.create()
+                .withSubject(userName)
+                .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME_REFRESH))
+                .withClaim(JwtProperties.CLAIM_NAME, userName)
+                .withClaim(JwtProperties.CLAIM_NAME2, role)
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
     }
 
     public static String getClaim(String token, String claimName)

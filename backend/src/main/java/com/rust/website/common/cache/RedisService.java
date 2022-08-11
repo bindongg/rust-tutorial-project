@@ -23,7 +23,14 @@ public class RedisService {
     {
         ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
         stringStringValueOperations.set(key, value);
-        stringRedisTemplate.expire(key, JwtProperties.EXPIRATION_TIME/1000, TimeUnit.SECONDS);
+        stringRedisTemplate.expire(key, JwtProperties.EXPIRATION_TIME_ACCESS/1000, TimeUnit.SECONDS);
+    }
+
+    public void setRedisRefreshStringValue(String key, String value)
+    {
+        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
+        stringStringValueOperations.set(key, value);
+        stringRedisTemplate.expire(key, JwtProperties.EXPIRATION_TIME_REFRESH/1000, TimeUnit.SECONDS);
     }
 
     public void delRedisStringValue(String key)

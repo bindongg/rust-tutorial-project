@@ -3,6 +3,7 @@ import {Row, Container, Col, Form, Button, NavLink} from "react-bootstrap";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {Token} from "../../Context/Token/Token";
+import {Refresh} from "../../Context/Token/Refresh";
 import {decodeToken} from "react-jwt";
 import { IP } from "../../Context/IP";
 
@@ -14,10 +15,12 @@ const config = {
 
 function LoginForm() {
     const {token,setToken} = useContext(Token);
+    const {refresh,setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const [userId,setUserId] = useState("");
     const [userPwd,setUserPwd] = useState("");
     const navigate = useNavigate();
+
     function onChangeId(e)
     {
         setUserId(e.target.value);
@@ -36,6 +39,8 @@ function LoginForm() {
                 {
                     localStorage.setItem("jwt", response.headers['authorization']);
                     setToken(localStorage.getItem("jwt"));
+                    localStorage.setItem("refresh", response.headers['refresh']);
+                    setRefresh(localStorage.getItem("refresh"));
                     navigate(-1);
                 }
             })

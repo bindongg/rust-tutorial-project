@@ -40,15 +40,18 @@ import ReferenceCreate from "./pages/Reference/ReferenceCreate";
 import ReferenceDetail from "./pages/Reference/ReferenceDetail";
 import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
 import QuestionUpdate from "./pages/Question/QuestionUpdate";
+import {Refresh} from "./Context/Token/Refresh";
 
 
 
 //container -> 중앙으로 모아줌
 function App() {
     const [token,setToken] = useState(localStorage.getItem("jwt"));
+    const [refresh,setRefresh] = useState(localStorage.getItem("refresh"));
     return (
         <div>
             <Token.Provider value={{token,setToken}}>
+            <Refresh.Provider value={{refresh,setRefresh}}>
             <Header/>
             <main className="pt-5">
                     <Routes>
@@ -101,6 +104,7 @@ function App() {
                         <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
                     </Routes>
             </main>
+            </Refresh.Provider>
             </Token.Provider>
         </div>
     );

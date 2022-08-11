@@ -12,11 +12,10 @@ function Home(){
 
     const {token,setToken} = useContext(Token);
 
-    function temp()
+    function test()
     {
-        let token = localStorage.getItem("jwt");
-        let res = decodeToken(token);
-        alert(res.role);
+        console.log(localStorage.getItem("jwt"));
+        console.log(localStorage.getItem("refresh"));
     }
     const moveTo = (href) => {
         navigate(href);
@@ -41,6 +40,9 @@ function Home(){
                     Exercise
                 </Button>
                 {""}
+                <Button variant="secondary" onClick={test} size="lg">
+                    Exercise
+                </Button>
             </div>
             <br></br>
         </div>
