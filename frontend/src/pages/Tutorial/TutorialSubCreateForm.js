@@ -79,7 +79,8 @@ function TutorialSubCreateForm() {
                                     border: '1px solid #ced4da',
                                     borderRadius: '.25rem'
                                 }}
-                            /> 
+                            />
+                            {/* <textarea value={draftToHtml(convertToRaw(editorState.getCurrentContent()))} />  */}
                             <br/>
                            <Button type="submit">제출하기</Button>
                         </Form>
