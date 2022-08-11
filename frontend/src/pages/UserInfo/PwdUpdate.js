@@ -4,11 +4,12 @@ import {Token} from "../../Context/Token/Token";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {logout} from "../../Common/Modules/Common";
+import { IP } from "../../Context/IP";
 
 function InfoMain() {
 
     const {token,setToken} = useContext(Token);
-
+    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const [password,setPassword] = useState("");
@@ -37,7 +38,7 @@ function InfoMain() {
             let pwdEx = new RegExp(/^(?=.*?[A-Za-z#?!@$%^&*-]).{8,20}$/);
             if(pwdEx.test(newPassword))
             {
-                axios.post("http://localhost:8080/user/password", {password: password, newPassword: newPassword}, {headers: {authorization: token}})
+                axios.post(`http://${ip}:8080/user/password`, {password: password, newPassword: newPassword}, {headers: {authorization: token}})
                     .then((Response)=>{
                         if(Response.data.code === 200)
                         {

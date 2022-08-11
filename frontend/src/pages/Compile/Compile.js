@@ -3,9 +3,11 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Button } from "react-bootstrap";
 import axios from "axios";
 import { Token } from "../../Context/Token/Token";
+import { IP } from "../../Context/IP";
 
 function Compile() {
   const {token,setToken} = useContext(Token);
+  const ip = useContext(IP);
   const headers = {
     'Content-Type' : 'application/json; charset=utf-8',
     'Authorization' : token
@@ -17,7 +19,7 @@ function Compile() {
   const [output, setOutput] = useState();
 
   const compileCode = (data) => {
-    axios.post("http://54.180.10.223:8080/tutorial/compile",
+    axios.post(`http://${ip}:8080/tutorial/compile`,
         {code : code, stdIn : input},
         {headers : headers})
         .then(response => { 

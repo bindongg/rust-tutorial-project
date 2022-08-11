@@ -4,6 +4,7 @@ import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import {useHistory, useLocation, useNavigate, useParams} from "react-router-dom"
 import {Token} from "../../Context/Token/Token";
+import { IP } from "../../Context/IP";
 
 
 function ExerciseUpdate() {
@@ -15,6 +16,7 @@ function ExerciseUpdate() {
     const { register, watch, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -34,7 +36,7 @@ function ExerciseUpdate() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         console.log('data', data);
-        axios.patch(`http://localhost:8080/exercise/${id}`, {...data}, {headers : headers}
+        axios.patch(`http://${ip}:8080/exercise/${id}`, {...data}, {headers : headers}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);

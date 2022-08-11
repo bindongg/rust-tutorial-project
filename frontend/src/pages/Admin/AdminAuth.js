@@ -4,11 +4,13 @@ import axios from "axios";
 import {Token} from "../../Context/Token/Token";
 import {logout} from "../../Common/Modules/Common";
 import {useNavigate} from "react-router-dom";
+import { IP } from "../../Context/IP";
 
 function AdminAuth() {
     const navigate = useNavigate();
 
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
 
     const [id,setId] = useState("");
 
@@ -26,7 +28,7 @@ function AdminAuth() {
 
     function send()
     {
-        axios.post("http://localhost:8080/admin/auth",{id: id, role: role}, {headers: {authorization: token}})
+        axios.post(`http://${ip}:8080/admin/auth`,{id: id, role: role}, {headers: {authorization: token}})
             .then(
                 (response)=>
                 {

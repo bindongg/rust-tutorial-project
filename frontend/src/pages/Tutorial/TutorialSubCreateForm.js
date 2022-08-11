@@ -11,11 +11,13 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import PropTypes from 'prop-types';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { IP } from "../../Context/IP";
 
 
 function TutorialSubCreateForm() {
     const {tutorial} = useLocation().state;
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -27,7 +29,7 @@ function TutorialSubCreateForm() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.post(`http://54.180.10.223:8080/tutorial/${tutorial.id}/sub`, {...data}, {headers : headers})
+        axios.post(`http://${ip}:8080/tutorial/${tutorial.id}/sub`, {...data}, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)

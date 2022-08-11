@@ -4,6 +4,7 @@ import { Button } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
 import { decodeToken } from "react-jwt";
 import { NavLink, useNavigate } from "react-router-dom";
+import { IP } from "../../../Context/IP";
 import { Token } from "../../../Context/Token/Token";
 import TutorialSubList from "./TutorialSubList";
 
@@ -11,6 +12,7 @@ import TutorialSubList from "./TutorialSubList";
 function TutorialList({tutorials, rerender, setRerender}) {
     const navigate = useNavigate();
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const role = (token === null ? null : (decodeToken(token).role));
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
@@ -21,7 +23,7 @@ function TutorialList({tutorials, rerender, setRerender}) {
         navigate("/tutorial/updateForm", {state: {tutorial : tutorial}});
     }
     const deleteTutorial = (tutorial) => {
-        axios.delete(`http://54.180.10.223:8080/tutorial/${tutorial.id}`, {headers : headers})
+        axios.delete(`http://${ip}:8080/tutorial/${tutorial.id}`, {headers : headers})
         .then((response) =>
         {
             if (response.data.code === 200)

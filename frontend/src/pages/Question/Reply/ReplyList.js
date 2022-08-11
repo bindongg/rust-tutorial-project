@@ -8,10 +8,12 @@ import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
 import {logout} from "../../../Common/Modules/Common";
 import Reply from "./Reply";
+import { IP } from "../../../Context/IP";
 
 function ReplyList(props)
 {
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const navigate = useNavigate();
     const config = {
         headers: {
@@ -31,7 +33,7 @@ function ReplyList(props)
 
     function add()
     {
-        axios.post("http://localhost:8080/user/reply/add",{content: replyState, parent: props.id, userId: username}, config)
+        axios.post(`http://${ip}:8080/user/reply/add`,{content: replyState, parent: props.id, userId: username}, config)
             .then((response)=>{
                 if(response.data.code === 200)
                 {

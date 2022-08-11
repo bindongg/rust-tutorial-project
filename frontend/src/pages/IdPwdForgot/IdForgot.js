@@ -1,10 +1,12 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Button, Col, Container, Form, FormControl, FormGroup, InputGroup, NavLink, Row} from "react-bootstrap";
 import axios from "axios";
+import { IP } from "../../Context/IP";
 
 
 //container -> 중앙으로 모아줌
 function IdForgot() {
+    const ip = useContext(IP);
     const[email,setEmail] = useState("");
     const[password,setPassword] = useState("");
 
@@ -20,7 +22,7 @@ function IdForgot() {
 
     function send()
     {
-        axios.post("http://localhost:8080/id",{email: email, password: password}).then(
+        axios.post(`http://${ip}:8080/id`,{email: email, password: password}).then(
             (Response)=>
             {
                 if(Response.data.data === null)
