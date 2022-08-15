@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Header from "./pages/Header";
 
 import Footer from "./pages/Footer";
 import AfterAuthEmailSent from "./pages/Register/AfterAuthEmailSent";
 
-import {Route,Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import LoginForm from "./pages/Login/LoginForm";
 import RegisterForm from "./pages/Register/RegisterForm";
 import IdForgot from "./pages/IdPwdForgot/IdForgot";
@@ -41,6 +41,9 @@ import ReferenceDetail from "./pages/Reference/ReferenceDetail";
 import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
 import QuestionUpdate from "./pages/Question/QuestionUpdate";
 import {Refresh} from "./Context/Token/Refresh";
+import {isExpired} from "react-jwt";
+import {logout_} from "./Common/Modules/Common";
+import axios from "axios";
 
 
 
@@ -48,10 +51,17 @@ import {Refresh} from "./Context/Token/Refresh";
 function App() {
     const [token,setToken] = useState(localStorage.getItem("jwt"));
     const [refresh,setRefresh] = useState(localStorage.getItem("refresh"));
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(isExpired(refresh))
+        {
+            logout_(token,setToken,setRefresh,navigate,axios);
+        }
+    },[isExpired(refresh)]);
     return (
         <div>
-            <Token.Provider value={{token,setToken}}>
             <Refresh.Provider value={{refresh,setRefresh}}>
+            <Token.Provider value={{token,setToken}}>
             <Header/>
             <main className="pt-5">
                     <Routes>
@@ -104,8 +114,8 @@ function App() {
                         <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
                     </Routes>
             </main>
-            </Refresh.Provider>
             </Token.Provider>
+            </Refresh.Provider>
         </div>
     );
 }

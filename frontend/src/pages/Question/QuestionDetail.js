@@ -6,13 +6,17 @@ import {Col, Container, Row} from "react-bootstrap";
 import {decodeToken} from "react-jwt";
 import ReplyList from "./Reply/ReplyList";
 import axios from "axios";
-import {logout} from "../../Common/Modules/Common";
+import {login, logout, logout_} from "../../Common/Modules/Common";
 import { IP } from "../../Context/IP";
+import {Refresh} from "../../Context/Token/Refresh";
 
 
 function QuestionDetail()
 {
+    window.onbeforeunload = function(event){
+    }
     const {token,setToken} = useContext(Token);
+    const {setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const navigate = useNavigate();
 
@@ -29,7 +33,7 @@ function QuestionDetail()
     const [content,setContent] = useState(null);
     const [reply,setReply] = useState(null);
 
-    const [refresh,setRefresh] = useState(false);
+    const [refresh_,setRefresh_] = useState(false);
 
     const username = (token === null ? null : (decodeToken(token).username));
 
@@ -51,7 +55,7 @@ function QuestionDetail()
             .catch((error)=>{
                 alert("error");
             })
-    },[refresh]);
+    },[refresh_]);
 
     function delQuestion()
     {
@@ -59,6 +63,7 @@ function QuestionDetail()
             .then((response)=>{
                 if(response.data.code === 200)
                 {
+                    login(setToken,setRefresh,response);
                     navigate("/question");
                 }
                 else
@@ -69,7 +74,7 @@ function QuestionDetail()
             .catch((error)=>{
                 if(error.response.status === 401 || error.response.status === 403)
                 {
-                    logout(token,setToken,navigate);
+                    logout_(token,setToken,setRefresh,navigate,axios);
                 }
             })
     }
@@ -93,7 +98,7 @@ function QuestionDetail()
                         <div dangerouslySetInnerHTML={{__html: content}}/>
                     </Col>
                 </Row>
-                <ReplyList id={id} reply={reply} refresh={refresh} setRefresh={setRefresh}/>
+                <ReplyList id={id} reply={reply} refresh_={refresh_} setRefresh_={setRefresh_}/>
             </Container>
         </>
     );

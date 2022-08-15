@@ -1,11 +1,12 @@
 import {Button, Col, Row} from "react-bootstrap";
 import {useContext, useState} from "react";
-import {logout} from "../../../Common/Modules/Common";
+import {login, logout, logout_} from "../../../Common/Modules/Common";
 import axios from "axios";
 import {Token} from "../../../Context/Token/Token";
 import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
 import { IP } from "../../../Context/IP";
+import {Refresh} from "../../../Context/Token/Refresh";
 
 function Reply(props)
 {
@@ -17,6 +18,7 @@ function Reply(props)
     }
 
     const {token,setToken} = useContext(Token);
+    const {setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const navigate = useNavigate();
     const username = token === null || token === undefined ? "" : decodeToken(token).username;
@@ -49,8 +51,8 @@ function Reply(props)
             .then((response)=>{
                 if(response.data.code === 200)
                 {
-                    //window.location.replace(`/question/${props.reply.question_.id}`);
-                    props.setRefresh(!(props.refresh));
+                    login(setToken,setRefresh,response);
+                    props.setRefresh_(!(props.refresh_));
                 }
                 else
                 {
@@ -60,7 +62,7 @@ function Reply(props)
             .catch((error)=>{
                 if(error.response.status === 401 || error.response.status === 403)
                 {
-                    logout(token,setToken,navigate);
+                    logout_(token,setToken,setRefresh,navigate,axios);
                 }
             })
     }
@@ -79,8 +81,8 @@ function Reply(props)
             .then((response)=>{
                 if(response.data.code === 200)
                 {
-                    //window.location.replace(`/question/${props.reply.question_.id}`);
-                    props.setRefresh(!(props.refresh));
+                    login(setToken,setRefresh,response);
+                    props.setRefresh_(!(props.refresh_));
                 }
                 else
                 {
@@ -90,7 +92,7 @@ function Reply(props)
             .catch((error)=>{
                 if(error.response.status === 401 || error.response.status === 403)
                 {
-                    logout(token,setToken,navigate);
+                    logout_(token,setToken,setRefresh,navigate,axios);
                 }
             })
     }
@@ -106,15 +108,15 @@ function Reply(props)
             }, config)
                 .then((response) => {
                     if (response.data.code === 200) {
-                        //window.location.replace(`/question/${props.reply.question_.id}`);
-                        props.setRefresh(!(props.refresh));
+                        login(setToken,setRefresh,response);
+                        props.setRefresh_(!(props.refresh_));
                     } else {
                         alert("failed");
                     }
                 })
                 .catch((error) => {
                     if (error.response.status === 401 || error.response.status === 403) {
-                        logout(token, setToken, navigate);
+                        logout_(token,setToken,setRefresh,navigate,axios);
                     }
                 })
                 .finally(()=>{

@@ -2,8 +2,9 @@ import React, {useContext, useState} from 'react';
 import {Button, Figure} from "react-bootstrap";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {decodeToken} from "react-jwt";
+import {decodeToken, isExpired} from "react-jwt";
 import {Token} from "../../Context/Token/Token";
+import {Refresh} from "../../Context/Token/Refresh";
 
 
 function Home(){
@@ -11,11 +12,11 @@ function Home(){
     const navigate = useNavigate();
 
     const {token,setToken} = useContext(Token);
+    const {refresh} = useContext(Refresh);
 
     function test()
     {
-        console.log(localStorage.getItem("jwt"));
-        console.log(localStorage.getItem("refresh"));
+        console.log(isExpired(refresh));
     }
     const moveTo = (href) => {
         navigate(href);

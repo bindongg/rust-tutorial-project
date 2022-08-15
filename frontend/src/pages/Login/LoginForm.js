@@ -6,6 +6,7 @@ import {Token} from "../../Context/Token/Token";
 import {Refresh} from "../../Context/Token/Refresh";
 import {decodeToken} from "react-jwt";
 import { IP } from "../../Context/IP";
+import {login} from "../../Common/Modules/Common";
 
 const config = {
     headers: {
@@ -14,11 +15,12 @@ const config = {
 };
 
 function LoginForm() {
-    const {token,setToken} = useContext(Token);
-    const {refresh,setRefresh} = useContext(Refresh);
+    const {setToken} = useContext(Token);
+    const {setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const [userId,setUserId] = useState("");
     const [userPwd,setUserPwd] = useState("");
+    const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
 
     function onChangeId(e)
@@ -33,20 +35,19 @@ function LoginForm() {
 
     function logIn()
     {
+        setLoading(true);
         axios.post(`http://${ip}:8080/login`,{userId: userId, userPassword: userPwd}, config)
             .then((response)=>{
                 if(response.status === 200)
                 {
-                    localStorage.setItem("jwt", response.headers['authorization']);
-                    setToken(localStorage.getItem("jwt"));
-                    localStorage.setItem("refresh", response.headers['refresh']);
-                    setRefresh(localStorage.getItem("refresh"));
+                    login(setToken,setRefresh,response);
                     navigate(-1);
                 }
             })
             .catch((Error)=>{
                 alert(Error.response.status+" 아이디 또는 비밀번호가 일치하지 않습니다");
             })
+            .finally(()=>{setLoading(false);})
     }
 
     return (
@@ -71,10 +72,7 @@ function LoginForm() {
                                     <NavLink href="/pwdForgot">비밀번호 찾기</NavLink>
                                 </Form.Text>
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="로그인 유지" />
-                            </Form.Group>
-                            <Button variant="info" type="button" onClick={logIn}>
+                            <Button variant="info" type="button" disabled={loading} onClick={logIn}>
                                 로그인
                             </Button>
                         </Form>

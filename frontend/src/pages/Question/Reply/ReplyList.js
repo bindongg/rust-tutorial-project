@@ -6,13 +6,15 @@ import {useContext} from "react";
 import {Token} from "../../../Context/Token/Token";
 import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
-import {logout} from "../../../Common/Modules/Common";
+import {login, logout, logout_} from "../../../Common/Modules/Common";
 import Reply from "./Reply";
 import { IP } from "../../../Context/IP";
+import {Refresh} from "../../../Context/Token/Refresh";
 
 function ReplyList(props)
 {
     const {token,setToken} = useContext(Token);
+    const {setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const navigate = useNavigate();
     const config = {
@@ -45,15 +47,15 @@ function ReplyList(props)
             }, config)
                 .then((response) => {
                     if (response.data.code === 200) {
-                        //window.location.replace(`/question/${props.id}`);
-                        props.setRefresh(!(props.refresh));
+                        login(setToken,setRefresh,response);
+                        props.setRefresh_(!(props.refresh_));
                     } else {
                         alert("failed");
                     }
                 })
                 .catch((error) => {
                     if (error.response.status === 401 || error.response.status === 403) {
-                        logout(token, setToken, navigate);
+                        logout_(token,setToken,setRefresh,navigate,axios);
                     }
                 })
                 .finally(() => {
@@ -75,7 +77,7 @@ function ReplyList(props)
             {
                 props.reply === null
                     ? (<></>)
-                    : props.reply.map((reply,index)=>(<Reply key={index} reply={reply} refresh={props.refresh} setRefresh={props.setRefresh}/>))
+                    : props.reply.map((reply,index)=>(<Reply key={index} reply={reply} refresh_={props.refresh_} setRefresh_={props.setRefresh_}/>))
             }
         </>
     );
