@@ -12,7 +12,7 @@ function ExerciseUpdate() {
     const exerciseDetail = location.state.exerciseDetail;
 
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
-    const { register, watch, reset,handleSubmit } = useForm();
+    const { register, watch, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
     const {token,setToken} = useContext(Token);
     const headers = {
@@ -52,6 +52,7 @@ function ExerciseUpdate() {
     };
 
     const testcases = exerciseTestCases.map(function (exerciseTestCase, index){
+        setValue("exerciseTestcases["+ index+ "].number", (index+1));
         return (
             <Row key={index} className="mb-3">
                 <Col>
