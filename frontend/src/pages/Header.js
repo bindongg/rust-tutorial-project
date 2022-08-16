@@ -1,12 +1,13 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 import {Token} from "../Context/Token/Token";
-import {decodeToken} from "react-jwt";
+import {decodeToken,isExpired} from "react-jwt";
 import axios from "axios";
 import {Link, NavLink, useNavigate} from "react-router-dom";
-import {logout} from "../Common/Modules/Common";
+import {logout, logout_} from "../Common/Modules/Common";
 import './Header.css';
 import { IP } from '../Context/IP';
+import {Refresh} from "../Context/Token/Refresh";
 
 const config = {
     headers: {
@@ -16,6 +17,7 @@ const config = {
 
 function Header(){
     const {token,setToken} = useContext(Token);
+    const {refresh,setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const username = (token === null ? null : (decodeToken(token).username));
     const role = (token === null ? null : (decodeToken(token).role));
@@ -24,12 +26,13 @@ function Header(){
 
     function Logout()
     {
-        axios.post(`http://${ip}:8080/logout`,null, {headers: {authorization: token}})
+        logout_(token,setToken,setRefresh,navigate,axios);
+        /*axios.post(`http://${ip}:8080/logout`,null, {headers: {authorization: token}})
             .then(
                 (response)=>{
                     if(response.status === 200)
                     {
-                        logout(token,setToken,navigate);
+                        logout(token,setToken,setRefresh,navigate);
                     }
                 }
             )
@@ -37,7 +40,7 @@ function Header(){
                 (Error)=> {
                     alert(Error.response.status+" error");
                 }
-            )
+            )*/
     }
 
     return (

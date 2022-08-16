@@ -1,18 +1,20 @@
 import {Col, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import axios from "axios";
 import {useContext} from "react";
 import {Token} from "../../../Context/Token/Token";
 import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
-import {logout} from "../../../Common/Modules/Common";
+import {login, logout, logout_} from "../../../Common/Modules/Common";
 import Reply from "./Reply";
 import { IP } from "../../../Context/IP";
+import {Refresh} from "../../../Context/Token/Refresh";
 
 function ReplyList(props)
 {
     const {token,setToken} = useContext(Token);
+    const {setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const navigate = useNavigate();
     const config = {
@@ -33,23 +35,33 @@ function ReplyList(props)
 
     function add()
     {
-        axios.post(`http://${ip}:8080/user/reply/add`,{content: replyState, parent: props.id, userId: username}, config)
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    window.location.replace(`/question/${props.id}`);
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .catch((error)=>{
-                if(error.response.status === 401 || error.response.status === 403)
-                {
-                    logout(token,setToken,navigate);
-                }
-            })
+        if(replyState === "")
+        {
+            alert("댓글을 입력하세요");
+        }
+        else {
+            axios.post(`http://${ip}:8080/user/reply/add`, {
+                content: replyState,
+                parent: props.id,
+                userId: username
+            }, config)
+                .then((response) => {
+                    if (response.data.code === 200) {
+                        login(setToken,setRefresh,response);
+                        props.setRefresh_(!(props.refresh_));
+                    } else {
+                        alert("failed");
+                    }
+                })
+                .catch((error) => {
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        logout_(token,setToken,setRefresh,navigate,axios);
+                    }
+                })
+                .finally(() => {
+
+                })
+        }
     }
 
     return (
@@ -65,7 +77,7 @@ function ReplyList(props)
             {
                 props.reply === null
                     ? (<></>)
-                    : props.reply.map((reply,index)=>(<Reply key={index} reply={reply}/>))
+                    : props.reply.map((reply,index)=>(<Reply key={index} reply={reply} refresh_={props.refresh_} setRefresh_={props.setRefresh_}/>))
             }
         </>
     );

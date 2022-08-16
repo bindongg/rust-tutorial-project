@@ -12,6 +12,9 @@ import htmlToDraft from 'html-to-draftjs';
 import PropTypes from 'prop-types';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IP } from "../../Context/IP";
+import { stateToMarkdown } from "draft-js-export-markdown";
+import { stateFromMarkdown } from "draft-js-import-markdown";
+
 
 
 function TutorialSubCreateForm() {
@@ -28,7 +31,7 @@ function TutorialSubCreateForm() {
         
     const onSubmit = (data) => {
         data.number = data.number * 1;
-        data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
+        data = {...data, content: textState};
         axios.post(`http://${ip}:8080/tutorial/${tutorial.id}/sub`, {...data}, {headers : headers})
         .then((response) =>
         {
@@ -44,12 +47,20 @@ function TutorialSubCreateForm() {
         });
     }
     // editor 설정
-    const [state, setState] = useState({editorState: EditorState.createEmpty(),  })
-    const { editorState } = state;
-    const onEditorStateChange = (editorState) => {
-        setState({editorState,});
+    const [state, setState] = useState({editorState: EditorState.createEmpty(), textState: "" })
+    const { editorState, textState } = state;
+    const onEditorStateChange = (editorState) => {        
+        let state = editorState.getCurrentContent()
+        let textState = stateToMarkdown(state);
+        setState({editorState, textState});
     };
-
+    const onPlainTextChange = (e) => {
+        let textState = e.target.value;
+        let content = stateFromMarkdown(textState);
+        let editorState = EditorState.createWithContent(content);
+        setState({ editorState, textState });
+    }
+    
     return (
         <>
             <Container>
@@ -81,7 +92,9 @@ function TutorialSubCreateForm() {
                                     border: '1px solid #ced4da',
                                     borderRadius: '.25rem'
                                 }}
-                            /> 
+                            />
+                            <br/>
+                            <Form.Control value={textState} as="textarea" rows="3" onChange={onPlainTextChange} />
                             <br/>
                            <Button type="submit">제출하기</Button>
                         </Form>

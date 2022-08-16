@@ -1,15 +1,24 @@
 import {Button, Col, Row} from "react-bootstrap";
-import {useContext, useEffect, useState} from "react";
-import {logout} from "../../../Common/Modules/Common";
+import {useContext, useState} from "react";
+import {login, logout, logout_} from "../../../Common/Modules/Common";
 import axios from "axios";
 import {Token} from "../../../Context/Token/Token";
 import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
 import { IP } from "../../../Context/IP";
+import {Refresh} from "../../../Context/Token/Refresh";
 
 function Reply(props)
 {
+    const replyStyle = {
+        fontSize: "1rem"
+    }
+    const replyAuthorStyle = {
+        fontSize: "0.9rem"
+    }
+
     const {token,setToken} = useContext(Token);
+    const {setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const navigate = useNavigate();
     const username = token === null || token === undefined ? "" : decodeToken(token).username;
@@ -42,7 +51,8 @@ function Reply(props)
             .then((response)=>{
                 if(response.data.code === 200)
                 {
-                    window.location.replace(`/question/${props.reply.question_.id}`);
+                    login(setToken,setRefresh,response);
+                    props.setRefresh_(!(props.refresh_));
                 }
                 else
                 {
@@ -52,7 +62,7 @@ function Reply(props)
             .catch((error)=>{
                 if(error.response.status === 401 || error.response.status === 403)
                 {
-                    logout(token,setToken,navigate);
+                    logout_(token,setToken,setRefresh,navigate,axios);
                 }
             })
     }
@@ -71,7 +81,8 @@ function Reply(props)
             .then((response)=>{
                 if(response.data.code === 200)
                 {
-                    window.location.replace(`/question/${props.reply.question_.id}`);
+                    login(setToken,setRefresh,response);
+                    props.setRefresh_(!(props.refresh_));
                 }
                 else
                 {
@@ -81,7 +92,7 @@ function Reply(props)
             .catch((error)=>{
                 if(error.response.status === 401 || error.response.status === 403)
                 {
-                    logout(token,setToken,navigate);
+                    logout_(token,setToken,setRefresh,navigate,axios);
                 }
             })
     }
@@ -97,15 +108,19 @@ function Reply(props)
             }, config)
                 .then((response) => {
                     if (response.data.code === 200) {
-                        window.location.replace(`/question/${props.reply.question_.id}`);
+                        login(setToken,setRefresh,response);
+                        props.setRefresh_(!(props.refresh_));
                     } else {
                         alert("failed");
                     }
                 })
                 .catch((error) => {
                     if (error.response.status === 401 || error.response.status === 403) {
-                        logout(token, setToken, navigate);
+                        logout_(token,setToken,setRefresh,navigate,axios);
                     }
+                })
+                .finally(()=>{
+                    setSubReplyAreaState(false);
                 })
         }
     }
@@ -113,9 +128,9 @@ function Reply(props)
     return(
         <Row className="mt-7">
             <Col lg={12} md={10} sm={12} className="p-3 m-auto shadow-sm rounded-lg">
-                <h6 className="ps-3 pt-2 text-lg-start">{props.reply.user.id}</h6>
+                <h6 className="ps-3 pt-2 text-lg-start" style={replyAuthorStyle}>{props.reply.user.id}</h6>
                 <div>
-                    <span className="ps-3">{props.reply.content}</span>
+                    <span className="ps-3" style={replyStyle}>{props.reply.content}</span>
                 </div>
                 <Button type="button" className="btn btn-primary btn-sm" onClick={changeState}>대댓글</Button>
                 &nbsp;&nbsp;
@@ -139,9 +154,9 @@ function Reply(props)
                         :
                         props.reply.subReply.map((subReply,index)=>(
                             <div className="ps-5" key={index}>
-                                <h6 className="pt-2 text-lg-start">{subReply.user.id}</h6>
-                                <div className="ps-3">
-                                    <span>{subReply.content}</span>
+                                <h6 className="pt-2 text-lg-start" style={replyAuthorStyle}>{subReply.user.id}</h6>
+                                <div>
+                                    <span style={replyStyle}>{subReply.content}</span>
                                 </div>
                                 {
                                     subReply.user.id === username

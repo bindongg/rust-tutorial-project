@@ -2,10 +2,11 @@ import React, {useContext, useState} from "react";
 import {Row, Container, Col, Button} from "react-bootstrap";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
+import {IP} from "../../Context/IP";
 
 function AfterAuthEmailSent() {
     const location = useLocation();
-    const ip = useContext(ip);
+    const ip = useContext(IP);
     const id = location.state.id;
     const password = location.state.pwd;
     const email = location.state.email;

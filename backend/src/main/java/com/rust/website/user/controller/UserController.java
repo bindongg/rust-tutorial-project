@@ -167,24 +167,30 @@ public class UserController {
     {
         String id = mp.get("id");
         String value = mp.get("value");
-        test.setRedisStringValue(id,value);
+        //test.setRedisStringValue(id,value);
+    }
+
+    @GetMapping("/test")
+    public String test()
+    {
+        return "test";
     }
 
     @GetMapping ("/test/redis/out/{id}")
     public void redistest2(@PathVariable String id)
     {
-        String value = test.getRedisStringValue(id);
+        /*String value = test.getRedisStringValue(id);
         if(value == null)
         {
             System.out.println("null");
         }
-        else System.out.println(value);
+        else System.out.println(value);*/
     }
 
     @GetMapping("/test/delete/{id}")
     public void redistest3(@PathVariable String id)
     {
-        test.delRedisStringValue(id);
+        /*test.delRedisStringValue(id);*/
     }
 
     @GetMapping("/admin/test")

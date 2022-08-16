@@ -79,7 +79,7 @@ public class ExerciseService {
             if (!exerciseTestcases.get(i).getOutput().equals(compileOutputDTO.getStdOut())) { break; }
         }
 
-        ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).get();
+        ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).orElse(null);
         if (exerciseTry == null) {
             exerciseTry = ExerciseTry.builder()
                     .exercise(exercise)

@@ -8,13 +8,15 @@ import {Editor} from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import {Token} from "../../Context/Token/Token";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import {logout} from "../../Common/Modules/Common";
+import {login, logout, logout_} from "../../Common/Modules/Common";
 import Loading from "../Loading";
 import { IP } from "../../Context/IP";
+import {Refresh} from "../../Context/Token/Refresh";
 
 function QuestionWrite()
 {
     const {token,setToken} = useContext(Token);
+    const {setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
     const navigate = useNavigate();
     const config = {
@@ -43,6 +45,7 @@ function QuestionWrite()
             .then((response)=>{
                 if(response.data.code === 200)
                 {
+                    login(setToken,setRefresh,response);
                     navigate("/question");
                 }
                 else
@@ -53,7 +56,7 @@ function QuestionWrite()
             .catch((error)=>{
                 if(error.response.status === 401 || error.response.status === 403)
                 {
-                    logout(token,setToken,navigate);
+                    logout_(token,setToken,setRefresh,navigate,axios);
                 }
             })
             .finally(()=>{
