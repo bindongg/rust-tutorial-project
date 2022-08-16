@@ -43,6 +43,7 @@ function InfoMain() {
                         if(Response.data.code === 200)
                         {
                             alert("비밀번호 변경을 완료했습니다");
+                            //로그아웃 로직 추가?
                             navigate("/login");
                         }
                         else
