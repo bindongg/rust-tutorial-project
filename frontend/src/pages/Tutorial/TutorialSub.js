@@ -1,12 +1,14 @@
 import axios from "axios";
-import { convertToRaw } from "draft-js";
-import { draftjsToMarkdown } from "draftjs-to-markdown";
 import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { decodeToken } from "react-jwt";
 import { useNavigate, useParams } from "react-router-dom";
+import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
+import { dark } from "react-syntax-highlighter/src/styles/hljs";
+import remarkGfm from "remark-gfm";
 import { IP } from "../../Context/IP";
 import { Token } from "../../Context/Token/Token";
+import ReactMarkdown from "react-markdown";
 
 function TutorialSub(props) {
     const {id, subId} = useParams();
@@ -69,8 +71,7 @@ function TutorialSub(props) {
     const goNext = () => {
         navigate(`/tutorial/${id}/sub/${nextSub.id}`);
     }
-
-
+    
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
@@ -84,8 +85,27 @@ function TutorialSub(props) {
             </div>
             }
             </div>
-            <div className="col-8 mx-auto border-top border-bottom m-3 p-2" 
-            dangerouslySetInnerHTML={{__html: tutorialSub.content}}>                 
+            <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
+                <ReactMarkdown children={tutorialSub.content}
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    code({node, inline, className, children, ...props}) {
+                                        const match = /language-(\w+)/.exec(className || '')
+                                        return !inline && match ? (
+                                            <SyntaxHighlighter
+                                                children={String(children).replace(/\n$/, '')}
+                                                style={dark}
+                                                language={match[1]}
+                                                PreTag="div"
+                                                {...props}
+                                            />
+                                        ) : (
+                                            <code className={className} {...props}>
+                                                {children}
+                                            </code>
+                                        )
+                                    }
+                                }}/>
             </div>
             <br/>
             <div className="col-8 mx-auto">
