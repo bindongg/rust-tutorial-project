@@ -24,10 +24,17 @@ public class TutorialService {
     private final TutorialQuizQuestionRepository tutorialQuizQuestionRepository;
 
     @Transactional(readOnly = true)
-    public List<Tutorial> getTutorials(String userId)
+    public List<Tutorial> getUserTutorials(String userId)
     {
         int doneCnt = tutorialDoneRepository.countByUser_id(userId);
         List<Tutorial> tutorials = tutorialRepository.getTutorials(doneCnt + 1);
+        return tutorials;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Tutorial> getAllTutorials()
+    {
+        List<Tutorial> tutorials = tutorialRepository.getAllTutorials();
         return tutorials;
     }
 

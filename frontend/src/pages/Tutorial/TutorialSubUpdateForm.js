@@ -10,10 +10,12 @@ import draftToMarkdown from 'draftjs-to-markdown';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { IP } from "../../Context/IP";
 
 function TutorialSubUpdateForm() {
     const {tutorialSub} = useLocation().state;
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -24,12 +26,19 @@ function TutorialSubUpdateForm() {
     const onSubmit = (data) => {
         data.number = data.number * 1;
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.patch(`http://localhost:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers}
-        ).then(function(response) {
-            alert(response.data.data);
+        axios.patch(`http://${ip}:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
+        .then((response) => 
+        {
+            if (response.data.code === 200)
+            {
+                alert(response.data.data);
+            }
             navigate(-1);
         })
-        
+        .catch((Error) => 
+        {
+            alert(Error.response.status + " error");
+        })
     }
     // editor 설정
     const [state, setState] = useState({editorState: EditorState.createWithContent(
@@ -65,19 +74,16 @@ function TutorialSubUpdateForm() {
                                 wrapperClassName="demo-wrapper"
                                 editorClassName="demo-editor"
                                 onEditorStateChange={onEditorStateChange}
-                                localization={{
+                                localization=
+                                {{
                                 locale: 'ko',
                                 }}
-                                
+                                wrapperStyle=
+                                {{
+                                    border: '1px solid #ced4da',
+                                    borderRadius: '.25rem'
+                                }}
                             />
-                            {/* <textarea
-                                disabled
-                                value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-                                />
-                            <textarea
-                            disabled
-                            value={editorState && draftToMarkdown(convertToRaw(editorState.getCurrentContent()))}
-                            /> */}
                             <br/>
                            <Button type="submit">제출하기</Button>
                         </Form>

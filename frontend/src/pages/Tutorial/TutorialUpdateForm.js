@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { IP } from "../../Context/IP";
 import { Token } from "../../Context/Token/Token";
 
 
@@ -10,6 +11,7 @@ import { Token } from "../../Context/Token/Token";
 function TutorialUpdateForm() {
     const {tutorial} = useLocation().state;
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -20,11 +22,18 @@ function TutorialUpdateForm() {
         
     const onSubmit = (data) => {
         data.number = data.number * 1;
-        console.log('data', data);
-        axios.patch(`http://localhost:8080/tutorial/${tutorial.id}`, {...data}, {headers : headers}
-        ).then(function(response) {
-            alert(response.data.data);
+        axios.patch(`http://${ip}:8080/tutorial/${tutorial.id}`, {...data}, {headers : headers})
+        .then((response) =>
+        {
+            if (response.data.code === 200)
+            {
+                alert(response.data.data);
+            }
             navigate(-1);
+        })
+        .catch((Error) => 
+        {
+            alert(Error.response.status + "error");
         })
     }
 

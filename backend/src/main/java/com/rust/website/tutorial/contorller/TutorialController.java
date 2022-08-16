@@ -32,7 +32,16 @@ public class TutorialController {
     public ResponseDTO<List<Tutorial>> getTutorialMainPage(HttpServletRequest request)
     {
         String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
-        List<Tutorial> tutorials = tutorialService.getTutorials(userId);
+        String userRole = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME2);
+        List<Tutorial> tutorials = null;
+        if (userRole.equals("ROLE_ADMIN") || userRole.equals("ROLE_MANAGER"))
+        {
+            tutorials = tutorialService.getAllTutorials();
+        }
+        else
+        {
+            tutorials = tutorialService.getUserTutorials(userId);
+        }
 
         return new ResponseDTO<List<Tutorial>>(HttpStatus.OK.value(), tutorials);
     }

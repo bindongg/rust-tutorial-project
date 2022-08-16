@@ -4,6 +4,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {Token} from "../../Context/Token/Token";
 import {decodeToken} from "react-jwt";
+import { IP } from "../../Context/IP";
 
 const config = {
     headers: {
@@ -13,11 +14,10 @@ const config = {
 
 function LoginForm() {
     const {token,setToken} = useContext(Token);
-
+    const ip = useContext(IP);
     const [userId,setUserId] = useState("");
     const [userPwd,setUserPwd] = useState("");
     const navigate = useNavigate();
-
     function onChangeId(e)
     {
         setUserId(e.target.value);
@@ -30,13 +30,13 @@ function LoginForm() {
 
     function logIn()
     {
-        axios.post("http://localhost:8080/login",{userId: userId, userPassword: userPwd}, config)
+        axios.post(`http://${ip}:8080/login`,{userId: userId, userPassword: userPwd}, config)
             .then((response)=>{
                 if(response.status === 200)
                 {
                     localStorage.setItem("jwt", response.headers['authorization']);
                     setToken(localStorage.getItem("jwt"));
-                    navigate("/home");
+                    navigate(-1);
                 }
             })
             .catch((Error)=>{

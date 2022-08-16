@@ -1,15 +1,17 @@
 import Button from "react-bootstrap/Button";
 import {NavLink, Table} from "react-bootstrap";
 import React, {useContext, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Token} from "../../Context/Token/Token";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {logout} from "../../Common/Modules/Common";
 import Page from "../../Common/Page/Page";
-import { Token } from "../../Context/Token/Token";
-import { logout } from "../../Common/Modules/Common";
+import { IP } from "../../Context/IP";
 
 function QuestionMain()
 {
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const [questions,setQuestions] = useState(null);
@@ -21,7 +23,7 @@ function QuestionMain()
     const [page,setPage] = useState(0);
 
     useEffect(()=>{
-        axios.get("http://localhost:8080/question",{params: {page: page, size: recPerPage}})
+        axios.get(`http://${ip}:8080/question`,{params: {page: page, size: recPerPage}})
             .then((response)=>{
                 if(response.data.code === 200)
                 {
@@ -68,7 +70,7 @@ function QuestionMain()
                                             (<tr key={index}>
                                                 <td>{question.id}</td>
                                                 <td onClick={()=>{
-                                                    navigate("/question/"+question.id, {state: {title: question.title, content: question.content}})
+                                                    navigate(`/question/${question.id}`)
                                                 }}>{question.title}</td>
                                                 <td>{question.user.id}</td>
                                                 <td>{question.done}</td>

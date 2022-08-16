@@ -4,12 +4,14 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button} from "react-bootstrap";
 import axios from "axios";
 import {Token} from "../../../Context/Token/Token";
+import { IP } from "../../../Context/IP";
 
 function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
     // let problemURL = window.location.pathname;
     // let problemNum = problemURL[problemURL.length-1];
     const {id} = useParams();
     const {token,setToken} = useContext(Token);
+    const ip = useContext(IP);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -45,7 +47,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
     }
 
     const deleteExercise = () => {
-        axios.delete(`http://localhost:8080/exercise/${id}`, {headers : headers}
+        axios.delete(`http://${ip}:8080/exercise/${id}`, {headers : headers}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
