@@ -26,21 +26,19 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
         Testcases: Testcases,
         difficulty: difficulty
     }
-    const [rustCode, setRustCode] = useState(`fn main() {
+    const [code, setCode] = useState(`fn main() {
   println!("Hello World!");
 }
 `);
+    const jsonCode ={
+        "code": code
+    }
 
     const compileCode = (data) => {
-        console.log('code: ', {rustCode});
-        // return  axios.post(`https://ec33a7bf-9e16-4092-8ca5-aeeaf2a1072c.mock.pstmn.io/exercise/compile/${id}`,
-        //     {code: rustCode},
-        //     {withCredentials: true}).then(result => { //TODO backend에서도 마찬가지로 Credential 설정을 true 로 해줘야함
-        //     console.log('register result', result)
-        // }).catch()
-        axios.post(`http://${ip}:8080//exercise/compile/${id}`, {...rustCode}, {headers : headers}
+        console.log(jsonCode);
+        axios.post(`http://localhost:8080/exercise/compile/${id}`, jsonCode, {headers : headers}
         ).then(function(response) {
-            alert(response.data.data);
+            alert(response.data);
             navigate(-1);
         })
     }
@@ -90,10 +88,10 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <CodeEditor
-                    value={rustCode}
+                    value={code}
                     language="rust"
                     placeholder="Please enter RUST code."
-                    onChange={(event) => setRustCode(event.target.value)}
+                    onChange={(event) => setCode(event.target.value)}
                     padding={15}
                     style={{
                         fontSize: 15,

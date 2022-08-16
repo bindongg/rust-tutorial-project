@@ -13,7 +13,7 @@ function ExerciseUpdate() {
     const exerciseDetail = location.state.exerciseDetail;
 
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
-    const { register, watch, reset,handleSubmit } = useForm();
+    const { register, watch, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
     const {token,setToken} = useContext(Token);
     const ip = useContext(IP);
@@ -43,9 +43,18 @@ function ExerciseUpdate() {
         })
     }
 
-    const exerciseTestCases = exerciseDetail.Testcases;
+    const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.Testcases);
+    const testCaseForm = {id: "", number: "", input: "", output: ""}
+
+    // const exerciseTestCases = exerciseDetail.Testcases;
+    const addTestcase = () => {
+        // setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
+        console.log(exerciseTestCases);
+        setExerciseTestCases(arr => [...arr, testCaseForm] )
+    };
 
     const testcases = exerciseTestCases.map(function (exerciseTestCase, index){
+        setValue("exerciseTestcases["+ index+ "].number", (index+1));
         return (
             <Row key={index} className="mb-3">
                 <Col>
@@ -128,7 +137,9 @@ function ExerciseUpdate() {
                             </Form.Group>
 
                             {testcases}
-
+                            <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
+                            <br/>
+                            <br/>
                            <Button variant="info" type="submit" >
                                 문제 수정
                             </Button>
