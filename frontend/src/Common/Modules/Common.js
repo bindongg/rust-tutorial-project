@@ -29,3 +29,28 @@ export function login(setToken,setRefresh,response)
         }
     }
 }
+
+export function axios_get(axios,url,data,config,success,fail,final)
+{
+    axios.get(url).then().catch().finally();
+}
+
+export function axios_post(axios,url,data,config,success,fail,final)
+{
+    axios.post(url).then().catch().finally()
+}
+
+export function axios_delete(axios,url,data,config,success,fail,final)
+{
+    axios.delete(url).then().catch().finally()
+}
+
+export function axios_put(axios,url,data,config,success,fail,final)
+{
+    axios.put(url).then().catch().finally()
+}
+
+export function axios_patch(axios,url,data,config,success,fail,final)
+{
+    axios.patch(url).then().catch().finally()
+}
