@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +15,13 @@ function TutorialCreateForm() {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
       };
+    const [loading,setLoading] = useState(false);
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();
 
         
     const onSubmit = (data) => {
+        setLoading(true);
         data.number = data.number * 1;
         axios.post(`http://${ip}:8080/tutorial`, {...data}, {headers : headers})
         .then((response) =>
@@ -55,7 +57,7 @@ function TutorialCreateForm() {
                                 {errors.name && <p style={{color:'red', fontSize:"13px"}}>{errors.name.message}</p>}
                             </Form.Group>
 
-                           <Button type="submit">제출하기</Button>
+                           <Button type="submit" disabled={loading}>제출하기</Button>
                         </Form>
                     </Col>
                 </Row>

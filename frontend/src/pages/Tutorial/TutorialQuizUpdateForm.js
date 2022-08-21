@@ -14,12 +14,14 @@ function TutorialQuizUpdateForm() {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
       };
+    const [loading,setLoading] = useState(false);
     const [numbers, setNumbers] = useState([...Array(tutorialQuiz.tutorialQuizQuestions.length)].map((v,i) => i+1));
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
     const onSubmit = (data) => {
+        setLoading(true);
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
         axios.patch(`http://${ip}:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers})
         .then((response) => 
@@ -89,7 +91,7 @@ function TutorialQuizUpdateForm() {
                             <Button onClick={ addQuestion } style={buttonStyle}>Question 추가하기</Button>
                             <Button onClick={ removeQuestion } style={buttonStyle}>Question 삭제하기</Button>
                             <br/><br/>
-                           <Button type="submit" style={buttonStyle}>제출하기</Button>
+                           <Button type="submit" style={buttonStyle} disabled={loading}>제출하기</Button>
                         </Form>
                     </Col>
                 </Row>

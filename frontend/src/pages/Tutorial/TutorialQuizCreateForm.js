@@ -12,12 +12,14 @@ function TutorialQuizCreateForm() {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
       };
+      const [loading,setLoading] = useState(false);
     const [numbers, setNumbers] = useState([1 ]);
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
     const onSubmit = (data) => {
+        setLoading(true);
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
         axios.post(`http://54.180.10.223:8080/tutorial/${tutorial.id}/quiz`, {...data}, {headers : headers})
         .then((response) =>
@@ -72,7 +74,7 @@ function TutorialQuizCreateForm() {
                             <Button onClick={ addQuestion } style={buttonStyle}>Question 추가하기</Button>
                             <Button onClick={ removeQuestion } style={buttonStyle}>Question 삭제하기</Button>
                             <br/><br/>
-                           <Button type="submit" style={buttonStyle}>제출하기</Button>
+                           <Button type="submit" style={buttonStyle} disabled={loading}>제출하기</Button>
                         </Form>
                     </Col>
                 </Row>

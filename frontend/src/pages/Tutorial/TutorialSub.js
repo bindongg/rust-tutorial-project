@@ -20,6 +20,7 @@ function TutorialSub(props) {
         number: "",
         content: "",
     });
+    const [loading,setLoading] = useState(false);
     const [preSub, setPreSub] = useState(null);           
     const [nextSub, setNextSub] = useState(null);           
     const headers = {
@@ -51,6 +52,7 @@ function TutorialSub(props) {
         navigate("/tutorial/sub/updateForm", {state: {tutorialSub : tutorialSub}});
     }
     const deleteSub = () => {
+        setLoading(true);
         axios.delete(`http://${ip}:8080/tutorial/sub/${tutorialSub.id}`, {headers : headers})
         .then((response) => 
         {
@@ -81,7 +83,7 @@ function TutorialSub(props) {
             (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
             <div>
                 <Button variant="warning" style={buttonStyle} onClick={updateSub}>수정</Button>
-                <Button variant="danger" style={buttonStyle} onClick={deleteSub}>삭제</Button>
+                <Button variant="danger" style={buttonStyle} disabled={loading} onClick={deleteSub}>삭제</Button>
             </div>
             }
             </div>
