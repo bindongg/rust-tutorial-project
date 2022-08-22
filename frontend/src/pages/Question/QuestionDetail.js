@@ -1,31 +1,16 @@
-import {Token} from "../../Context/Token/Token";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {Col, Container, Row} from "react-bootstrap";
 import {decodeToken} from "react-jwt";
 import ReplyList from "./Reply/ReplyList";
-import axios from "axios";
-import {login, logout, logout_} from "../../Common/Modules/Common";
-import { IP } from "../../Context/IP";
-import {Refresh} from "../../Context/Token/Refresh";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 function QuestionDetail()
 {
-    window.onbeforeunload = function(event){
-    }
-    const {token,setToken} = useContext(Token);
-    const {setRefresh} = useContext(Refresh);
-    const ip = useContext(IP);
     const navigate = useNavigate();
 
-    const config = {
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            "authorization": token
-        },
-    };
 
     const {id} = useParams();
     const [author,setAuthor] = useState(null);
@@ -35,48 +20,36 @@ function QuestionDetail()
 
     const [refresh_,setRefresh_] = useState(false);
 
-    const username = (token === null ? null : (decodeToken(token).username));
+    const username = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).username));
 
     useEffect(()=>{
-        axios.get(`http://${ip}:8080/question/${id}`)
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    setAuthor(response.data.data.user.id);
-                    setContent(response.data.data.content);
-                    setTitle(response.data.data.title);
-                    setReply(response.data.data.reply);
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .catch((error)=>{
-                alert("error");
-            })
+        customAxios.get(`/question/${id}`).then((response)=>{
+            if(response.data.code === 200)
+            {
+                setAuthor(response.data.data.user.id);
+                setContent(response.data.data.content);
+                setTitle(response.data.data.title);
+                setReply(response.data.data.reply);
+            }
+            else
+            {
+                alert("failed");
+            }
+        })
     },[refresh_]);
 
     function delQuestion()
     {
-        axios.delete(`http://${ip}:8080/user/question/delete/${id}`,config)
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    login(setToken,setRefresh,response);
-                    navigate("/question");
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .catch((error)=>{
-                if(error.response.status === 401 || error.response.status === 403)
-                {
-                    logout_(token,setToken,setRefresh,navigate,axios);
-                }
-            })
+        customAxios.delete(`/user/question/delete/${id}`).then((response)=>{
+            if(response.data.code === 200)
+            {
+                navigate("/question");
+            }
+            else
+            {
+                alert("failed");
+            }
+        })
     }
 
     return(

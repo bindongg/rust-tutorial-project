@@ -30,6 +30,7 @@ public class QuestionController { //delete 하는 메소드 경우 나중에 받
     @PostMapping("/user/question/add")
     public ResponseDTO<String> addQuestion(@RequestBody Map<String,String> mp, HttpServletRequest request)
     {
+        //System.out.println(mp);
         questionService.add(mp.get("title"),mp.get("content"),
                 JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME));
         return new ResponseDTO<>(200,null);

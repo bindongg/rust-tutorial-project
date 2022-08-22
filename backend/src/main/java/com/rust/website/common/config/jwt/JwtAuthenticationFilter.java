@@ -7,6 +7,7 @@ import com.rust.website.common.dto.LoginDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -40,11 +41,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         if(loginDTO != null)
         {
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    loginDTO.getUserId(), loginDTO.getUserPassword());
+            try {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        loginDTO.getUserId(), loginDTO.getUserPassword());
 
-            return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
+                return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+            }
+            catch (BadCredentialsException e)
+            {
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+            }
         }
         return null;
     }

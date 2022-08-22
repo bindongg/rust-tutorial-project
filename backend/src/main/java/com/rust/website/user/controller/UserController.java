@@ -171,8 +171,9 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    public String test()
+    public String test(HttpServletRequest req)
     {
+        System.out.println("test");
         return "test";
     }
 
