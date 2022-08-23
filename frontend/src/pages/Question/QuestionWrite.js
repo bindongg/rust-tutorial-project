@@ -1,30 +1,18 @@
-import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {EditorState, convertToRaw} from 'draft-js';
 import {Editor} from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
-import {Token} from "../../Context/Token/Token";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import {login, logout, logout_} from "../../Common/Modules/Common";
 import Loading from "../Loading";
-import { IP } from "../../Context/IP";
-import {Refresh} from "../../Context/Token/Refresh";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function QuestionWrite()
 {
-    const {token,setToken} = useContext(Token);
-    const {setRefresh} = useContext(Refresh);
-    const ip = useContext(IP);
     const navigate = useNavigate();
-    const config = {
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            "authorization": token
-        },
-    };
+
 
     const [loadingState,setLoadingState] = useState(false);
     const { register, handleSubmit, formState: {errors} } = useForm();
@@ -41,22 +29,15 @@ function QuestionWrite()
     {
         setLoadingState(true);
         data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        axios.post(`http://${ip}:8080/user/question/add`,{...data},config)
+        customAxios.post("user/question/add",{...data})
             .then((response)=>{
                 if(response.data.code === 200)
                 {
-                    login(setToken,setRefresh,response);
                     navigate("/question");
                 }
                 else
                 {
                     alert("failed");
-                }
-            })
-            .catch((error)=>{
-                if(error.response.status === 401 || error.response.status === 403)
-                {
-                    logout_(token,setToken,setRefresh,navigate,axios);
                 }
             })
             .finally(()=>{

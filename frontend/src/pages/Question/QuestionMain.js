@@ -1,17 +1,12 @@
 import Button from "react-bootstrap/Button";
-import {NavLink, Table} from "react-bootstrap";
-import React, {useContext, useEffect, useState} from "react";
-import {Token} from "../../Context/Token/Token";
-import {Link, useNavigate} from "react-router-dom";
-import axios from "axios";
-import {logout} from "../../Common/Modules/Common";
+import {Table} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import Page from "../../Common/Page/Page";
-import { IP } from "../../Context/IP";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function QuestionMain()
 {
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const [questions,setQuestions] = useState(null);
@@ -23,24 +18,17 @@ function QuestionMain()
     const [page,setPage] = useState(0);
 
     useEffect(()=>{
-        axios.get(`http://${ip}:8080/question`,{params: {page: page, size: recPerPage}})
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    setTotal(response.data.total);
-                    setQuestions([...response.data.data]);
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .catch((error)=>{
-                if(error.response.status === 401 || error.response.status === 403)
-                {
-                    logout(token,setToken,navigate);
-                }
-            })
+        customAxios.get("/question",{params: {page: page, size: recPerPage}}).then((response)=>{
+            if(response.data.code === 200)
+            {
+                setTotal(response.data.total);
+                setQuestions([...response.data.data]);
+            }
+            else
+            {
+                alert("failed");
+            }
+        })
     },[page]);
 
     function write()

@@ -3,7 +3,7 @@ import {Row, Container, Col, Form, Button} from "react-bootstrap";
 import {Token} from "../../Context/Token/Token";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {logout} from "../../Common/Modules/Common";
+import {Logout} from "../../Common/Modules/Common";
 import { IP } from "../../Context/IP";
 
 function InfoMain() {
@@ -55,7 +55,7 @@ function InfoMain() {
                         alert(Error.response.status + " Error");
                         if(Error.response.status === 401 || Error.response.status === 403)
                         {
-                            logout(token,setToken,navigate);
+                            Logout(token,setToken,navigate);
                         }
                     })
             }

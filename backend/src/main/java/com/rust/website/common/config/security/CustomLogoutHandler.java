@@ -25,10 +25,9 @@ public class CustomLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try{
+            System.out.println("logout");
             String token = request.getHeader("authorization");
             String username = JwtUtil.getClaim(token,JwtProperties.CLAIM_NAME);
-            /*String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token.replace(JwtProperties.TOKEN_PREFIX, ""))
-                    .getClaim(JwtProperties.CLAIM_NAME).asString();*/
             redisService.delRedisStringValue(username);
             redisService.delRedisStringValue(JwtProperties.REFRESH_STRING+username);
             SecurityContextHolder.clearContext();

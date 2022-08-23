@@ -2,7 +2,7 @@ import {Button, Col, Container, Form, NavLink, Row} from "react-bootstrap";
 import React, {useContext, useState} from "react";
 import axios from "axios";
 import {Token} from "../../Context/Token/Token";
-import {logout} from "../../Common/Modules/Common";
+import {Logout} from "../../Common/Modules/Common";
 import {useNavigate} from "react-router-dom";
 import { IP } from "../../Context/IP";
 
@@ -46,7 +46,7 @@ function AdminAuth() {
             {
                 if(error.response.status === 401)
                 {
-                    logout(token, setToken, navigate);
+                    Logout(token, setToken, navigate);
                 }
             })
     }

@@ -5,6 +5,8 @@ import {useNavigate} from "react-router-dom";
 import {decodeToken, isExpired} from "react-jwt";
 import {Token} from "../../Context/Token/Token";
 import {Refresh} from "../../Context/Token/Refresh";
+import {Axios_get} from "../../Common/Modules/Common";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 function Home(){
@@ -14,10 +16,6 @@ function Home(){
     const {token,setToken} = useContext(Token);
     const {refresh} = useContext(Refresh);
 
-    function test()
-    {
-        console.log(isExpired(refresh));
-    }
     const moveTo = (href) => {
         navigate(href);
     }
@@ -41,8 +39,8 @@ function Home(){
                     Exercise
                 </Button>
                 {""}
-                <Button variant="secondary" onClick={test} size="lg">
-                    Exercise
+                <Button variant="secondary" onClick={()=>{console.log(localStorage.getItem("refresh"))}} size="lg">
+                    Exercise2
                 </Button>
             </div>
             <br></br>
