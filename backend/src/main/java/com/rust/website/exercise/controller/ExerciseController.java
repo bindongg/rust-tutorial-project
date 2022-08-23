@@ -26,9 +26,10 @@ public class ExerciseController {
     }
 
     @GetMapping("/exercise/{id}")
-    public ResponseDTO<Exercise> getExerciseContent(@PathVariable int id)
+    public ResponseDTO<Exercise> getExerciseContent(@PathVariable int id, HttpServletRequest request)
     {
-        return new ResponseDTO<Exercise>(HttpStatus.OK.value(), exerciseService.getExercise(id));
+        String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
+        return new ResponseDTO<Exercise>(HttpStatus.OK.value(), exerciseService.getExercise(id, userId));
     }
 
     @PostMapping("/exercise/compile/{id}")

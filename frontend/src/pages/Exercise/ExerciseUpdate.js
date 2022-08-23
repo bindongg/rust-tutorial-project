@@ -34,7 +34,6 @@ function ExerciseUpdate() {
     const onInvalid = (data) => console.log(data, "onInvalid");
 
     const onSubmit = (data) => {
-        data.number = data.number * 1;
         console.log('data', data);
         axios.patch(`http://${ip}:8080/exercise/${id}`, {...data}, {headers : headers}
         ).then(function(response) {

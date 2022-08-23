@@ -11,9 +11,9 @@ import java.util.TimerTask;
 @Service
 public class CompileService {
     // for window
-    // private static final String CODE_PATH = ".\\online_compile\\";
+     private static final String CODE_PATH = ".\\online_compile\\";
     // for linux
-    private static final String CODE_PATH = "./online_compile/";
+//    private static final String CODE_PATH = "./online_compile/";
     private static int processNumber = 0;
 
     public CompileOutputDTO onlineCompile(CompileInputDTO compileInputDTOModel) throws IOException {
@@ -44,19 +44,19 @@ public class CompileService {
     }
 
     private void deleteCodeFiles(String fileName) throws IOException {
-//        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "del " + CODE_PATH + fileName + "_code.exe "
-//                + CODE_PATH + fileName + "_code.pdb "+ CODE_PATH + fileName + "_code.rs "+ CODE_PATH + fileName + "_input.txt ");
-        ProcessBuilder builder = new ProcessBuilder("bash", "-c", "rm " + CODE_PATH + fileName + "_code "
-                + CODE_PATH + fileName + "_code.rs "+ CODE_PATH + fileName + "_input.txt ");
+        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "del " + CODE_PATH + fileName + "_code.exe "
+                + CODE_PATH + fileName + "_code.pdb "+ CODE_PATH + fileName + "_code.rs "+ CODE_PATH + fileName + "_input.txt ");
+//        ProcessBuilder builder = new ProcessBuilder("bash", "-c", "rm " + CODE_PATH + fileName + "_code "
+//                + CODE_PATH + fileName + "_code.rs "+ CODE_PATH + fileName + "_input.txt ");
 
         builder.start();
     }
 
     private Process runRustCode(String fileName) throws IOException {
-//        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "rustc -o " + CODE_PATH + fileName + "_code.exe "
-//                + CODE_PATH + fileName + "_code.rs && " + CODE_PATH + fileName + "_code");
-        ProcessBuilder builder = new ProcessBuilder("bash", "-c", "rustc -o " + CODE_PATH + fileName + "_code "
+        ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "rustc -o " + CODE_PATH + fileName + "_code.exe "
                 + CODE_PATH + fileName + "_code.rs && " + CODE_PATH + fileName + "_code");
+//        ProcessBuilder builder = new ProcessBuilder("bash", "-c", "rustc -o " + CODE_PATH + fileName + "_code "
+//                + CODE_PATH + fileName + "_code.rs && " + CODE_PATH + fileName + "_code");
 
         File input = new File(CODE_PATH + fileName + "_input.txt");
         builder.redirectInput(input);
@@ -66,8 +66,8 @@ public class CompileService {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-//                ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "taskkill /im " + fileName + "_code.exe /f");
-                ProcessBuilder builder = new ProcessBuilder("bash", "-c", "pkill " + fileName + "_code");
+                ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", "taskkill /im " + fileName + "_code.exe /f");
+//                ProcessBuilder builder = new ProcessBuilder("bash", "-c", "pkill " + fileName + "_code");
                 try {
                     builder.start();
                 } catch(IOException e) {

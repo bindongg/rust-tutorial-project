@@ -21,6 +21,7 @@ function TutorialSubCreateForm() {
     const {tutorial} = useLocation().state;
     const {token,setToken} = useContext(Token);
     const ip = useContext(IP);
+    const [loading,setLoading] = useState(false);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -30,6 +31,7 @@ function TutorialSubCreateForm() {
 
         
     const onSubmit = (data) => {
+        setLoading(true);
         data.number = data.number * 1;
         data = {...data, content: textState};
         axios.post(`http://${ip}:8080/tutorial/${tutorial.id}/sub`, {...data}, {headers : headers})
@@ -96,7 +98,7 @@ function TutorialSubCreateForm() {
                             <br/>
                             <Form.Control value={textState} as="textarea" rows="3" onChange={onPlainTextChange} />
                             <br/>
-                           <Button type="submit">제출하기</Button>
+                           <Button type="submit" disabled={loading}>제출하기</Button>
                         </Form>
                     </Col>
                 </Row>

@@ -21,6 +21,7 @@ function TutorialQuiz() {
         'Content-Type' : 'application/json',
         'Authorization' : token
       }
+    const [loading,setLoading] = useState(false);
     const [answers, setAnswers] = useState([]);
     const [correctList, setCorrectList] = useState([]);
     const navigate = useNavigate();
@@ -41,6 +42,7 @@ function TutorialQuiz() {
         setAnswers([...answers.slice(0, number), choice, ...answers.slice(number + 1, 3)]);
     }
     const submitQuiz = (e) => {
+        setLoading(true);
         e.preventDefault();
         if (answers.length === tutorialQuiz.tutorialQuizQuestions.length) {
             axios.post(`http://${ip}:8080/tutorial/quiz/${id}`, {answers:answers},{headers : headers})
@@ -56,6 +58,11 @@ function TutorialQuiz() {
             {
                 alert(Error.response.status + " error");
             })
+            .finally(() =>
+            {
+                setLoading(false);
+            }
+            )
         }
         else {
             alert("정답을 모두 체크해주세요");
@@ -98,7 +105,7 @@ function TutorialQuiz() {
             </div>
            <br/>
             <div className="col-8 mx-auto">
-                    <Button onClick={submitQuiz}>제출하기</Button>
+                    <Button disabled={loading} onClick={submitQuiz}>제출하기</Button>
             </div>
         </>
     );

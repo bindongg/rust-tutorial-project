@@ -1,12 +1,7 @@
 import {Button, Col, Row} from "react-bootstrap";
-import {useContext, useState} from "react";
-import {login, logout, logout_} from "../../../Common/Modules/Common";
-import axios from "axios";
-import {Token} from "../../../Context/Token/Token";
-import {useNavigate} from "react-router-dom";
+import { useState} from "react";
 import {decodeToken} from "react-jwt";
-import { IP } from "../../../Context/IP";
-import {Refresh} from "../../../Context/Token/Refresh";
+import {customAxios} from "../../../Common/Modules/CustomAxios";
 
 function Reply(props)
 {
@@ -17,20 +12,11 @@ function Reply(props)
         fontSize: "0.9rem"
     }
 
-    const {token,setToken} = useContext(Token);
-    const {setRefresh} = useContext(Refresh);
-    const ip = useContext(IP);
-    const navigate = useNavigate();
-    const username = token === null || token === undefined ? "" : decodeToken(token).username;
+    const username = localStorage.getItem("refresh") === null  ? "" : decodeToken(localStorage.getItem("refresh")).username;
     const [subReplyAreaState,setSubReplyAreaState] = useState(false);
     const [subReplyContent,setSubReplyContent] = useState("");
 
-    const config = {
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            "authorization": token
-        },
-    };
+
 
     function changeState()
     {
@@ -39,89 +25,60 @@ function Reply(props)
 
     function delReply()
     {
-        axios.delete(`http://${ip}:8080/user/reply/delete`, {
+        customAxios.delete("/user/reply/delete",{
             data: {
                 author: props.reply.user.id,
-                id: props.reply.id,
-            }, headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                "authorization": token
+                id: props.reply.id
+            }
+        }).then((response)=>{
+            if(response.data.code === 200)
+            {
+                props.setRefresh_(!(props.refresh_));
+            }
+            else
+            {
+                alert("failed");
             }
         })
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    login(setToken,setRefresh,response);
-                    props.setRefresh_(!(props.refresh_));
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .catch((error)=>{
-                if(error.response.status === 401 || error.response.status === 403)
-                {
-                    logout_(token,setToken,setRefresh,navigate,axios);
-                }
-            })
     }
+
 
     function delSubReply(e)
     {
-        axios.delete(`http://${ip}:8080/user/subReply/delete`,{
+        customAxios.delete("/user/subReply/delete",{
             data: {
                 id: e.target.id,
                 author: e.target.value
-            }, headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                "authorization": token
+            }
+        }).then((response)=>{
+            if(response.data.code === 200)
+            {
+                props.setRefresh_(!(props.refresh_));
+            }
+            else
+            {
+                alert("failed");
             }
         })
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    login(setToken,setRefresh,response);
-                    props.setRefresh_(!(props.refresh_));
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .catch((error)=>{
-                if(error.response.status === 401 || error.response.status === 403)
-                {
-                    logout_(token,setToken,setRefresh,navigate,axios);
-                }
-            })
     }
 
 
     function addSubReply()
     {
         if(subReplyContent !== "") {
-            axios.post(`http://${ip}:8080/user/subReply/add`, {
+            customAxios.post("/user/subReply/add",{
                 content: subReplyContent,
                 userId: username,
-                parent: props.reply.id
-            }, config)
+                parent: props.reply.id})
                 .then((response) => {
                     if (response.data.code === 200) {
-                        login(setToken,setRefresh,response);
                         props.setRefresh_(!(props.refresh_));
                     } else {
                         alert("failed");
                     }
-                })
-                .catch((error) => {
-                    if (error.response.status === 401 || error.response.status === 403) {
-                        logout_(token,setToken,setRefresh,navigate,axios);
-                    }
-                })
-                .finally(()=>{
-                    setSubReplyAreaState(false);
-                })
+                }).finally(()=>{
+                setSubReplyAreaState(false);
+            })
         }
     }
 

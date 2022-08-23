@@ -4,9 +4,10 @@ import Accordion from "react-bootstrap/Accordion";
 import { Token } from "../../Context/Token/Token";
 import TutorialList from "./components/TutorialList";
 import {Button} from "react-bootstrap";
-import { useNavigate } from "react-router";import { decodeToken } from "react-jwt";
+import { useNavigate } from "react-router";
+import { decodeToken } from "react-jwt";
 import { IP } from "../../Context/IP";
-;
+
 
 
 function Tutorial(props) {

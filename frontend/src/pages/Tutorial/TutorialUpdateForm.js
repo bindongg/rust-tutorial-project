@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ function TutorialUpdateForm() {
     const {tutorial} = useLocation().state;
     const {token,setToken} = useContext(Token);
     const ip = useContext(IP);
+    const [loading,setLoading] = useState(false);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -21,6 +22,7 @@ function TutorialUpdateForm() {
 
         
     const onSubmit = (data) => {
+        setLoading(true);
         data.number = data.number * 1;
         axios.patch(`http://${ip}:8080/tutorial/${tutorial.id}`, {...data}, {headers : headers})
         .then((response) =>
@@ -56,7 +58,7 @@ function TutorialUpdateForm() {
                                 {errors.name && <p style={{color:'red', fontSize:"13px"}}>{errors.name.message}</p>}
                             </Form.Group>
 
-                           <Button type="submit">제출하기</Button>
+                           <Button type="submit" disabled={loading}>제출하기</Button>
                         </Form>
                     </Col>
                 </Row>

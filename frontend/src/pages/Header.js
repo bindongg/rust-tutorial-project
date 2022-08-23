@@ -4,7 +4,7 @@ import {Token} from "../Context/Token/Token";
 import {decodeToken,isExpired} from "react-jwt";
 import axios from "axios";
 import {Link, NavLink, useNavigate} from "react-router-dom";
-import {logout, logout_} from "../Common/Modules/Common";
+import {Logout, Logout_} from "../Common/Modules/Common";
 import './Header.css';
 import { IP } from '../Context/IP';
 import {Refresh} from "../Context/Token/Refresh";
@@ -16,31 +16,27 @@ const config = {
 };
 
 function Header(){
-    const {token,setToken} = useContext(Token);
-    const {refresh,setRefresh} = useContext(Refresh);
+    //const {token,setToken} = useContext(Token);
+    //const {refresh,setRefresh} = useContext(Refresh);
     const ip = useContext(IP);
-    const username = (token === null ? null : (decodeToken(token).username));
-    const role = (token === null ? null : (decodeToken(token).role));
+    const [username,setUsername] = useState("");
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+
+    useEffect(()=>{
+        if(localStorage.getItem("refresh") !== null)
+        {
+            setUsername(decodeToken(localStorage.getItem("refresh")).username);
+        }
+    },[localStorage.getItem("refresh")])
 
     const navigate = useNavigate();
 
     function Logout()
     {
-        logout_(token,setToken,setRefresh,navigate,axios);
-        /*axios.post(`http://${ip}:8080/logout`,null, {headers: {authorization: token}})
-            .then(
-                (response)=>{
-                    if(response.status === 200)
-                    {
-                        logout(token,setToken,setRefresh,navigate);
-                    }
-                }
-            )
-            .catch(
-                (Error)=> {
-                    alert(Error.response.status+" error");
-                }
-            )*/
+        axios.post(`http://localhost:8080/logout`, {headers: {"authorization": localStorage.getItem("jwt")}}).then(()=> {
+            localStorage.clear();
+            navigate("/login");
+        });
     }
 
     return (
@@ -72,17 +68,17 @@ function Header(){
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             {
-                                token === null
+                                localStorage.getItem("refresh") === null
                                     ? (<NavLink className="nav-link" to="/login">Login</NavLink>)
                                     : (<></>)
                             }
                             {
-                                token === null
+                                localStorage.getItem("refresh") === null
                                     ? (<NavLink className="nav-link" to="/register">Register</NavLink>)
                                     : (<></>)
                             }
                             {
-                                token === null
+                                localStorage.getItem("refresh") === null
                                     ? (<></>)
                                     : (<NavDropdown title={username}>
                                         <NavLink className={"nav-link"} to="/info">사용자 정보</NavLink> 

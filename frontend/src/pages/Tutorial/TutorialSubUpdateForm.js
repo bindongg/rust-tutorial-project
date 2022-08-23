@@ -6,9 +6,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Token } from "../../Context/Token/Token";
 import { EditorState, convertToRaw, ContentState, convertFromHTML } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToMarkdown from 'draftjs-to-markdown';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IP } from "../../Context/IP";
 import { stateFromMarkdown } from "draft-js-import-markdown";
@@ -18,6 +15,7 @@ function TutorialSubUpdateForm() {
     const {tutorialSub} = useLocation().state;
     const {token,setToken} = useContext(Token);
     const ip = useContext(IP);
+    const [loading,setLoading] = useState(false);
     const headers = {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
@@ -26,6 +24,7 @@ function TutorialSubUpdateForm() {
     const navigate = useNavigate();
     
     const onSubmit = (data) => {
+        setLoading(true);
         data.number = data.number * 1;
         data = {...data, content: textState};
         axios.patch(`http://${ip}:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
@@ -93,7 +92,7 @@ function TutorialSubUpdateForm() {
                             <br/>
                             <Form.Control value={textState} as="textarea" rows="3" onChange={onPlainTextChange} />
                             <br/>
-                           <Button type="submit">제출하기</Button>
+                           <Button type="submit" disabled={loading}>제출하기</Button>
                         </Form>
                     </Col>
                 </Row>

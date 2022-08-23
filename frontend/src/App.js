@@ -42,7 +42,7 @@ import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
 import QuestionUpdate from "./pages/Question/QuestionUpdate";
 import {Refresh} from "./Context/Token/Refresh";
 import {isExpired} from "react-jwt";
-import {logout_} from "./Common/Modules/Common";
+import {Logout_} from "./Common/Modules/Common";
 import axios from "axios";
 
 
@@ -52,12 +52,12 @@ function App() {
     const [token,setToken] = useState(localStorage.getItem("jwt"));
     const [refresh,setRefresh] = useState(localStorage.getItem("refresh"));
     const navigate = useNavigate();
-    useEffect(()=>{
+    /*useEffect(()=>{
         if(isExpired(refresh))
         {
-            logout_(token,setToken,setRefresh,navigate,axios);
+            Logout_(token,setToken,setRefresh,navigate,axios);
         }
-    },[isExpired(refresh)]);
+    },[isExpired(refresh)]);*/
     return (
         <div>
             <Refresh.Provider value={{refresh,setRefresh}}>
