@@ -6,8 +6,7 @@ function ExerciseListInfo ({ exercise}) {
     let solvedStyle = {color: 'gold'};
 
     if(solved == "NO_TRY" ){
-        solved = "시도 X";
-        solvedStyle = {color: 'gold'};
+        solved = "";
     }else if(solved == "FAIL"){
         solved = "실패";
         solvedStyle = {color: 'red'};
