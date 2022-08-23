@@ -38,10 +38,6 @@ function Home(){
                 <Button variant="secondary" onClick={() => moveTo("/exercise")} size="lg">
                     Exercise
                 </Button>
-                {""}
-                <Button variant="secondary" onClick={()=>{console.log(localStorage.getItem("refresh"))}} size="lg">
-                    Exercise2
-                </Button>
             </div>
             <br></br>
         </div>

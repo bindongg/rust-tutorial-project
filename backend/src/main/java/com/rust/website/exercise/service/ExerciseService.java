@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
@@ -54,9 +55,15 @@ public class ExerciseService {
     }
 
     @Transactional(readOnly = true)
-    public Exercise getExercise(int id)
+    public Exercise getExercise(int id, String userId)
     {
-        return exerciseRepository.findById(id).get();
+        Exercise exercise = exerciseRepository.findById(id).get();
+        Optional<ExerciseTry> exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(userId, id);
+        if (exerciseTry.isPresent())
+        {
+            exercise.setSolved(exerciseTry.get().getSolved());
+        }
+        return exercise;
     }
 
     @Transactional
@@ -128,7 +135,6 @@ public class ExerciseService {
         IntStream.range(0, exerciseTestcases.size())
                 .mapToObj(i -> ExerciseTestcase.builder()
                         .exercise(exercise)
-                        .number(exerciseTestcases.get(i).getNumber())
                         .input(exerciseTestcases.get(i).getInput())
                         .output(exerciseTestcases.get(i).getOutput())
                         .build()
