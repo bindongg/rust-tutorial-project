@@ -18,11 +18,13 @@ function TutorialList({tutorials, rerender, setRerender}) {
         'Content-Type' : 'application/json; charset=utf-8',
         'Authorization' : token
     };
+    const [loading,setLoading] = useState(false);
 
     const updateTutorial = (tutorial) => {      
         navigate("/tutorial/updateForm", {state: {tutorial : tutorial}});
     }
     const deleteTutorial = (tutorial) => {
+        setLoading(true);
         axios.delete(`http://${ip}:8080/tutorial/${tutorial.id}`, {headers : headers})
         .then((response) =>
         {
@@ -73,7 +75,7 @@ function TutorialList({tutorials, rerender, setRerender}) {
                         (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
                         <div>
                             <Button variant="warning" style={buttonStyle} onClick={() => updateTutorial(tutorial)}>수정</Button>
-                            <Button variant="danger" style={buttonStyle} onClick={() => deleteTutorial(tutorial)}>삭제</Button>
+                            <Button variant="danger" style={buttonStyle} disabled={loading} onClick={() => deleteTutorial(tutorial)}>삭제</Button>
                         </div>                    
                         }
                     </div>

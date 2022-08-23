@@ -25,6 +25,7 @@ function ExerciseCreate() {
     const onSubmit = (data) => {
         console.log('data', data)
         data.number = data.number * 1;
+        data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
         axios.post(`http://${ip}:8080/exercise`, {...data}, {headers : headers}
         ).then(function(response) {
             alert(response.data.data);

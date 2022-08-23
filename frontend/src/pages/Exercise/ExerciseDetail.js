@@ -4,6 +4,7 @@ import ExerciseDetailInfo from "./components/ExerciseDetailInfo";
 import {useParams} from "react-router-dom";
 import {Token} from "../../Context/Token/Token";
 import { IP } from "../../Context/IP";
+import './Exercise.css';
 
 function ExerciseDetail() {
     const {id} = useParams();

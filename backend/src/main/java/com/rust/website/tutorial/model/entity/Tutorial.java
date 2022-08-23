@@ -25,7 +25,7 @@ public class Tutorial implements Serializable {
     @Column(nullable = false)
     private int number;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @CreationTimestamp
