@@ -26,10 +26,6 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int number;
-
     @Column(nullable = false, length = 100)
     private String name;
 
@@ -56,7 +52,6 @@ public class Exercise {
 
     public void copy(Exercise newExercise)
     {
-        this.number = newExercise.getNumber();
         this.name = newExercise.getName();
         this.difficulty = newExercise.getDifficulty();
         this.tag = newExercise.getTag();

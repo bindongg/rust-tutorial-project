@@ -27,7 +27,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
         difficulty: difficulty
     }
     const [code, setCode] = useState(`fn main() {
-  println!("Hello World!");
+  
 }
 `);
     const jsonCode ={
@@ -74,6 +74,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
                 {Content?.input_description}
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
+                <h6>예시&#41;</h6>
                 {Content?.input_value}
             </div>
             <div className="col-8 mx-auto mt-5">
@@ -81,6 +82,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
                 {Content?.output_description}
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
+                <h6>예시&#41;</h6>
                 {Content?.output_value}
             </div>
             <div className="col-8 mx-auto mt-5">
