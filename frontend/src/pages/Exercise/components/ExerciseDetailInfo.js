@@ -36,7 +36,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
 
     const compileCode = (data) => {
         console.log(jsonCode);
-        axios.post(`http://localhost:8080/exercise/compile/${id}`, jsonCode, {headers : headers}
+        axios.post(`http://${ip}:8080/exercise/compile/${id}`, jsonCode, {headers : headers}
         ).then(function(response) {
             alert(response.data);
             navigate(-1);

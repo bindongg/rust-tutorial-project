@@ -10,16 +10,12 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IP } from "../../Context/IP";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import { stateToMarkdown } from "draft-js-export-markdown";
+import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialSubUpdateForm() {
     const {tutorialSub} = useLocation().state;
     const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
     const [loading,setLoading] = useState(false);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-      };
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();
     
@@ -27,7 +23,7 @@ function TutorialSubUpdateForm() {
         setLoading(true);
         data.number = data.number * 1;
         data = {...data, content: textState};
-        axios.patch(`http://${ip}:8080/tutorial/sub/${tutorialSub.id}`, {...data}, {headers : headers})
+        customAxios.patch(`/tutorial/sub/${tutorialSub.id}`, {...data})
         .then((response) => 
         {
             if (response.data.code === 200)
