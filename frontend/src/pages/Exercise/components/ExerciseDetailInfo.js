@@ -54,10 +54,32 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
         })
     }
 
+    let difficulty_emoji = difficulty;
+    switch (difficulty_emoji){
+        case 'STAR1':
+            difficulty_emoji = '⭐';
+            break;
+        case 'STAR2':
+            difficulty_emoji = '⭐⭐';
+            break;
+        case 'STAR3':
+            difficulty_emoji = '⭐⭐⭐';
+            break;
+        case 'STAR4':
+            difficulty_emoji = '⭐⭐⭐⭐';
+            break;
+        case 'STAR5':
+            difficulty_emoji = '⭐⭐⭐⭐⭐';
+            break;
+        default:
+            difficulty_emoji = 'etc';
+    }
+
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
                 <h1>{title}</h1>
+                <h5  className="col-4 ms-auto m-1">난이도: {difficulty_emoji}</h5>
             </div>
             <div className="col-4 ms-auto m-1">
                 <Button variant="warning" style={buttonStyle} onClick={updateDetail}>수정</Button>
