@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QuestionResponseDTO<T> {
+public class TupleResponseDTO<T> {
     int code;
     long total;
     T data;

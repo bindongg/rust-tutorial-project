@@ -19,7 +19,6 @@ customAxios.interceptors.response.use(
         if(response.headers['authorization'] !== undefined)
         {
             localStorage.setItem("jwt", response.headers['authorization']);
-            console.log("intercept "+localStorage.getItem("jwt"))
             if(response.headers['refresh'] !== undefined)
             {
                 localStorage.setItem("refresh", response.headers['refresh']);

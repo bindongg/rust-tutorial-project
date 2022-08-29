@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import {Table} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Page from "../../Common/Page/Page";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 
@@ -36,6 +36,13 @@ function QuestionMain()
         navigate("/question/add");
     }
 
+    function getCnt(reply)
+    {
+        let cnt = 0;
+        reply.map((reply)=>{cnt = cnt + parseInt(reply.subReply.length)})
+        return cnt;
+    }
+
 
     return(
         <>
@@ -54,14 +61,11 @@ function QuestionMain()
                             ?    (<tbody><tr><td colSpan={11}>질문이 없습니다</td></tr></tbody>)
                             :    (<tbody>
                                     {
-                                        questions.map((question,index)=>
-                                            (<tr key={index}>
+                                        questions.map((question,index)=>(<tr key={index}>
                                                 <td>{question.id}</td>
-                                                <td onClick={()=>{
-                                                    navigate(`/question/${question.id}`)
-                                                }}>{question.title}</td>
+                                                <td><Link to={`/question/${question.id}`} style={{color: "black", textDecorationLine: "none"}}>{question.title}&nbsp;[{question.reply.length + getCnt(question.reply)}]</Link></td>
                                                 <td>{question.user.id}</td>
-                                                <td>{question.done}</td>
+                                                <td>{question.done === true ? "✔" : ""}</td>
                                             </tr>)
                                         )
                                     }

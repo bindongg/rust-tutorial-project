@@ -40,16 +40,28 @@ function QuestionDetail()
 
     function delQuestion()
     {
-        customAxios.delete(`/user/question/delete/${id}`).then((response)=>{
-            if(response.data.code === 200)
-            {
-                navigate("/question");
-            }
-            else
-            {
-                alert("failed");
-            }
-        })
+        if(window.confirm("삭제하시겠어요?")) {
+            customAxios.delete(`/user/question/delete/${id}`).then((response) => {
+                if (response.data.code === 200) {
+                    navigate("/question");
+                } else {
+                    alert("failed");
+                }
+            })
+        }
+    }
+
+    function doneQuestion()
+    {
+        if(window.confirm("완료처리 하시겠어요?")) {
+            customAxios.put(`user/question/done`, {author: author, id: id}).then((response) => {
+                if (response.data.code === 200) {
+                    alert("완료");
+                } else {
+                    alert("failed");
+                }
+            })
+        }
     }
 
     return(
@@ -62,6 +74,7 @@ function QuestionDetail()
                         (<span>
                             <Button className="btn btn-secondary btn-sm" type="button" onClick={()=>{navigate(`/question/update/${id}`,{state: {author: author, title: title, content: content}})}}>수정하기</Button>
                             <Button className="btn btn-secondary btn-sm" type="button" onClick={delQuestion}>삭제하기</Button>
+                            <Button className="btn btn-secondary btn-sm" type="button" onClick={doneQuestion}>완료하기</Button>
                         </span>)
                         : (<></>)
                 }

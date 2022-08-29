@@ -1,6 +1,9 @@
 package com.rust.website.user.service;
 
 import com.rust.website.common.CommonProperties;
+import com.rust.website.exercise.model.entity.ExerciseTry;
+import com.rust.website.exercise.model.myEnum.ExerciseSolved;
+import com.rust.website.exercise.repository.ExerciseTryRepository;
 import com.rust.website.mail.service.MailService;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
@@ -10,12 +13,14 @@ import com.rust.website.user.model.myEnum.UserRoleType;
 import com.rust.website.user.repository.UserAuthRepository;
 import com.rust.website.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -27,6 +32,8 @@ public class UserService {
     private final MailService mailService;
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
+    private final ExerciseTryRepository exerciseTryRepository;
+
 
     @Transactional(readOnly = true)
     public boolean checkDuplicateId(String id) {
@@ -228,9 +235,28 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("No such Entity"));
     }
 
+    @Transactional(readOnly = true)
+    public List<ExerciseTry> getTriedExercise(String userId, ExerciseSolved exerciseSolved, Pageable pageable)
+    {
+        return exerciseTryRepository.findByUser_idAndSolved(pageable, userId,exerciseSolved);
+    }
+
+    @Transactional(readOnly = true)
+    public long getTriedExerciseCount(String userId, ExerciseSolved exerciseSolved)
+    {
+        return exerciseTryRepository.findByUser_idAndSolved(userId,exerciseSolved).size();
+    }
+
     @Transactional
     public void test(User user)
     {
         userRepository.save(user);
     }
+
+    @Transactional
+    public void test2(ExerciseTry exerciseTry)
+    {
+        exerciseTryRepository.save(exerciseTry);
+    }
+
 }
