@@ -1,24 +1,16 @@
-import React, {Component, useContext, useEffect, useState} from "react";
-import axios from "axios";
+import React, { useEffect, useState} from "react";
 import ExerciseDetailInfo from "./components/ExerciseDetailInfo";
 import {useParams} from "react-router-dom";
-import {Token} from "../../Context/Token/Token";
-import { IP } from "../../Context/IP";
 import './Exercise.css';
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function ExerciseDetail() {
     const {id} = useParams();
     const [exerciseDetail, setExerciseDetail] = useState({});
-    const {token, setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const headers = {
-        'Content-Type' : 'application/json',
-        'Authorization' : token
-    }
 
     useEffect( () => {
         const getExerciseDetail = async () => {
-             let exerciseDetail = await axios.get(`http://${ip}:8080/exercise/${id}`, {headers : headers});
+             let exerciseDetail = await customAxios.get(`/exercise/${id}`);
             exerciseDetail = exerciseDetail.data.data;
             setExerciseDetail({...exerciseDetail});
             console.log({exerciseDetail});

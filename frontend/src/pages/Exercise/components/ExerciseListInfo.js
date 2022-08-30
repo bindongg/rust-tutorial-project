@@ -16,12 +16,34 @@ function ExerciseListInfo ({ exercise}) {
     }else{
         solved = "오류";
     }
+
+    let difficulty = exercise?.difficulty;
+    switch (difficulty){
+        case 'STAR1':
+            difficulty = '⭐';
+            break;
+        case 'STAR2':
+            difficulty = '⭐⭐';
+            break;
+        case 'STAR3':
+            difficulty = '⭐⭐⭐';
+            break;
+        case 'STAR4':
+            difficulty = '⭐⭐⭐⭐';
+            break;
+        case 'STAR5':
+            difficulty = '⭐⭐⭐⭐⭐';
+            break;
+        default:
+            difficulty = 'etc';
+    }
+
     return (
         <tr>
             <td>{exercise.id}</td>
             <td><Link to= {`/exercise/${exercise.id}`} >{exercise.name}</Link></td>
             <td>{exercise.tag}</td>
-            <td>{exercise.difficulty}</td>
+            <td>{difficulty}</td>
             <td style={solvedStyle}>{solved}</td>
         </tr>
     );
