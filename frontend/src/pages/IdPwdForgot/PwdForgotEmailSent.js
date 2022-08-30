@@ -1,5 +1,5 @@
 import React from "react";
-import {Row, Container, Col, NavLink} from "react-bootstrap";
+import {Row, Container, Col} from "react-bootstrap";
 
 function PwdForgotEmailSent() {
     return (

@@ -1,5 +1,6 @@
 import React from "react";
-import {Row, Container, Col, NavLink, Form} from "react-bootstrap";
+import {Row, Container, Col, Form} from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 function InfoMain() {
     return (
@@ -19,7 +20,7 @@ function InfoMain() {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Text className="text-muted">
-                                    <NavLink href="/info/updatePwd">비밀번호 변경</NavLink>
+                                    <Link className={"nav-link"} to="/info/updatePwd">비밀번호 변경</Link>
                                 </Form.Text>
                             </Form.Group>
                         </Form>

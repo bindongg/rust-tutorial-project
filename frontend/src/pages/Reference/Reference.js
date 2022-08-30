@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import "./sidebar.css";
-import {Button, NavLink} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import ReferenceSidebar from "./component/ReferenceSidebar";
 import MarkdownContents from "./MarkdownContents";
 import {useNavigate} from "react-router";

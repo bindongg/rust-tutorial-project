@@ -1,14 +1,11 @@
-import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { customAxios } from "../../Common/Modules/CustomAxios";
-import { Token } from "../../Context/Token/Token";
 
 function TutorialQuizCreateForm() {
     const {tutorial} = useLocation().state;
-    const {token,setToken} = useContext(Token);
     const [loading,setLoading] = useState(false);
     const [numbers, setNumbers] = useState([1 ]);
     const { register, handleSubmit, formState: {errors}, reset } = useForm();

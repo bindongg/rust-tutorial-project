@@ -5,12 +5,9 @@ import {Button} from "react-bootstrap";
 import {customAxios} from "../../../Common/Modules/CustomAxios";
 
 function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
-    // let problemURL = window.location.pathname;
-    // let problemNum = problemURL[problemURL.length-1];
     const {id} = useParams();
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
-    // const [exerciseDetail, setExerciseDetail] = useState({});
     const exerciseDetail = {
         title: title,
         tag: tag,

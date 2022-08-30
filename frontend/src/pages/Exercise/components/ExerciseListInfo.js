@@ -5,12 +5,12 @@ function ExerciseListInfo ({ exercise}) {
     let solved = exercise?.solved;
     let solvedStyle = {color: 'gold'};
 
-    if(solved == "NO_TRY" ){
+    if(solved === "NO_TRY" ){
         solved = "";
-    }else if(solved == "FAIL"){
+    }else if(solved === "FAIL"){
         solved = "실패";
         solvedStyle = {color: 'red'};
-    }else if(solved == "SOLVE"){
+    }else if(solved === "SOLVE"){
         solved = "성공";
         solvedStyle = {color: 'forestgreen'};
     }else{

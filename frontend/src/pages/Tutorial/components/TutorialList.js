@@ -1,18 +1,15 @@
-import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
 import { decodeToken } from "react-jwt";
 import { NavLink, useNavigate } from "react-router-dom";
 import { customAxios } from "../../../Common/Modules/CustomAxios";
-import { Token } from "../../../Context/Token/Token";
 import TutorialSubList from "./TutorialSubList";
 
 
 function TutorialList({tutorials, rerender, setRerender}) {
     const navigate = useNavigate();
-    const {token,setToken} = useContext(Token);
-    const role = (token === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [loading,setLoading] = useState(false);
 
     const updateTutorial = (tutorial) => {      

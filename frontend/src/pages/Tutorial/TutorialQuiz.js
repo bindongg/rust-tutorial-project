@@ -1,17 +1,13 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import TutorialQuizQuestionList from "./components/TutorialQuestionList";
-import { Token } from "../../Context/Token/Token";
 import { decodeToken } from "react-jwt";
-import { IP } from "../../Context/IP";
 import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialQuiz() {
     const {id} = useParams();    
-    const {token,setToken} = useContext(Token);
-    const role = (token === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [tutorialQuiz, setTutorialQuiz] = useState({
         id: "",
         name: "",

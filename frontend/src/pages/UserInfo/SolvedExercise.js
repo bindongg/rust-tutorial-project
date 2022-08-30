@@ -1,9 +1,8 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Container} from "react-bootstrap";
 import SolvedExerciseContainer from "./components/SolvedExerciseContainer";
 import FailedExerciseContainer from "./components/FailedExerciseContainer";
-import {customAxios} from "../../Common/Modules/CustomAxios";
-import {decodeToken} from "react-jwt";
+
 
 function SolvedExercise() {
     return (
