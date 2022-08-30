@@ -15,15 +15,19 @@ function ExerciseByTag() {
           </thead>
           <tbody>
             <tr>
-              <td><Link to="/exercise">우선순위 큐</Link></td>
+              <td><Link to="/exercise">입출력</Link></td>
               <td>10</td>
             </tr>
             <tr>
-              <td><Link to="#">그래프</Link></td>
+              <td><Link to="#">제어문</Link></td>
               <td>10</td>
             </tr>
             <tr>
-              <td><Link to="#">스택</Link></td>
+              <td><Link to="#">반복문</Link></td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td><Link to="#">자료구조</Link></td>
               <td>10</td>
             </tr>
             <tr>

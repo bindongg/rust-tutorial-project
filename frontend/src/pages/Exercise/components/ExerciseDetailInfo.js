@@ -28,6 +28,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
 
     const compileCode = (data) => {
         console.log(jsonCode);
+
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
             alert(response.data);

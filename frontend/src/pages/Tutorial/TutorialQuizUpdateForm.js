@@ -3,17 +3,12 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IP } from "../../Context/IP";
+import { customAxios } from "../../Common/Modules/CustomAxios";
 import { Token } from "../../Context/Token/Token";
 
 function TutorialQuizUpdateForm() {
     const {tutorialQuiz} = useLocation().state;
     const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-      };
     const [loading,setLoading] = useState(false);
     const [numbers, setNumbers] = useState([...Array(tutorialQuiz.tutorialQuizQuestions.length)].map((v,i) => i+1));
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
@@ -23,7 +18,7 @@ function TutorialQuizUpdateForm() {
     const onSubmit = (data) => {
         setLoading(true);
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
-        axios.patch(`http://${ip}:8080/tutorial/quiz/${tutorialQuiz.id}`, {...data}, {headers : headers})
+        customAxios.patch(`/tutorial/quiz/${tutorialQuiz.id}`, {...data})
         .then((response) => 
         {
             if (response.data.code === 200)

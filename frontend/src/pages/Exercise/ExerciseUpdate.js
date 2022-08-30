@@ -92,11 +92,11 @@ function ExerciseUpdate() {
                                     <Form.Label>문제 분류</Form.Label>
                                     <Form.Select aria-label="exercise kind" defaultValue={exerciseDetail.tag}  onChange={onEditChange} {...register("tag")}>
                                         <option>문제 분류를 선택해주세요</option>
-                                        //TODO 문제 분류 확정되면 추가하기
-                                        <option value="STACK">STACK</option>
-                                        <option value="QUEUE">QUEUE</option>
-                                        <option value="LIST">LIST</option>
-                                        <option value="BASIC">BASIC</option>
+                                        <option value="입출력">입출력</option>
+                                        <option value="제어문">제어문</option>
+                                        <option value="반복문">반복문</option>
+                                        <option value="자료구조">자료구조</option>
+                                        <option value="기타">기타</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Row>

@@ -6,26 +6,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Token } from "../../Context/Token/Token";
 import { EditorState, convertToRaw, RichUtils, Modifier, ContentState, convertFromHTML } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToMarkdown from 'draftjs-to-markdown';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import PropTypes from 'prop-types';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IP } from "../../Context/IP";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
+import { customAxios } from "../../Common/Modules/CustomAxios";
 
 
 
 function TutorialSubCreateForm() {
     const {tutorial} = useLocation().state;
     const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
     const [loading,setLoading] = useState(false);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-      };
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();
 
@@ -34,7 +26,7 @@ function TutorialSubCreateForm() {
         setLoading(true);
         data.number = data.number * 1;
         data = {...data, content: textState};
-        axios.post(`http://${ip}:8080/tutorial/${tutorial.id}/sub`, {...data}, {headers : headers})
+        customAxios.post(`/tutorial/${tutorial.id}/sub`, {...data})
         .then((response) =>
         {
             if (response.data.code === 200)

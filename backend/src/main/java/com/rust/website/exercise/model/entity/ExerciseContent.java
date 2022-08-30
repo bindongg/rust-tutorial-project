@@ -20,19 +20,19 @@ public class ExerciseContent implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 700)
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String input_description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String output_description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String input_value;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String output_value;
 
     @OneToOne

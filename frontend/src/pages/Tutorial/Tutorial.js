@@ -6,23 +6,17 @@ import TutorialList from "./components/TutorialList";
 import {Button} from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { decodeToken } from "react-jwt";
-import { IP } from "../../Context/IP";
-
+import { customAxios } from "../../Common/Modules/CustomAxios";
 
 
 function Tutorial(props) {
   const [tutorials, setTutorials] = useState([]);
   const {token,setToken} = useContext(Token);
-  const ip = useContext(IP);
-  const role = (token === null ? null : (decodeToken(token).role));
-  const headers = {
-    'Content-Type' : 'application/json; charset=utf-8',
-    'Authorization' : token
-  };
+  const role = (token === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
   const [rerender, setRerender] = useState(0);
 
   useEffect( () => {
-    axios.get(`http://${ip}:8080/tutorial`, {headers : headers})
+        customAxios.get(`/tutorial`)
         .then((response) => 
         {
             if (response.data.code === 200)
@@ -33,7 +27,7 @@ function Tutorial(props) {
         .catch((Error) => 
         {
             alert(Error.response.status + " error");
-        });
+            });
     }, [rerender]);
 
     const navigate = useNavigate();

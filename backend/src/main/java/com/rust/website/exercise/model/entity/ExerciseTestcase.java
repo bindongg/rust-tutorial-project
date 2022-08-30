@@ -22,10 +22,10 @@ public class ExerciseTestcase {
     @Column(nullable = false)
     private int number;
 
-    @Column(nullable = false)
+    @Column(length = 700)
     private String input;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String output;
 
     @ManyToOne(fetch = FetchType.LAZY)
