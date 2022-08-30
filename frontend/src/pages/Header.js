@@ -33,7 +33,7 @@ function Header(){
 
     function Logout()
     {
-        axios.post(`http://localhost:8080/logout`, {headers: {"authorization": localStorage.getItem("jwt")}}).then(()=> {
+        axios.post(`http://${ip}:8080/logout`, {headers: {"authorization": localStorage.getItem("jwt")}}).then(()=> {
             localStorage.clear();
             navigate("/login");
         });
