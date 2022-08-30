@@ -1,24 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
-import {Token} from "../Context/Token/Token";
-import {decodeToken,isExpired} from "react-jwt";
+import {decodeToken} from "react-jwt";
 import axios from "axios";
-import {Link, NavLink, useNavigate} from "react-router-dom";
-import {Logout, Logout_} from "../Common/Modules/Common";
+import { NavLink, useNavigate} from "react-router-dom";
 import './Header.css';
-import { IP } from '../Context/IP';
-import {Refresh} from "../Context/Token/Refresh";
+import {customAxios} from "../Common/Modules/CustomAxios";
 
-const config = {
-    headers: {
-        "Content-Type": "application/json; charset=utf-8",
-    },
-};
 
 function Header(){
-    //const {token,setToken} = useContext(Token);
-    //const {refresh,setRefresh} = useContext(Refresh);
-    const ip = useContext(IP);
     const [username,setUsername] = useState("");
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
 
@@ -33,10 +22,18 @@ function Header(){
 
     function Logout()
     {
-        axios.post(`http://${ip}:8080/logout`, {headers: {"authorization": localStorage.getItem("jwt")}}).then(()=> {
-            localStorage.clear();
-            navigate("/login");
-        });
+        customAxios.post("/logout")
+            .then((response)=>{
+                if(response.status === 200)
+                {
+                    localStorage.clear();
+                    navigate("/login");
+                }
+                else
+                {
+                    alert("failed");
+                }
+            })
     }
 
     return (

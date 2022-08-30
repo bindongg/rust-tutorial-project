@@ -1,18 +1,15 @@
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { decodeToken } from "react-jwt";
 import { useNavigate, useParams } from "react-router-dom";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
 import { dark } from "react-syntax-highlighter/src/styles/hljs";
 import remarkGfm from "remark-gfm";
-import { Token } from "../../Context/Token/Token";
 import ReactMarkdown from "react-markdown";
 import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialSub(props) {
     const {id, subId} = useParams();
-    //const {token,setToken} = useContext(Token);
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [tutorialSub, setTutorialSub] = useState({
         id: "",

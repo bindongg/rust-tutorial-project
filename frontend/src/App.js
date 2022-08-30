@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Header from "./pages/Header";
 
 import Footer from "./pages/Footer";
 import AfterAuthEmailSent from "./pages/Register/AfterAuthEmailSent";
 
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import LoginForm from "./pages/Login/LoginForm";
 import RegisterForm from "./pages/Register/RegisterForm";
 import IdForgot from "./pages/IdPwdForgot/IdForgot";
@@ -26,7 +26,6 @@ import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
 import AdminAuth from "./pages/Admin/AdminAuth";
 import QuestionMain from "./pages/Question/QuestionMain";
-import {Token} from "./Context/Token/Token";
 import QuestionWrite from "./pages/Question/QuestionWrite";
 import QuestionDetail from "./pages/Question/QuestionDetail";
 import TutorialCreateForm from "./pages/Tutorial/TutorialCreateForm";
@@ -40,27 +39,10 @@ import ReferenceCreate from "./pages/Reference/ReferenceCreate";
 import ReferenceDetail from "./pages/Reference/ReferenceDetail";
 import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
 import QuestionUpdate from "./pages/Question/QuestionUpdate";
-import {Refresh} from "./Context/Token/Refresh";
-import {isExpired} from "react-jwt";
-import {Logout_} from "./Common/Modules/Common";
-import axios from "axios";
 
-
-
-//container -> 중앙으로 모아줌
 function App() {
-    //const [token,setToken] = useState(localStorage.getItem("jwt"));
-    //const [refresh,setRefresh] = useState(localStorage.getItem("refresh"));
-    const navigate = useNavigate();
-    /*useEffect(()=>{
-        if(isExpired(refresh))
-        {
-            Logout_(token,setToken,setRefresh,navigate,axios);
-        }
-    },[isExpired(refresh)]);*/
     return (
         <div>
-
             <Header/>
             <main className="pt-5">
                     <Routes>
@@ -113,7 +95,6 @@ function App() {
                         <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
                     </Routes>
             </main>
-
         </div>
     );
 }

@@ -1,15 +1,10 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {Row, Container, Col, Form, Button} from "react-bootstrap";
-import {Token} from "../../Context/Token/Token";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {Logout} from "../../Common/Modules/Common";
-import { IP } from "../../Context/IP";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function InfoMain() {
 
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const [password,setPassword] = useState("");
@@ -38,24 +33,16 @@ function InfoMain() {
             let pwdEx = new RegExp(/^(?=.*?[A-Za-z#?!@$%^&*-]).{8,20}$/);
             if(pwdEx.test(newPassword))
             {
-                axios.post(`http://${ip}:8080/user/password`, {password: password, newPassword: newPassword}, {headers: {authorization: token}})
-                    .then((Response)=>{
-                        if(Response.data.code === 200)
+                customAxios.post("user/password",{password: password, newPassword: newPassword})
+                    .then((response)=>{
+                        if(response.data.code === 200)
                         {
                             alert("비밀번호 변경을 완료했습니다");
-                            //로그아웃 로직 추가?
-                            navigate("/login");
+                            navigate("/home");
                         }
                         else
                         {
                             alert("비밀번호 변경에 실패했습니다");
-                        }
-                    })
-                    .catch((Error)=>{
-                        alert(Error.response.status + " Error");
-                        if(Error.response.status === 401 || Error.response.status === 403)
-                        {
-                            Logout(token,setToken,navigate);
                         }
                     })
             }

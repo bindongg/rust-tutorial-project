@@ -2,6 +2,7 @@ import React, {useContext, useState} from "react";
 import {Button, Col, Container, Form, FormControl, FormGroup, InputGroup, NavLink, Row} from "react-bootstrap";
 import axios from "axios";
 import { IP } from "../../Context/IP";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 //container -> 중앙으로 모아줌
@@ -22,9 +23,8 @@ function IdForgot() {
 
     function send()
     {
-        axios.post(`http://${ip}:8080/id`,{email: email, password: password}).then(
-            (Response)=>
-            {
+        customAxios.post("/id",{email: email, password: password})
+            .then(()=>{
                 if(Response.data.data === null)
                 {
                     alert("이메일 또는 비밀번호가 일치하지 않습니다");
@@ -34,10 +34,6 @@ function IdForgot() {
                     alert("회원님의 아이디는 "+Response.data.data+"입니다");
                 }
             })
-            .catch((Error)=>
-            {
-                alert(Error.response.status+"error");
-            });
     }
     return (
         <>

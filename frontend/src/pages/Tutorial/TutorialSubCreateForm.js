@@ -1,13 +1,10 @@
-import axios from "axios";
-import { Component, useContext, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Token } from "../../Context/Token/Token";
-import { EditorState, convertToRaw, RichUtils, Modifier, ContentState, convertFromHTML } from 'draft-js';
+import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { IP } from "../../Context/IP";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import { customAxios } from "../../Common/Modules/CustomAxios";
@@ -16,7 +13,6 @@ import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialSubCreateForm() {
     const {tutorial} = useLocation().state;
-    //const {token,setToken} = useContext(Token);
     const [loading,setLoading] = useState(false);
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();

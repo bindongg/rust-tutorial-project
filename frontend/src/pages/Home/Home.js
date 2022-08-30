@@ -1,12 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React from 'react';
 import {Button, Figure} from "react-bootstrap";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {decodeToken, isExpired} from "react-jwt";
-import {Token} from "../../Context/Token/Token";
-import {Refresh} from "../../Context/Token/Refresh";
-import {Axios_get} from "../../Common/Modules/Common";
-import {customAxios} from "../../Common/Modules/CustomAxios";
+
+
 
 
 function Home() {
@@ -16,8 +12,6 @@ function Home() {
     const moveTo = (href) => {
         navigate(href);
     }
-
-    const {token} = useContext(Token);
 
     return (
         <div className="App text-center">

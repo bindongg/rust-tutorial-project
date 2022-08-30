@@ -1,14 +1,11 @@
 import React, { useContext, useState } from "react";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Button } from "react-bootstrap";
-import axios from "axios";
 import { customAxios } from "../../Common/Modules/CustomAxios";
-import { Token } from "../../Context/Token/Token";
 import { IP } from "../../Context/IP";
 
 function Compile() {
-  //const {token,setToken} = useContext(Token);
-  const ip = useContext(IP);
+
   const [code, setCode] = useState(
     `fn main() {\n    println!("Hello World!"); \n}`
   );
@@ -16,12 +13,6 @@ function Compile() {
   const [output, setOutput] = useState();
 
   const compileCode = (data) => {
-    /*axios.post(`http://${ip}:8080/tutorial/compile`,
-        {code : code, stdIn : input},
-        {headers : headers})
-        .then(response => { 
-          setOutput(response.data.data);
-        })*/
         customAxios.post("/tutorial/compile",{code: code, stdIn: input})
         .then((response)=>{
             setOutput(response.data.data);

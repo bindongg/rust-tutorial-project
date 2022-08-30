@@ -1,16 +1,8 @@
 import {Button, Col, Container, Form, NavLink, Row} from "react-bootstrap";
-import React, {useContext, useState} from "react";
-import axios from "axios";
-import {Token} from "../../Context/Token/Token";
-import {Logout} from "../../Common/Modules/Common";
-import {useNavigate} from "react-router-dom";
-import { IP } from "../../Context/IP";
+import React, {useState} from "react";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function AdminAuth() {
-    const navigate = useNavigate();
-
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
 
     const [id,setId] = useState("");
 
@@ -28,25 +20,15 @@ function AdminAuth() {
 
     function send()
     {
-        axios.post(`http://${ip}:8080/admin/auth`,{id: id, role: role}, {headers: {authorization: token}})
-            .then(
-                (response)=>
+        customAxios.post("/admin/auth",{id: id, role: role})
+            .then((response)=>{
+                if(response.data.code === 200)
                 {
-                    if(response.data.code === 200)
-                    {
-                        alert("권한 변경 완료");
-                    }
-                    else
-                    {
-                        alert("failed");
-                    }
+                    alert("권한 변경 완료");
                 }
-            )
-            .catch((error)=>
-            {
-                if(error.response.status === 401)
+                else
                 {
-                    Logout(token, setToken, navigate);
+                    alert("failed");
                 }
             })
     }

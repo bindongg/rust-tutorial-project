@@ -4,6 +4,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import Loading from "../Loading";
 import { IP } from "../../Context/IP";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function PwdForgot() {
     const ip = useContext(IP);
@@ -27,9 +28,8 @@ function PwdForgot() {
     function send()
     {
         setLoadingState(true);
-        axios.post(`http://${ip}:8080/password`,{id: id, email: email})
-            .then((response)=>
-            {
+        customAxios.post("password",{id: id, email: email})
+            .then((response)=>{
                 if(response.data.code === 200)
                 {
                     alert("입력하신 메일 주소로 임시 비밀번호를 전송했습니다.");
@@ -39,10 +39,6 @@ function PwdForgot() {
                 {
                     alert("fail");
                 }
-            })
-            .catch((Error)=>
-            {
-                alert(Error.response.status+"error");
             })
             .finally(()=>
             {
