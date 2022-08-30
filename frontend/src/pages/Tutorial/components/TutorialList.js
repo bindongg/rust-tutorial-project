@@ -1,23 +1,15 @@
-import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
 import { decodeToken } from "react-jwt";
 import { NavLink, useNavigate } from "react-router-dom";
-import { IP } from "../../../Context/IP";
-import { Token } from "../../../Context/Token/Token";
+import { customAxios } from "../../../Common/Modules/CustomAxios";
 import TutorialSubList from "./TutorialSubList";
 
 
 function TutorialList({tutorials, rerender, setRerender}) {
     const navigate = useNavigate();
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const role = (token === null ? null : (decodeToken(token).role));
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-    };
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [loading,setLoading] = useState(false);
 
     const updateTutorial = (tutorial) => {      
@@ -25,7 +17,7 @@ function TutorialList({tutorials, rerender, setRerender}) {
     }
     const deleteTutorial = (tutorial) => {
         setLoading(true);
-        axios.delete(`http://${ip}:8080/tutorial/${tutorial.id}`, {headers : headers})
+        customAxios.delete(`/tutorial/${tutorial.id}`)
         .then((response) =>
         {
             if (response.data.code === 200)

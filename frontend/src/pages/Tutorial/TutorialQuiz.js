@@ -1,26 +1,18 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import TutorialQuizQuestionList from "./components/TutorialQuestionList";
-import { Token } from "../../Context/Token/Token";
 import { decodeToken } from "react-jwt";
-import { IP } from "../../Context/IP";
+import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialQuiz() {
     const {id} = useParams();    
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const role = (token === null ? null : (decodeToken(token).role));
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [tutorialQuiz, setTutorialQuiz] = useState({
         id: "",
         name: "",
         tutorialQuizQuestions: []
     });
-    const headers = {
-        'Content-Type' : 'application/json',
-        'Authorization' : token
-      }
     const [loading,setLoading] = useState(false);
     const [answers, setAnswers] = useState([]);
     const [correctList, setCorrectList] = useState([]);
@@ -28,11 +20,18 @@ function TutorialQuiz() {
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
     useEffect( () => {
-    const getTutorialQuiz = async () => {
-        const tutorialQuiz = await axios.get(`http://${ip}:8080/tutorial/quiz/${id}`, {headers : headers});        
-        setTutorialQuiz({...tutorialQuiz.data.data});
-    }    
-    getTutorialQuiz();
+        customAxios.get(`/tutorial/quiz/${id}`)
+        .then((response) =>
+        {
+            if (response.data.code === 200)
+            {
+                setTutorialQuiz({...response.data.data});
+            }
+        })
+        .catch((Error) =>
+        {
+            alert(Error.response.status + " error");
+        })
     }, []);
 
     
@@ -45,7 +44,7 @@ function TutorialQuiz() {
         setLoading(true);
         e.preventDefault();
         if (answers.length === tutorialQuiz.tutorialQuizQuestions.length) {
-            axios.post(`http://${ip}:8080/tutorial/quiz/${id}`, {answers:answers},{headers : headers})
+            customAxios.post(`/tutorial/quiz/${id}`, {answers:answers})
             .then((response) =>
             {
                 if (response.data.code === 200)
@@ -72,7 +71,7 @@ function TutorialQuiz() {
         navigate("/tutorial/quiz/updateForm", {state: {tutorialQuiz : tutorialQuiz}});
     }
     const deleteSub = () => {
-        axios.delete(`http://${ip}:8080/tutorial/quiz/${tutorialQuiz.id}`, {headers : headers})
+        customAxios.delete(`/tutorial/quiz/${tutorialQuiz.id}`)
         .then((response) =>
         {
             if (response.data.code === 200)

@@ -1,24 +1,9 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, NavLink} from "react-bootstrap";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {Token} from "../../Context/Token/Token";
-import {Refresh} from "../../Context/Token/Refresh";
-import {decodeToken} from "react-jwt";
-import { IP } from "../../Context/IP";
-import {Login} from "../../Common/Modules/Common";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 
-const config = {
-    headers: {
-        "Content-Type": "application/json; charset=utf-8",
-    },
-};
-
 function LoginForm() {
-    const {setToken} = useContext(Token);
-    const {setRefresh} = useContext(Refresh);
-    const ip = useContext(IP);
     const [userId,setUserId] = useState("");
     const [userPwd,setUserPwd] = useState("");
     const [loading,setLoading] = useState(false);
@@ -37,20 +22,6 @@ function LoginForm() {
     function logIn()
     {
         setLoading(true);
-        /*axios.post(`http://${ip}:8080/login`,{userId: userId, userPassword: userPwd}, config)
-            .then((response)=>{
-                if(response.status === 200)
-                {
-                    //Login(setToken,setRefresh,response);
-                    localStorage.setItem("jwt",response.headers['authorization']);
-                    localStorage.setItem("refresh",response.headers['refresh']);
-                    navigate(-1);
-                }
-            })
-            .catch((Error)=>{
-                alert(Error.response.status+" 아이디 또는 비밀번호가 일치하지 않습니다");
-            })
-            .finally(()=>{setLoading(false);})*/
         customAxios.post("/login",{userId: userId, userPassword: userPwd}).then((res)=>{
             if(res.status === 200) {
                 navigate(-1)
@@ -60,7 +31,9 @@ function LoginForm() {
             {
                 alert("아이디 또는 비밀번호가 틀렸습니다")
             }
-        }).finally(()=>{setLoading(false);})
+        }).finally(()=>{
+            setLoading(false);
+        })
     }
 
     return (
@@ -74,7 +47,7 @@ function LoginForm() {
                                 <Form.Label>아이디</Form.Label>
                                 <Form.Control type="id" placeholder="아이디를 입력하세요" onChange={onChangeId}/>
                                 <Form.Text className="text-muted">
-                                    <NavLink href="/idForgot">아이디 찾기</NavLink>
+                                    <NavLink className={"nav-link"} to="/idForgot">아이디 찾기</NavLink>
                                 </Form.Text>
                             </Form.Group>
 
@@ -82,7 +55,7 @@ function LoginForm() {
                                 <Form.Label>비밀번호</Form.Label>
                                 <Form.Control type="password" placeholder="Password" onChange={onChangePwd}/>
                                 <Form.Text className="text-muted">
-                                    <NavLink href="/pwdForgot">비밀번호 찾기</NavLink>
+                                    <NavLink className={"nav-link"} to="/pwdForgot">비밀번호 찾기</NavLink>
                                 </Form.Text>
                             </Form.Group>
                             <Button variant="info" type="button" disabled={loading} onClick={logIn}>

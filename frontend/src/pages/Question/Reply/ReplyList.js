@@ -5,6 +5,7 @@ import {decodeToken} from "react-jwt";
 import Reply from "./Reply";
 import {customAxios} from "../../../Common/Modules/CustomAxios";
 
+
 function ReplyList(props) {
 
     const username = localStorage.getItem("refresh") === null ? "" : decodeToken(localStorage.getItem("refresh")).username;
@@ -25,7 +26,6 @@ function ReplyList(props) {
                 userId: username
             }).then((response) => {
                 if (response.data.code === 200) {
-                    //Login(setToken,setRefresh,response);
                     props.setRefresh_(!(props.refresh_));
                 } else {
                     alert("failed");

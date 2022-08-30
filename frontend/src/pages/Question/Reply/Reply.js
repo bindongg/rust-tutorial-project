@@ -25,41 +25,41 @@ function Reply(props)
 
     function delReply()
     {
-        customAxios.delete("/user/reply/delete",{
-            data: {
-                author: props.reply.user.id,
-                id: props.reply.id
-            }
-        }).then((response)=>{
-            if(response.data.code === 200)
-            {
-                props.setRefresh_(!(props.refresh_));
-            }
-            else
-            {
-                alert("failed");
-            }
-        })
+        if(window.confirm("삭제하시겠어요?"))
+        {
+            customAxios.delete("/user/reply/delete", {
+                data: {
+                    author: props.reply.user.id,
+                    id: props.reply.id
+                }
+            }).then((response) => {
+                if (response.data.code === 200) {
+                    props.setRefresh_(!(props.refresh_));
+                } else {
+                    alert("failed");
+                }
+            })
+        }
     }
 
 
     function delSubReply(e)
     {
-        customAxios.delete("/user/subReply/delete",{
-            data: {
-                id: e.target.id,
-                author: e.target.value
-            }
-        }).then((response)=>{
-            if(response.data.code === 200)
-            {
-                props.setRefresh_(!(props.refresh_));
-            }
-            else
-            {
-                alert("failed");
-            }
-        })
+        if(window.confirm("삭제하시겠어요?"))
+        {
+            customAxios.delete("/user/subReply/delete", {
+                data: {
+                    id: e.target.id,
+                    author: e.target.value
+                }
+            }).then((response) => {
+                if (response.data.code === 200) {
+                    props.setRefresh_(!(props.refresh_));
+                } else {
+                    alert("failed");
+                }
+            })
+        }
     }
 
 

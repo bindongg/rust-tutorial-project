@@ -1,20 +1,16 @@
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { decodeToken } from "react-jwt";
 import { useNavigate, useParams } from "react-router-dom";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
 import { dark } from "react-syntax-highlighter/src/styles/hljs";
 import remarkGfm from "remark-gfm";
-import { IP } from "../../Context/IP";
-import { Token } from "../../Context/Token/Token";
 import ReactMarkdown from "react-markdown";
+import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialSub(props) {
     const {id, subId} = useParams();
-    const {token,setToken} = useContext(Token); 
-    const ip = useContext(IP);
-    const role = (token === null ? null : (decodeToken(token).role));
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [tutorialSub, setTutorialSub] = useState({
         id: "",
         number: "",
@@ -23,15 +19,11 @@ function TutorialSub(props) {
     const [loading,setLoading] = useState(false);
     const [preSub, setPreSub] = useState(null);           
     const [nextSub, setNextSub] = useState(null);           
-    const headers = {
-        'Content-Type' : 'application/json',
-        'Authorization' : token
-    }
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
     useEffect( () => {
-        axios.get(`http://${ip}:8080/tutorial/${id}/sub/${subId}`, {headers : headers})
+        customAxios.get(`/tutorial/${id}/sub/${subId}`)
         .then((response) =>
         {
             if (response.data.code === 200)
@@ -53,7 +45,7 @@ function TutorialSub(props) {
     }
     const deleteSub = () => {
         setLoading(true);
-        axios.delete(`http://${ip}:8080/tutorial/sub/${tutorialSub.id}`, {headers : headers})
+        customAxios.delete(`/tutorial/sub/${tutorialSub.id}`)
         .then((response) => 
         {
             if (response.data.code === 200)

@@ -1,11 +1,9 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink, Table} from "react-bootstrap";
-import axios from "axios";
 import ExerciseList from "./components/ExerciseList";
 import Button from 'react-bootstrap/Button';
 import {useNavigate} from "react-router";
-import {Token} from "../../Context/Token/Token";
-import { IP } from "../../Context/IP";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function Exercise(){
   const [isLoading, setIsLoading] = useState(true);
@@ -14,16 +12,10 @@ function Exercise(){
   const moveTo = (href) => {
     navigate(href);
   }
-  const {token,setToken} = useContext(Token);
-  const ip = useContext(IP);
-  const headers = {
-    'Content-Type' : 'application/json; charset=utf-8',
-    'Authorization' : token
-  };
 
   useEffect( () => {
     const getExercises = async () => {
-      const exercises = await axios.get(`http://${ip}:8080/exercise`, {headers : headers});
+      const exercises = await customAxios.get(`/exercise`);
       setExercises(exercises.data.data);
     }
     // 실행함으로써 데이타를 fetching합니다.

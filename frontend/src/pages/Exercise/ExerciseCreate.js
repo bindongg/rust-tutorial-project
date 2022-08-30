@@ -1,21 +1,13 @@
-import React, {useContext, useState} from "react";
+import React, { useState} from "react";
 import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
-import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
-import {useHistory, useNavigate} from "react-router-dom"
-import {Token} from "../../Context/Token/Token";
-import { IP } from "../../Context/IP";
+import { useForm } from "react-hook-form";
+import {useNavigate} from "react-router-dom"
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 function ExerciseCreate() {
     const { register, watch, reset,handleSubmit, formState: {errors} } = useForm();
     const [testcaseNums, setTestcaseNums] = useState([1 ]);
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-    };
     const navigate = useNavigate();
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
@@ -25,7 +17,7 @@ function ExerciseCreate() {
     const onSubmit = (data) => {
         console.log('data', data)
         data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
-        axios.post(`http://${ip}:8080/exercise`, {...data}, {headers : headers}
+        customAxios.post(`/exercise`, {...data}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
@@ -85,11 +77,11 @@ function ExerciseCreate() {
                                     <Form.Label>문제 분류</Form.Label>
                                     <Form.Select aria-label="exercise kind" {...register("tag")}>
                                         <option>문제 분류를 선택해주세요</option>
-                                        //TODO 문제 분류 확정되면 추가하기
-                                        <option value="STACK">STACK</option>
-                                        <option value="QUEUE">QUEUE</option>
-                                        <option value="LIST">LIST</option>
-                                        <option value="BASIC">BASIC</option>
+                                        <option value="입출력">입출력</option>
+                                        <option value="제어문">제어문</option>
+                                        <option value="반복문">반복문</option>
+                                        <option value="자료구조">자료구조</option>
+                                        <option value="기타">기타</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Row>

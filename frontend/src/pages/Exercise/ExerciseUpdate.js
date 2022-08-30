@@ -1,26 +1,17 @@
-import React, { useContext, useState} from "react";
+import React, { useState} from "react";
 import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
-import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
-import {useHistory, useLocation, useNavigate, useParams} from "react-router-dom"
-import {Token} from "../../Context/Token/Token";
-import { IP } from "../../Context/IP";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate, useParams} from "react-router-dom"
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 function ExerciseUpdate() {
     const {id} = useParams();
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
-
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
     const { register, watch, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-    };
 
     const onEditChange = (e) => {
         setEditedExercise({ //문법
@@ -35,7 +26,7 @@ function ExerciseUpdate() {
 
     const onSubmit = (data) => {
         console.log('data', data);
-        axios.patch(`http://${ip}:8080/exercise/${id}`, {...data}, {headers : headers}
+        customAxios.patch(`/exercise/${id}`, {...data}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
@@ -101,11 +92,11 @@ function ExerciseUpdate() {
                                     <Form.Label>문제 분류</Form.Label>
                                     <Form.Select aria-label="exercise kind" defaultValue={exerciseDetail.tag}  onChange={onEditChange} {...register("tag")}>
                                         <option>문제 분류를 선택해주세요</option>
-                                        //TODO 문제 분류 확정되면 추가하기
-                                        <option value="STACK">STACK</option>
-                                        <option value="QUEUE">QUEUE</option>
-                                        <option value="LIST">LIST</option>
-                                        <option value="BASIC">BASIC</option>
+                                        <option value="입출력">입출력</option>
+                                        <option value="제어문">제어문</option>
+                                        <option value="반복문">반복문</option>
+                                        <option value="자료구조">자료구조</option>
+                                        <option value="기타">기타</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Row>

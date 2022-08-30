@@ -72,6 +72,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 {
                     if(redisService.getRedisStringValue(username) == null)
                     {
+                        System.out.println("null jwt");
                         String tokenString = redisService.getRedisStringValue(JwtProperties.REFRESH_STRING+username);
 
                         if(tokenString == null)

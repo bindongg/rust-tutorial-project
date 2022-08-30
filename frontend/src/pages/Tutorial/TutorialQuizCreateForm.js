@@ -1,18 +1,12 @@
-import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Token } from "../../Context/Token/Token";
+import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialQuizCreateForm() {
     const {tutorial} = useLocation().state;
-    const {token,setToken} = useContext(Token);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-      };
-      const [loading,setLoading] = useState(false);
+    const [loading,setLoading] = useState(false);
     const [numbers, setNumbers] = useState([1 ]);
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
     const navigate = useNavigate();
@@ -21,7 +15,7 @@ function TutorialQuizCreateForm() {
     const onSubmit = (data) => {
         setLoading(true);
         data.tutorialQuizQuestions = data.tutorialQuizQuestions.slice(0, numbers.length);
-        axios.post(`http://54.180.10.223:8080/tutorial/${tutorial.id}/quiz`, {...data}, {headers : headers})
+        customAxios.post(`/tutorial/${tutorial.id}/quiz`, {...data})
         .then((response) =>
         {
             if (response.data.code === 200)

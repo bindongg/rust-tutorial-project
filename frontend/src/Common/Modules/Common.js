@@ -1,5 +1,3 @@
-
-
 export function Logout(token, setToken, setRefresh, navigate)
 {
     //localStorage.clear();

@@ -1,6 +1,5 @@
 package com.rust.website.user.controller;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.rust.website.common.CommonProperties;
 import com.rust.website.common.cache.RedisService;
@@ -9,14 +8,20 @@ import com.rust.website.common.config.jwt.JwtUtil;
 import com.rust.website.common.dto.RegisterDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.common.dto.MailResendDTO;
+import com.rust.website.common.dto.TupleResponseDTO;
+import com.rust.website.exercise.model.entity.Exercise;
+import com.rust.website.exercise.model.entity.ExerciseTry;
+import com.rust.website.exercise.model.myEnum.ExerciseSolved;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.entity.UserAuth;
 import com.rust.website.user.model.exception.LoginException;
 import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.model.myEnum.UserRoleType;
+import com.rust.website.user.repository.UserRepository;
 import com.rust.website.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,10 +38,11 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final RedisService test;
+
+    private final UserRepository testRepo;
 
     @PostMapping({"/duplicateId"})
     public ResponseDTO<Boolean> checkDuplicateId(@RequestBody Map<String, String> duplicateIdMap) {
@@ -124,6 +131,17 @@ public class UserController {
     {
         userService.updateAuthority(getNewAuthMap.get("id"), getNewAuthMap.get("role"));
         return new ResponseDTO<>(200,"OK");
+    }
+    @GetMapping("/user/exercise/success/{userId}")
+    public TupleResponseDTO<List<ExerciseTry>> getExerciseDone(@PathVariable String userId, Pageable pageable)
+    {
+        return new TupleResponseDTO<>(200,userService.getTriedExerciseCount(userId,ExerciseSolved.SOLVE),userService.getTriedExercise(userId, ExerciseSolved.SOLVE, pageable));
+    }
+
+    @GetMapping("/user/exercise/fail/{userId}")
+    public TupleResponseDTO<List<ExerciseTry>> getExerciseFail(@PathVariable String userId, Pageable pageable)
+    {
+        return new TupleResponseDTO<>(200,userService.getTriedExerciseCount(userId,ExerciseSolved.FAIL),userService.getTriedExercise(userId, ExerciseSolved.FAIL, pageable));
     }
 
     @PostMapping("/test/admin")
@@ -216,6 +234,30 @@ public class UserController {
     public void test6(HttpServletRequest req)
     {
         System.out.println(req.getHeader(JwtProperties.HEADER_STRING));
+    }
+
+    @PostMapping("/test/exerlist/solve/{id}")
+    public void test7(@PathVariable String id)
+    {
+        ExerciseTry exerciseTry = ExerciseTry.builder()
+                .sourceCode("")
+                .solved(ExerciseSolved.SOLVE)
+                .user(testRepo.findById(id).orElse(null))
+                .exercise(new Exercise())
+                .build();
+        userService.test2(exerciseTry);
+    }
+
+    @PostMapping("/test/exerlist/fail/{id}")
+    public void test8(@PathVariable String id)
+    {
+        ExerciseTry exerciseTry = ExerciseTry.builder()
+                .sourceCode("")
+                .solved(ExerciseSolved.FAIL)
+                .user(testRepo.findById(id).orElse(null))
+                .exercise(new Exercise())
+                .build();
+        userService.test2(exerciseTry);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

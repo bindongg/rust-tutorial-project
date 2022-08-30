@@ -3,6 +3,7 @@ import {Row, Container, Col, Button} from "react-bootstrap";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 import {IP} from "../../Context/IP";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function AfterAuthEmailSent() {
     const location = useLocation();
@@ -18,17 +19,18 @@ function AfterAuthEmailSent() {
     function register()
     {
         setBtnState(true);
-        axios.post(`http://${ip}:8080/register/resend`,{id: id, authId: authId, password: password, email: email}, {withCredentials: true}).then((Response)=>{
-            if(Response.data.code === 200)
-            {
-                setAuthId(Response.data.data);
-                alert("재전송 완료");
-            }
-        }).catch((Error)=>{
-            alert(Error.response.status+" failed");
-        }).finally(()=>{
-            setBtnState(false);
-        })
+        customAxios.post("/register/resend",{id: id, authId: authId, password: password, email: email}, {withCredentials: true})
+            .then((response)=>{
+                if(response.data.code === 200)
+                {
+                    setAuthId(Response.data.data);
+                    alert("재전송 완료");
+                }
+            }).catch((Error)=>{
+                alert(Error.response.status+" failed");
+            }).finally(()=>{
+                setBtnState(false);
+            })
     }
 
     return (

@@ -1,22 +1,15 @@
-import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { IP } from "../../Context/IP";
-import { Token } from "../../Context/Token/Token";
+import { customAxios } from "../../Common/Modules/CustomAxios";
+
 
 
 
 function TutorialUpdateForm() {
     const {tutorial} = useLocation().state;
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
     const [loading,setLoading] = useState(false);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-    };
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();
 
@@ -24,7 +17,7 @@ function TutorialUpdateForm() {
     const onSubmit = (data) => {
         setLoading(true);
         data.number = data.number * 1;
-        axios.patch(`http://${ip}:8080/tutorial/${tutorial.id}`, {...data}, {headers : headers})
+        customAxios.patch(`/tutorial/${tutorial.id}`, {...data})
         .then((response) =>
         {
             if (response.data.code === 200)
