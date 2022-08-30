@@ -1,6 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Container} from "react-bootstrap";
 import SolvedExerciseContainer from "./components/SolvedExerciseContainer";
+import FailedExerciseContainer from "./components/FailedExerciseContainer";
+import {customAxios} from "../../Common/Modules/CustomAxios";
+import {decodeToken} from "react-jwt";
 
 function SolvedExercise() {
     return (
@@ -11,7 +14,7 @@ function SolvedExercise() {
                 <br/>
                 <br/>
                 <h3 className="text-black mt-5 p-3 text-center rounded">실패한 문제</h3>
-                <SolvedExerciseContainer/>
+                <FailedExerciseContainer/>
             </Container>
         </>
     );

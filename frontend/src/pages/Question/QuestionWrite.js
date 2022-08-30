@@ -27,22 +27,21 @@ function QuestionWrite()
 
     function onSubmit(data)
     {
-        setLoadingState(true);
-        data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
-        customAxios.post("user/question/add",{...data})
-            .then((response)=>{
-                if(response.data.code === 200)
-                {
-                    navigate("/question");
-                }
-                else
-                {
-                    alert("failed");
-                }
-            })
-            .finally(()=>{
-                setLoadingState(false);
-            })
+        if(window.confirm("작성하시겠어요?")) {
+            setLoadingState(true);
+            data = {...data, content: draftToHtml(convertToRaw(editorState.getCurrentContent()))};
+            customAxios.post("user/question/add", {...data})
+                .then((response) => {
+                    if (response.data.code === 200) {
+                        navigate("/question");
+                    } else {
+                        alert("failed");
+                    }
+                })
+                .finally(() => {
+                    setLoadingState(false);
+                })
+        }
     }
     return (
         <>

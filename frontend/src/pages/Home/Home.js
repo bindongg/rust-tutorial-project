@@ -9,16 +9,15 @@ import {Axios_get} from "../../Common/Modules/Common";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
-function Home(){
+function Home() {
 
     const navigate = useNavigate();
-
-    const {token,setToken} = useContext(Token);
-    const {refresh} = useContext(Refresh);
 
     const moveTo = (href) => {
         navigate(href);
     }
+
+    const {token} = useContext(Token);
 
     return (
         <div className="App text-center">

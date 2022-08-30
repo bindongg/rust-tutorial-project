@@ -1,5 +1,6 @@
 package com.rust.website.user.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rust.website.exercise.model.entity.ExerciseTry;
@@ -22,6 +23,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+
+//@JsonFilter("UserInfo")
 public class User {
 
     @Id
