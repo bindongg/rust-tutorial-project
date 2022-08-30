@@ -106,4 +106,15 @@ public class QuestionService {
         }
         else throw new IllegalArgumentException("No such entity");
     }
+
+    @Transactional
+    public void updateQuestionDone(int id)
+    {
+        Optional<Question> optQuestion = questionRepository.findById(id);
+        if(optQuestion.isPresent())
+        {
+            optQuestion.get().setDone(true);
+        }
+        else throw new IllegalArgumentException("No such entity");
+    }
 }

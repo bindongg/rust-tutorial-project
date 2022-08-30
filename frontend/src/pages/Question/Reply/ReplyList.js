@@ -4,6 +4,8 @@ import { useState} from "react";
 import {decodeToken} from "react-jwt";
 import Reply from "./Reply";
 import {customAxios} from "../../../Common/Modules/CustomAxios";
+import {Login, Logout} from "../../../Common/Modules/Common";
+import axios from "axios";
 
 function ReplyList(props) {
 
@@ -25,7 +27,6 @@ function ReplyList(props) {
                 userId: username
             }).then((response) => {
                 if (response.data.code === 200) {
-                    //Login(setToken,setRefresh,response);
                     props.setRefresh_(!(props.refresh_));
                 } else {
                     alert("failed");

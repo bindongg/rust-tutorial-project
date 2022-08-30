@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import ExerciseListInfo from "./ExerciseListInfo";
 
 function ExerciseList({exercises}){

@@ -1,33 +1,25 @@
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Token } from "../../Context/Token/Token";
 import remarkGfm from "remark-gfm";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import {dark} from "react-syntax-highlighter/src/styles/hljs";
 import ReactMarkdown from "react-markdown";
 import ReferenceSidebar from "./component/ReferenceSidebar";
-import { IP } from "../../Context/IP";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function ReferenceDetail(props) {
     const {id} = useParams();
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP); 
     const [referenceDetail, setReferenceDetail] = useState({});
     const [preDetail, setPreDetail] = useState(null);
     const [nextDetail, setNextDetail] = useState(null);
-    const headers = {
-        'Content-Type' : 'application/json',
-        'Authorization' : token
-    }
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
     const [titles, setTitles] = useState(useLocation().state); //목차 전달을 위함
 
     useEffect( () => {
     const getReferenceDetail = async (nextSub, preSub) => {
-        let referenceDetail = await axios.get(`http://${ip}:8080/reference/${id}`, {headers : headers});
+        let referenceDetail = await customAxios.get(`/reference/${id}`);
         referenceDetail = referenceDetail.data.data
         // console.log(referenceDetail);
         setReferenceDetail({...referenceDetail.ref});
@@ -41,7 +33,7 @@ function ReferenceDetail(props) {
         navigate(`/reference/${referenceDetail.id}/update`, {state: {referenceDetail : referenceDetail}});
     }
     const deleteDetail = () => {
-        axios.delete(`http://${ip}:8080/reference/${referenceDetail.id}`, {headers : headers}
+        customAxios.delete(`/reference/${referenceDetail.id}`
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
