@@ -1,26 +1,17 @@
-import React, { useContext, useState} from "react";
+import React, { useState} from "react";
 import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
-import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
-import {useHistory, useLocation, useNavigate, useParams} from "react-router-dom"
-import {Token} from "../../Context/Token/Token";
-import { IP } from "../../Context/IP";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate, useParams} from "react-router-dom"
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 function ExerciseUpdate() {
     const {id} = useParams();
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
-
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
     const { register, watch, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-    };
 
     const onEditChange = (e) => {
         setEditedExercise({ //문법
@@ -35,7 +26,7 @@ function ExerciseUpdate() {
 
     const onSubmit = (data) => {
         console.log('data', data);
-        axios.patch(`http://${ip}:8080/exercise/${id}`, {...data}, {headers : headers}
+        customAxios.patch(`/exercise/${id}`, {...data}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);

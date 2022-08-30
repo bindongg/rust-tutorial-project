@@ -1,21 +1,13 @@
-import React, {Component, useContext, useState} from "react";
-import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
+import React, { useState} from "react";
+import {Link,useNavigate, useParams} from "react-router-dom";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button} from "react-bootstrap";
-import axios from "axios";
-import {Token} from "../../../Context/Token/Token";
-import { IP } from "../../../Context/IP";
+import {customAxios} from "../../../Common/Modules/CustomAxios";
 
 function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
     // let problemURL = window.location.pathname;
     // let problemNum = problemURL[problemURL.length-1];
     const {id} = useParams();
-    const {token,setToken} = useContext(Token);
-    const ip = useContext(IP);
-    const headers = {
-        'Content-Type' : 'application/json; charset=utf-8',
-        'Authorization' : token
-    };
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
     // const [exerciseDetail, setExerciseDetail] = useState({});
@@ -36,7 +28,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
 
     const compileCode = (data) => {
         console.log(jsonCode);
-        axios.post(`http://localhost:8080/exercise/compile/${id}`, jsonCode, {headers : headers}
+        customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
             alert(response.data);
             navigate(-1);
@@ -47,7 +39,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
     }
 
     const deleteExercise = () => {
-        axios.delete(`http://${ip}:8080/exercise/${id}`, {headers : headers}
+        customAxios.delete(`/exercise/${id}`
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
