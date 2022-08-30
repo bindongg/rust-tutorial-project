@@ -8,7 +8,7 @@ import { Token } from "../../Context/Token/Token";
 
 function TutorialQuizCreateForm() {
     const {tutorial} = useLocation().state;
-    const {token,setToken} = useContext(Token);
+    //const {token,setToken} = useContext(Token);
     const [loading,setLoading] = useState(false);
     const [numbers, setNumbers] = useState([1 ]);
     const { register, handleSubmit, formState: {errors}, reset } = useForm();

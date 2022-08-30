@@ -11,8 +11,8 @@ import TutorialSubList from "./TutorialSubList";
 
 function TutorialList({tutorials, rerender, setRerender}) {
     const navigate = useNavigate();
-    const {token,setToken} = useContext(Token);
-    const role = (token === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+    //const {token,setToken} = useContext(Token);
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [loading,setLoading] = useState(false);
 
     const updateTutorial = (tutorial) => {      

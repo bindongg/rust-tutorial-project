@@ -10,8 +10,8 @@ import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialQuiz() {
     const {id} = useParams();    
-    const {token,setToken} = useContext(Token);
-    const role = (token === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+    //const {token,setToken} = useContext(Token);
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [tutorialQuiz, setTutorialQuiz] = useState({
         id: "",
         name: "",

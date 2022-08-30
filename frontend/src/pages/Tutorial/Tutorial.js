@@ -11,8 +11,8 @@ import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function Tutorial(props) {
   const [tutorials, setTutorials] = useState([]);
-  const {token,setToken} = useContext(Token);
-  const role = (token === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+  //const {token,setToken} = useContext(Token);
+  const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
   const [rerender, setRerender] = useState(0);
 
   useEffect( () => {

@@ -12,8 +12,8 @@ import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function TutorialSub(props) {
     const {id, subId} = useParams();
-    const {token,setToken} = useContext(Token); 
-    const role = (token === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+    //const {token,setToken} = useContext(Token);
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [tutorialSub, setTutorialSub] = useState({
         id: "",
         number: "",

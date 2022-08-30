@@ -49,8 +49,8 @@ import axios from "axios";
 
 //container -> 중앙으로 모아줌
 function App() {
-    const [token,setToken] = useState(localStorage.getItem("jwt"));
-    const [refresh,setRefresh] = useState(localStorage.getItem("refresh"));
+    //const [token,setToken] = useState(localStorage.getItem("jwt"));
+    //const [refresh,setRefresh] = useState(localStorage.getItem("refresh"));
     const navigate = useNavigate();
     /*useEffect(()=>{
         if(isExpired(refresh))
@@ -60,8 +60,7 @@ function App() {
     },[isExpired(refresh)]);*/
     return (
         <div>
-            <Refresh.Provider value={{refresh,setRefresh}}>
-            <Token.Provider value={{token,setToken}}>
+
             <Header/>
             <main className="pt-5">
                     <Routes>
@@ -114,8 +113,7 @@ function App() {
                         <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
                     </Routes>
             </main>
-            </Token.Provider>
-            </Refresh.Provider>
+
         </div>
     );
 }
