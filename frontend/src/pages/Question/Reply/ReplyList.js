@@ -30,6 +30,8 @@ function ReplyList(props) {
                 } else {
                     alert("failed");
                 }
+            }).finally(()=>{
+                setReplyState("")
             })
         }
     }
@@ -39,8 +41,8 @@ function ReplyList(props) {
                 <Row className="mt-7">
                     <Col lg={12} md={10} sm={12} className="p-3 m-auto shadow-sm rounded-lg">
                         <div className="ps-3 pe-3 pt-2 form-group">
-                            <textarea className="form-control h-25" rows="2" placeholder="댓글 입력"
-                                      onChange={onChangeReply}/>
+                            <input className="form-control h-25" placeholder="댓글 입력" value={replyState}
+                                      onKeyUp={(e)=>{if(e.key==="Enter"){add()}}} onChange={onChangeReply}/>
                             <Button type="button" className="btn btn-secondary btn-sm" onClick={add}>댓글 쓰기</Button>
                         </div>
                     </Col>

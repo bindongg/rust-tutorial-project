@@ -52,7 +52,8 @@ function QuestionMain()
                         <tr>
                             <th className="col-1">번호</th>
                             <th className="col-5">제목</th>
-                            <th className="col-2">작성자</th>
+                            <th className="col-1">날짜</th>
+                            <th className="col-1">작성자</th>
                             <th className="col-1">완료</th>
                         </tr>
                     </thead>
@@ -64,6 +65,7 @@ function QuestionMain()
                                         questions.map((question,index)=>(<tr key={index}>
                                                 <td>{question.id}</td>
                                                 <td><Link to={`/question/${question.id}`} style={{color: "black", textDecorationLine: "none"}}>{question.title}&nbsp;[{question.reply.length + getCnt(question.reply)}]</Link></td>
+                                                <td>{question.createDate.substr(0,10) + " " + question.createDate.substr(11,5)}</td>
                                                 <td>{question.user.id}</td>
                                                 <td>{question.done === true ? "✔" : ""}</td>
                                             </tr>)

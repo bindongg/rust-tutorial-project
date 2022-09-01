@@ -1,7 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 import {decodeToken} from "react-jwt";
-import axios from "axios";
 import { NavLink, useNavigate} from "react-router-dom";
 import './Header.css';
 import {customAxios} from "../Common/Modules/CustomAxios";
@@ -82,12 +81,12 @@ function Header(){
                                         <NavLink className={"nav-link"} to="/info/solved">시도한 문제</NavLink>
                                         {
                                             role === "ROLE_MANAGER" || role === "ROLE_ADMIN"
-                                                ? (<NavLink className={"nav-link"} to="#">manager</NavLink>)
+                                                ? (<NavLink className={"nav-link"} to="#">진도 및 문제 체크</NavLink>)
                                                 : (<></>)
                                         }
                                         {
                                             role === "ROLE_ADMIN"
-                                                ? (<NavLink className={"nav-link"} to="/admin/auth">admin</NavLink>)
+                                                ? (<NavLink className={"nav-link"} to="/admin/auth">권한 부여</NavLink>)
                                                 : (<></>)
                                         }
                                         <NavDropdown.Divider />                                        

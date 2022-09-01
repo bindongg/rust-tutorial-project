@@ -184,7 +184,7 @@ function RegisterForm() {
                                 <Button variant="info" type="button" size="sm" onClick={checkIdDuplicate}>
                                     중복확인
                                 </Button>
-                                <Form.Text>&nbsp;&nbsp; 중복 여부</Form.Text>
+                                <Form.Text>&nbsp;&nbsp; {checkIdState === false ? (<span style={{color: "red"}}>❌</span>) : (<span style={{color: "blue"}}>✔</span>)}</Form.Text>
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>비밀번호</Form.Label>
