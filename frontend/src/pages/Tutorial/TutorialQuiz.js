@@ -71,19 +71,21 @@ function TutorialQuiz() {
         navigate("/tutorial/quiz/updateForm", {state: {tutorialQuiz : tutorialQuiz}});
     }
     const deleteSub = () => {
-        customAxios.delete(`/tutorial/quiz/${tutorialQuiz.id}`)
-        .then((response) =>
-        {
-            if (response.data.code === 200)
+        if(window.confirm("삭제하시겠어요?")) {
+            customAxios.delete(`/tutorial/quiz/${tutorialQuiz.id}`)
+            .then((response) =>
             {
-                alert(response.data.data);
-                navigate(-1);
-            }
-        })
-        .catch((Error) =>
-        {
-            alert(Error.response.status + " error");
-        })
+                if (response.data.code === 200)
+                {
+                    alert(response.data.data);
+                    navigate(-1);
+                }
+            })
+            .catch((Error) =>
+            {
+                alert(Error.response.status + " error");
+            })
+        }
     }
 
     return (

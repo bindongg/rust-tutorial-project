@@ -20,8 +20,8 @@ function ReferenceDetail(props) {
     useEffect( () => {
     const getReferenceDetail = async (nextSub, preSub) => {
         let referenceDetail = await customAxios.get(`/reference/${id}`);
-        referenceDetail = referenceDetail.data.data
-        // console.log(referenceDetail);
+        console.log(referenceDetail);
+        referenceDetail = referenceDetail.data.data;        
         setReferenceDetail({...referenceDetail.ref});
         setNextDetail(referenceDetail.nextRef && {...referenceDetail.nextRef});
         setPreDetail(referenceDetail.preRef && {...referenceDetail.preRef});

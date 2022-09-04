@@ -41,7 +41,7 @@ function Header(){
                 <Container>
                     <NavLink className="navbar-brand" to="/">
                         <img
-                            src="rust-logo-64blk.png"
+                            src={"/rust-logo-64blk.png"}
                             width="40"
                             height="40"
                             className="d-inline-block align-top"
