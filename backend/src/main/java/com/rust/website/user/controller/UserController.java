@@ -260,6 +260,12 @@ public class UserController {
         userService.test2(exerciseTry);
     }
 
+    @GetMapping("/admin/user/{id}")
+    public ResponseDTO<User> getUser(@PathVariable String id)
+    {
+        return new ResponseDTO<>(HttpStatus.OK.value(), userService.getUser(id));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseDTO<String> temp()
     {

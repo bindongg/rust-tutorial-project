@@ -25,6 +25,8 @@ import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
 import AdminAuth from "./pages/Admin/AdminAuth";
+import UserSearchPage from "./pages/Admin/UserSearchPage";
+import UserInfoPage from "./pages/Admin/UserInfoPage";
 import QuestionMain from "./pages/Question/QuestionMain";
 import QuestionWrite from "./pages/Question/QuestionWrite";
 import QuestionDetail from "./pages/Question/QuestionDetail";
@@ -93,6 +95,8 @@ function App() {
                         <Route path="info/solved" exact={true} element={<SolvedExercise/>}/>
                         {/*admin*/}
                         <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
+                        <Route path="admin/search" exact={true} element={<UserSearchPage/>}/>
+                        <Route path="admin/user/:id" exact={true} element={<UserInfoPage/>}/>
                     </Routes>
             </main>
         </div>

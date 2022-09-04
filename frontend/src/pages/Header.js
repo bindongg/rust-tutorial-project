@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
-import {decodeToken} from "react-jwt";
+import {decodeToken, isExpired} from "react-jwt";
 import { NavLink, useNavigate} from "react-router-dom";
 import './Header.css';
 import {customAxios} from "../Common/Modules/CustomAxios";
@@ -11,11 +11,15 @@ function Header(){
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
 
     useEffect(()=>{
-        if(localStorage.getItem("refresh") !== null)
+        if(isExpired(localStorage.getItem("refresh")) === false)
         {
             setUsername(decodeToken(localStorage.getItem("refresh")).username);
         }
-    },[localStorage.getItem("refresh")])
+        else
+        {
+            localStorage.clear();
+        }
+    },[localStorage.getItem("refresh"),isExpired(localStorage.getItem("refresh"))])
 
     const navigate = useNavigate();
 
@@ -64,24 +68,24 @@ function Header(){
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             {
-                                localStorage.getItem("refresh") === null
+                                isExpired(localStorage.getItem("refresh")) === true
                                     ? (<NavLink className="nav-link" to="/login">Login</NavLink>)
                                     : (<></>)
                             }
                             {
-                                localStorage.getItem("refresh") === null
+                                isExpired(localStorage.getItem("refresh")) === true
                                     ? (<NavLink className="nav-link" to="/register">Register</NavLink>)
                                     : (<></>)
                             }
                             {
-                                localStorage.getItem("refresh") === null
+                                isExpired(localStorage.getItem("refresh")) === true
                                     ? (<></>)
                                     : (<NavDropdown title={username}>
                                         <NavLink className={"nav-link"} to="/info">사용자 정보</NavLink> 
                                         <NavLink className={"nav-link"} to="/info/solved">시도한 문제</NavLink>
                                         {
                                             role === "ROLE_MANAGER" || role === "ROLE_ADMIN"
-                                                ? (<NavLink className={"nav-link"} to="#">진도 및 문제 체크</NavLink>)
+                                                ? (<NavLink className={"nav-link"} to="/admin/search">진도 및 문제 체크</NavLink>)
                                                 : (<></>)
                                         }
                                         {

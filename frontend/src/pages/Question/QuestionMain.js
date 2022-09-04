@@ -65,7 +65,7 @@ function QuestionMain()
                                         questions.map((question,index)=>(<tr key={index}>
                                                 <td>{question.id}</td>
                                                 <td><Link to={`/question/${question.id}`} style={{color: "black", textDecorationLine: "none"}}>{question.title}&nbsp;[{question.reply.length + getCnt(question.reply)}]</Link></td>
-                                                <td>{question.createDate.substr(0,10) + " " + question.createDate.substr(11,5)}</td>
+                                                <td>{question.createDate.substring(0,10) + " " + question.createDate.substring(11,16)}</td>
                                                 <td>{question.user.id}</td>
                                                 <td>{question.done === true ? "✔" : ""}</td>
                                             </tr>)

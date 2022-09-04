@@ -53,7 +53,7 @@ function LoginForm() {
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>비밀번호</Form.Label>
-                                <Form.Control type="password" placeholder="Password" onChange={onChangePwd}/>
+                                <Form.Control type="password" placeholder="Password" onChange={onChangePwd} onKeyUp={(e)=>{if(e.key==='Enter'){logIn()}}}/>
                                 <Form.Text className="text-muted">
                                     <NavLink className={"nav-link"} to="/pwdForgot">비밀번호 찾기</NavLink>
                                 </Form.Text>
