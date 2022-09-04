@@ -56,7 +56,6 @@ function Header(){
                             <NavLink className={"nav-link"} to="/exercise">전체 문제</NavLink>
                             <NavLink className={"nav-link"} to="/exercise/tag">분류별 문제</NavLink>
                             <NavLink className={"nav-link"} to="/exercise/level">난이도별 문제</NavLink>
-                            <NavLink className={"nav-link"} to="/exercise/level">QnA</NavLink>
                         </NavDropdown>
                         <NavLink className={"nav-link"} to="/question">QnA</NavLink>
                         <NavLink className={"nav-link"} to="/compile">Online Compiler</NavLink>
