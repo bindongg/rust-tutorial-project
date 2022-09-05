@@ -3,11 +3,9 @@ import {Row, Container, Col, Form, Button, FormGroup, InputGroup, FormControl} f
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import Loading from "../Loading";
-import { IP } from "../../Context/IP";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function PwdForgot() {
-    const ip = useContext(IP);
     const navigate = useNavigate();
 
     const [id,setId] = useState("");

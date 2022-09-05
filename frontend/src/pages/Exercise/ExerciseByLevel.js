@@ -14,19 +14,19 @@ function ExerciseByLevel() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><Link to="/exercise">별 하나(이미지로 대체)</Link></td>
+                            <td><Link to="/exercise/level/STAR1">⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="#">별 둘(이미지로 대체)</Link></td>
+                            <td><Link to="/exercise/level/STAR2">⭐⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="#">별 셋(이미지로 대체)</Link></td>
+                            <td><Link to="/exercise/level/STAR3">⭐⭐⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="#">별 넷(이미지로 대체)</Link></td>
+                            <td><Link to="/exercise/level/STAR4">⭐⭐⭐⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="#">별 다섯(이미지로 대체)</Link></td>
+                            <td><Link to="/exercise/level/STAR5">⭐⭐⭐⭐⭐</Link></td>
                         </tr>
                     </tbody>
                 </Table>

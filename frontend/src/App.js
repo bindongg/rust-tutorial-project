@@ -69,7 +69,9 @@ function App() {
                         {/*exercise*/}
                         <Route path="exercise" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/tag" exact={true} element={<ExerciseByTag/>}/>
+                        <Route path="exercise/tag/:tag" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/level" exact={true} element={<ExerciseByLevel/>}/>
+                        <Route path="exercise/level/:difficulty" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/:id" exact={true}  element={<ExerciseDetail/>}/>
                         <Route path="exercise/add" exact={true}  element={<ExerciseCreate/>}/>
                         <Route path="exercise/:id/update" exact={true}  element={<ExerciseUpdate/>}/>

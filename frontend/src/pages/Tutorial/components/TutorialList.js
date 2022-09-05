@@ -16,20 +16,22 @@ function TutorialList({tutorials, rerender, setRerender}) {
         navigate("/tutorial/updateForm", {state: {tutorial : tutorial}});
     }
     const deleteTutorial = (tutorial) => {
-        setLoading(true);
-        customAxios.delete(`/tutorial/${tutorial.id}`)
-        .then((response) =>
-        {
-            if (response.data.code === 200)
+        if(window.confirm("삭제하시겠어요?")) {
+            setLoading(true);
+            customAxios.delete(`/tutorial/${tutorial.id}`)
+            .then((response) =>
             {
-                alert(response.data.data);
-                setRerender(rerender+1);
-            }
-        })
-        .catch((Error) =>
-        {
-            alert(Error.response.status + " error");
-        })
+                if (response.data.code === 200)
+                {
+                    alert(response.data.data);
+                    setRerender(rerender+1);
+                }
+            })
+            .catch((Error) =>
+            {
+                alert(Error.response.status + " error");
+            })
+        }
     }
     const createSub = (tutorial) => {
         navigate("/tutorial/sub/createForm", {state: {tutorial : tutorial}});
