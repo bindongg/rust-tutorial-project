@@ -36,7 +36,7 @@ function FailedExerciseContainer() {
                                 {
                                     exerciseList.map((exercise,index)=>
                                         (<li key={index} style={{listStyleType: "none"}}>
-                                            <Link to={`/exercise/${exercise.exercise.id}`} style={{color: "red", textDecorationLine: "none"}}>{exercise.date}&nbsp;&nbsp;{exercise.exercise.name}</Link>
+                                            <Link to={`/exercise/${exercise.exercise.id}`} style={{color: "red", textDecorationLine: "none"}}>{exercise.date.substring(0,10)+" "+exercise.date.substring(11,16)}&nbsp;&nbsp;{exercise.exercise.name}</Link>
                                         </li>)
                                     )
                                 }</>)
