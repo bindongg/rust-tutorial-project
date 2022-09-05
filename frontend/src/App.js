@@ -46,7 +46,7 @@ function App() {
     return (
         <div>
             <Header/>
-            <main className="pt-5">
+            <main>
                     <Routes>
                         {/*home*/}
                         <Route index element={<Home />} />
