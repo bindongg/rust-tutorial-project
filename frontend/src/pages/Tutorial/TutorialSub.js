@@ -44,20 +44,22 @@ function TutorialSub(props) {
         navigate("/tutorial/sub/updateForm", {state: {tutorialSub : tutorialSub}});
     }
     const deleteSub = () => {
-        setLoading(true);
-        customAxios.delete(`/tutorial/sub/${tutorialSub.id}`)
-        .then((response) => 
-        {
-            if (response.data.code === 200)
+        if(window.confirm("삭제하시겠어요?")) {
+            setLoading(true);
+            customAxios.delete(`/tutorial/sub/${tutorialSub.id}`)
+            .then((response) => 
             {
-                alert(response.data.data);
-            }
-            navigate(-1);
-        })
-        .catch((Error)=>
-        {
-            alert(Error.response.status + " error");
-        })
+                if (response.data.code === 200)
+                {
+                    alert(response.data.data);
+                }
+                navigate(-1);
+            })
+            .catch((Error)=>
+            {
+                alert(Error.response.status + " error");
+            })
+        }
     }
     const goPre = () => {
         navigate(`/tutorial/${id}/sub/${preSub.id}`);

@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Button } from "react-bootstrap";
 import { customAxios } from "../../Common/Modules/CustomAxios";
-import { IP } from "../../Context/IP";
 
 function Compile() {
 

@@ -25,6 +25,8 @@ import Tutorial from "./pages/Tutorial/Tutorial";
 import TutorialQuiz from "./pages/Tutorial/TutorialQuiz";
 import TutorialSub from "./pages/Tutorial/TutorialSub";
 import AdminAuth from "./pages/Admin/AdminAuth";
+import UserSearchPage from "./pages/Admin/UserSearchPage";
+import UserInfoPage from "./pages/Admin/UserInfoPage";
 import QuestionMain from "./pages/Question/QuestionMain";
 import QuestionWrite from "./pages/Question/QuestionWrite";
 import QuestionDetail from "./pages/Question/QuestionDetail";
@@ -44,7 +46,7 @@ function App() {
     return (
         <div>
             <Header/>
-            <main className="pt-5">
+            <main>
                     <Routes>
                         {/*home*/}
                         <Route index element={<Home />} />
@@ -69,7 +71,9 @@ function App() {
                         {/*exercise*/}
                         <Route path="exercise" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/tag" exact={true} element={<ExerciseByTag/>}/>
+                        <Route path="exercise/tag/:tag" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/level" exact={true} element={<ExerciseByLevel/>}/>
+                        <Route path="exercise/level/:difficulty" exact={true} element={<Exercise/>}/>
                         <Route path="exercise/:id" exact={true}  element={<ExerciseDetail/>}/>
                         <Route path="exercise/add" exact={true}  element={<ExerciseCreate/>}/>
                         <Route path="exercise/:id/update" exact={true}  element={<ExerciseUpdate/>}/>
@@ -93,6 +97,8 @@ function App() {
                         <Route path="info/solved" exact={true} element={<SolvedExercise/>}/>
                         {/*admin*/}
                         <Route path="admin/auth" exact={true} element={<AdminAuth/>}/>
+                        <Route path="admin/search" exact={true} element={<UserSearchPage/>}/>
+                        <Route path="admin/user/:id" exact={true} element={<UserInfoPage/>}/>
                     </Routes>
             </main>
         </div>

@@ -3,7 +3,9 @@ package com.rust.website.exercise.service;
 import com.rust.website.exercise.model.entity.Exercise;
 import com.rust.website.exercise.model.entity.ExerciseTestcase;
 import com.rust.website.exercise.model.entity.ExerciseTry;
+import com.rust.website.exercise.model.myEnum.ExerciseDifficulty;
 import com.rust.website.exercise.model.myEnum.ExerciseSolved;
+import com.rust.website.exercise.model.myEnum.ExerciseTag;
 import com.rust.website.exercise.repository.ExerciseContentRepository;
 import com.rust.website.exercise.repository.ExerciseRepository;
 import com.rust.website.exercise.repository.ExerciseTestcaseRepository;
@@ -14,6 +16,7 @@ import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.tutorial.service.CompileService;
 import com.rust.website.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +41,30 @@ public class ExerciseService {
 
 
     @Transactional(readOnly = true)
-    public List<Exercise> getExercises(String user_id)
+    public List<Exercise> getExercises(String user_id, Pageable pageable)
     {
         Map<Integer, ExerciseTry> exerciseTries = exerciseTryRepository.findByUser_idToMap(user_id);
-        List<Exercise> exercises = exerciseRepository.findAllOrderByNumberAsc();
+        List<Exercise> exercises = exerciseRepository.findAllByOrderByIdAsc(pageable).getContent();
+        return computeReturnList(exercises, exerciseTries);
+    }
+    @Transactional(readOnly = true)
+    public List<Exercise> getExercises(String user_id, Pageable pageable, ExerciseTag tag)
+    {
+        Map<Integer, ExerciseTry> exerciseTries = exerciseTryRepository.findByUser_idToMap(user_id);
+        List<Exercise> exercises = exerciseRepository.findByTagOrderByIdAsc(tag, pageable).getContent();
+        return computeReturnList(exercises, exerciseTries);
+    }
+    @Transactional(readOnly = true)
+    public List<Exercise> getExercises(String user_id, Pageable pageable, ExerciseDifficulty difficulty)
+    {
+        Map<Integer, ExerciseTry> exerciseTries = exerciseTryRepository.findByUser_idToMap(user_id);
+        List<Exercise> exercises = exerciseRepository.findByDifficultyOrderByIdAsc(difficulty, pageable).getContent();
+        return computeReturnList(exercises, exerciseTries);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Exercise> computeReturnList(List<Exercise> exercises, Map<Integer, ExerciseTry> exerciseTries)
+    {
         List<Exercise> returnList = new ArrayList<>();
         exercises.stream()
                 .forEach(e -> {
@@ -52,6 +75,22 @@ public class ExerciseService {
                     returnList.add(e);
                 });
         return returnList;
+    }
+
+    @Transactional(readOnly = true)
+    public long getTotal()
+    {
+        return exerciseRepository.count();
+    }
+    @Transactional(readOnly = true)
+    public long getTotal(ExerciseTag tag)
+    {
+        return exerciseRepository.countByTag(tag);
+    }
+    @Transactional(readOnly = true)
+    public long getTotal(ExerciseDifficulty difficulty)
+    {
+        return exerciseRepository.countByDifficulty(difficulty);
     }
 
     @Transactional(readOnly = true)

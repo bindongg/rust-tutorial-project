@@ -1,13 +1,11 @@
 import React, {useContext, useState} from "react";
 import {Button, Col, Container, Form, FormControl, FormGroup, InputGroup, NavLink, Row} from "react-bootstrap";
 import axios from "axios";
-import { IP } from "../../Context/IP";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 //container -> 중앙으로 모아줌
 function IdForgot() {
-    const ip = useContext(IP);
     const[email,setEmail] = useState("");
     const[password,setPassword] = useState("");
 

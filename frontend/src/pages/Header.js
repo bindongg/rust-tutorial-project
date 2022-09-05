@@ -1,9 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
-import {decodeToken} from "react-jwt";
-import axios from "axios";
+import {decodeToken, isExpired} from "react-jwt";
 import { NavLink, useNavigate} from "react-router-dom";
-import './Header.css';
 import {customAxios} from "../Common/Modules/CustomAxios";
 
 
@@ -12,11 +10,15 @@ function Header(){
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
 
     useEffect(()=>{
-        if(localStorage.getItem("refresh") !== null)
+        if(isExpired(localStorage.getItem("refresh")) === false)
         {
             setUsername(decodeToken(localStorage.getItem("refresh")).username);
         }
-    },[localStorage.getItem("refresh")])
+        else
+        {
+            localStorage.clear();
+        }
+    },[localStorage.getItem("refresh"),isExpired(localStorage.getItem("refresh"))])
 
     const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ function Header(){
                 <Container>
                     <NavLink className="navbar-brand" to="/">
                         <img
-                            src="rust-logo-64blk.png"
+                            src={"/rust-logo-64blk.png"}
                             width="40"
                             height="40"
                             className="d-inline-block align-top"
@@ -56,7 +58,6 @@ function Header(){
                             <NavLink className={"nav-link"} to="/exercise">전체 문제</NavLink>
                             <NavLink className={"nav-link"} to="/exercise/tag">분류별 문제</NavLink>
                             <NavLink className={"nav-link"} to="/exercise/level">난이도별 문제</NavLink>
-                            <NavLink className={"nav-link"} to="/exercise/level">QnA</NavLink>
                         </NavDropdown>
                         <NavLink className={"nav-link"} to="/question">QnA</NavLink>
                         <NavLink className={"nav-link"} to="/compile">Online Compiler</NavLink>
@@ -65,29 +66,29 @@ function Header(){
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             {
-                                localStorage.getItem("refresh") === null
+                                isExpired(localStorage.getItem("refresh")) === true
                                     ? (<NavLink className="nav-link" to="/login">Login</NavLink>)
                                     : (<></>)
                             }
                             {
-                                localStorage.getItem("refresh") === null
+                                isExpired(localStorage.getItem("refresh")) === true
                                     ? (<NavLink className="nav-link" to="/register">Register</NavLink>)
                                     : (<></>)
                             }
                             {
-                                localStorage.getItem("refresh") === null
+                                isExpired(localStorage.getItem("refresh")) === true
                                     ? (<></>)
                                     : (<NavDropdown title={username}>
                                         <NavLink className={"nav-link"} to="/info">사용자 정보</NavLink> 
                                         <NavLink className={"nav-link"} to="/info/solved">시도한 문제</NavLink>
                                         {
                                             role === "ROLE_MANAGER" || role === "ROLE_ADMIN"
-                                                ? (<NavLink className={"nav-link"} to="#">manager</NavLink>)
+                                                ? (<NavLink className={"nav-link"} to="/admin/search">진도 및 문제 체크</NavLink>)
                                                 : (<></>)
                                         }
                                         {
                                             role === "ROLE_ADMIN"
-                                                ? (<NavLink className={"nav-link"} to="/admin/auth">admin</NavLink>)
+                                                ? (<NavLink className={"nav-link"} to="/admin/auth">권한 부여</NavLink>)
                                                 : (<></>)
                                         }
                                         <NavDropdown.Divider />                                        

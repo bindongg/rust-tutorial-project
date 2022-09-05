@@ -10,29 +10,23 @@ function ExerciseByTag() {
           <thead>
             <tr>
               <th>종류</th>
-              <th>문제 수</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><Link to="/exercise">입출력</Link></td>
-              <td>10</td>
+              <td><Link to="/exercise/tag/입출력">입출력</Link></td>
             </tr>
             <tr>
-              <td><Link to="#">제어문</Link></td>
-              <td>10</td>
+              <td><Link to="/exercise/tag/제어문">제어문</Link></td>
             </tr>
             <tr>
-              <td><Link to="#">반복문</Link></td>
-              <td>10</td>
+              <td><Link to="/exercise/tag/반복문">반복문</Link></td>
             </tr>
             <tr>
-              <td><Link to="#">자료구조</Link></td>
-              <td>10</td>
+              <td><Link to="/exercise/tag/자료구조">자료구조</Link></td>
             </tr>
             <tr>
-              <td><Link to="#">기타</Link></td>
-              <td>10</td>
+              <td><Link to="/exercise/tag/기타">기타</Link></td>
             </tr>
           </tbody>
         </Table>

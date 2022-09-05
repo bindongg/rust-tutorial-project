@@ -29,7 +29,6 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
             alert(response.data);
-            navigate(-1);
         })
     }
     const updateDetail = () => {
@@ -37,11 +36,13 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
     }
 
     const deleteExercise = () => {
-        customAxios.delete(`/exercise/${id}`
-        ).then(function(response) {
-            alert(response.data.data);
-            navigate(-1);
-        })
+        if(window.confirm("삭제하시겠어요?")) {
+            customAxios.delete(`/exercise/${id}`
+            ).then(function(response) {
+                alert(response.data.data);
+                navigate(-1);
+            })
+        }
     }
 
     let difficulty_emoji = difficulty;
