@@ -9,7 +9,7 @@ function QuestionMain()
 {
     const navigate = useNavigate();
 
-    const [questions,setQuestions] = useState(null);
+    const [questions,setQuestions] = useState([]);
 
     const [total,setTotal] = useState(0);
 
@@ -22,7 +22,7 @@ function QuestionMain()
             if(response.data.code === 200)
             {
                 setTotal(response.data.total);
-                setQuestions([...response.data.data]);
+                setQuestions(response.data.data);
             }
             else
             {
@@ -58,7 +58,7 @@ function QuestionMain()
                         </tr>
                     </thead>
                     {
-                        questions === null
+                        questions.length === 0
                             ?    (<tbody><tr><td colSpan={11}>질문이 없습니다</td></tr></tbody>)
                             :    (<tbody>
                                     {
