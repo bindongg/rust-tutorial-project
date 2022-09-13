@@ -9,6 +9,7 @@ import com.rust.website.exercise.model.myEnum.ExerciseTag;
 import com.rust.website.exercise.service.ExerciseService;
 import com.rust.website.tutorial.model.dto.CompileInputDTO;
 import com.rust.website.common.dto.ResponseDTO;
+import com.rust.website.tutorial.model.dto.CompileOutputDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class ExerciseController {
     }
 
     @PostMapping("/exercise/compile/{id}")
-    public ResponseDTO<String> compileUserCode(@RequestBody CompileInputDTO compileInputDTO, @PathVariable int id, HttpServletRequest request)
+    public ResponseDTO<CompileOutputDTO> compileUserCode(@RequestBody CompileInputDTO compileInputDTO, @PathVariable int id, HttpServletRequest request)
     {
         String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
         return exerciseService.compileUserCode(compileInputDTO, id, userId);

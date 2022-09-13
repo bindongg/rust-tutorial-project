@@ -111,6 +111,11 @@ function ExerciseCreate() {
                                 <Form.Control as="textarea" placeholder="1번 출력값 예시을 입력하세요" {...register("exerciseContent.output_value")} />
                             </Form.Group>
 
+                            <Form.Group className="mb-3" controlId="exerciseOutputExample">
+                                <Form.Label>초기 코드</Form.Label>
+                                <Form.Control as="textarea" placeholder="초기 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.code")} />
+                            </Form.Group>
+
                             {testcases}
                             <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
                             <br/>

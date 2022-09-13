@@ -73,17 +73,16 @@ public class TutorialController {
     }
 
     @PostMapping("tutorial/compile")
-    public ResponseDTO<String> executeTutorialCode(@RequestBody CompileInputDTO compileInputDTO)
+    public ResponseDTO<CompileOutputDTO> executeTutorialCode(@RequestBody CompileInputDTO compileInputDTO)
     {
-        String output = null;
+        CompileOutputDTO output = null;
         try {
-            CompileOutputDTO compileOutputDTOModel = compileService.onlineCompile(compileInputDTO);
-            output = (compileOutputDTOModel.getStdOut().length() != 0) ? compileOutputDTOModel.getStdOut() : compileOutputDTOModel.getStdErr();
+            output = compileService.onlineCompile(compileInputDTO);
         } catch (IOException e) {
             e.printStackTrace();
-            output = "IOException Error";
+            output.setStdOut("IOException Error");
         }
-        return new ResponseDTO<String>(HttpStatus.OK.value(), output);
+        return new ResponseDTO<>(HttpStatus.OK.value(), output);
     }
 
     @PostMapping("tutorial")

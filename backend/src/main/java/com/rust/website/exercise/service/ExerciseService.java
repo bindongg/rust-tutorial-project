@@ -106,23 +106,24 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseDTO<String> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId)
+    public ResponseDTO<CompileOutputDTO> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "맞았습니다!");
+        CompileOutputDTO compileOutputDTO = CompileOutputDTO.builder().stdOut("맞았습니다!").build();
         Exercise exercise = exerciseRepository.findById(id).get();
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         int i = 0;
         for (; i < exerciseTestcases.size(); ++i)
         {
             compileInputDTO.setStdIn(exerciseTestcases.get(i).getInput());
-            CompileOutputDTO compileOutputDTO = null;
+            CompileOutputDTO curCompileOutputDTO = null;
             try {
-                compileOutputDTO = compileService.onlineCompile(compileInputDTO);
+                curCompileOutputDTO = compileService.onlineCompile(compileInputDTO);
+                compileOutputDTO.setTime(Math.max(compileOutputDTO.getTime(), curCompileOutputDTO.getTime()));
             } catch (IOException e) {
                 e.printStackTrace();
                 break;
             }
-            if (!exerciseTestcases.get(i).getOutput().equals(compileOutputDTO.getStdOut())) { break; }
+            if (!exerciseTestcases.get(i).getOutput().equals(curCompileOutputDTO.getStdOut())) { break; }
         }
 
         ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).orElse(null);
@@ -141,10 +142,11 @@ public class ExerciseService {
         else
         {
             exerciseTry.setSolved(ExerciseSolved.FAIL);
-            responseDTO.setData("틀렸습니다.");
+            compileOutputDTO.setStdOut("틀렸습니다.");
         }
-
         exerciseTryRepository.save(exerciseTry);
+
+        ResponseDTO<CompileOutputDTO> responseDTO = new ResponseDTO<CompileOutputDTO>(HttpStatus.OK.value(), compileOutputDTO);
         return responseDTO;
     }
 

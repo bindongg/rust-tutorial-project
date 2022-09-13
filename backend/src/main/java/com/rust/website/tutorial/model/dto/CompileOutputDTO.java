@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CompileOutputDTO {
 	private String stdOut;
-	private String stdErr;
+	private long time;
 }

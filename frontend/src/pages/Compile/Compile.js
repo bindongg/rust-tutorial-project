@@ -12,9 +12,12 @@ function Compile() {
   const [output, setOutput] = useState();
 
   const compileCode = (data) => {
-        customAxios.post("/tutorial/compile",{code: code, stdIn: input})
+        customAxios.post("/tutorial/compile", {code: code, stdIn: input})
         .then((response)=>{
+          if (response.data.code === 200)
+          {
             setOutput(response.data.data);
+          }
         })
   }
 
@@ -56,7 +59,7 @@ function Compile() {
       <h4>Output</h4>
       <CodeEditor
         disabled
-        value={output}      
+        value={output?.stdOut}      
         padding={15}
         style={{
           fontSize: 12,
@@ -64,6 +67,7 @@ function Compile() {
           fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
         }}
       />
+      <div className="nav justify-content-end" style={{fontSize: 12}}>time: {output ? output.time / 1000 + "sec" : "    sec"}</div>
     </div>
   </div>
   );

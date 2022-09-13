@@ -20,7 +20,7 @@ public class CompileService {
         processNumber = (processNumber + 1) % 100000;
         String fileName = new String("temp" + processNumber);
 
-        CompileOutputDTO compileOutputDTOModel = new CompileOutputDTO();
+        CompileOutputDTO compileOutputDTO = new CompileOutputDTO();
         try {
             FileWriter myWriter = new FileWriter(CODE_PATH + fileName + "_code.rs");
             myWriter.write(compileInputDTOModel.getCode());
@@ -34,13 +34,17 @@ public class CompileService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        long startTime = System.currentTimeMillis();
         Process p = runRustCode(fileName);
-        compileOutputDTOModel.setStdErr(streamReaderOutput(p.getErrorStream()));
-        compileOutputDTOModel.setStdOut(streamReaderOutput(p.getInputStream()));
+        compileOutputDTO.setTime(System.currentTimeMillis() - startTime);
+        compileOutputDTO.setStdOut(streamReaderOutput(p.getErrorStream()));
+        if (compileOutputDTO.getStdOut().length() == 0)
+        {
+            compileOutputDTO.setStdOut(streamReaderOutput(p.getInputStream()));
+        }
         deleteCodeFiles(fileName);
 
-        return compileOutputDTOModel;
+        return compileOutputDTO;
     }
 
     private void deleteCodeFiles(String fileName) throws IOException {
