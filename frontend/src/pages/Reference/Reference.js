@@ -31,7 +31,6 @@ function Reference() {
                     <div className="container-fluid">
                         <div style={{paddingBottom: "10px"}}><Button onClick={createReference}>레퍼런스 추가</Button></div>
                         <div id="page-content-wrapper">
-                            <h1>간단한 사이드바</h1>
                             <div>
                                 <MarkdownContents/>
                             </div>
