@@ -203,4 +203,10 @@ public class TutorialService {
 
         return responseDTO;
     }
+
+    @Transactional(readOnly = true)
+    public List<TutorialDone> test(String id)
+    {
+        return tutorialDoneRepository.findByUser_id(id);
+    }
 }

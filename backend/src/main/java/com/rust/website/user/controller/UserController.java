@@ -188,11 +188,10 @@ public class UserController {
         //test.setRedisStringValue(id,value);
     }
 
-    @GetMapping("/test")
-    public String test(HttpServletRequest req)
+    @GetMapping("/test/{id}")
+    public void test(@PathVariable String id)
     {
-        System.out.println("test");
-        return "test";
+        userService.getUser(id);
     }
 
     @GetMapping ("/test/redis/out/{id}")

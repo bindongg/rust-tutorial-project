@@ -4,6 +4,7 @@ import { Button } from "react-bootstrap";
 import TutorialQuizQuestionList from "./components/TutorialQuestionList";
 import { decodeToken } from "react-jwt";
 import { customAxios } from "../../Common/Modules/CustomAxios";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 function TutorialQuiz() {
     const {id} = useParams();    
@@ -34,6 +35,14 @@ function TutorialQuiz() {
         })
     }, []);
 
+
+    const checkIfPassedQuiz = (answerList) => {
+        let check = false;
+        answerList.forEach((elem)=>{
+            check = elem;
+        })
+        return check;
+    }
     
     const setAnswer = (e) => {        
         const number = e.target.name * 1 - 1;
@@ -51,6 +60,10 @@ function TutorialQuiz() {
                 {
                     setCorrectList([...response.data.data.correctList]);
                     alert(response.data.data.message);
+                    if(checkIfPassedQuiz(response.data.data.correctList) === true)
+                    {
+                        //recommend exercise
+                    }
                 }
             })
             .catch((Error) =>
@@ -65,6 +78,7 @@ function TutorialQuiz() {
         }
         else {
             alert("정답을 모두 체크해주세요");
+            setLoading(false);
         }
     }
     const updateSub = () => {      

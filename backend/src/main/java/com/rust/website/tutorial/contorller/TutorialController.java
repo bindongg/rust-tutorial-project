@@ -4,6 +4,7 @@ import com.rust.website.common.config.jwt.JwtProperties;
 import com.rust.website.common.config.jwt.JwtUtil;
 import com.rust.website.tutorial.model.dto.TutorialSubDTO;
 import com.rust.website.tutorial.model.entity.Tutorial;
+import com.rust.website.tutorial.model.entity.TutorialDone;
 import com.rust.website.tutorial.model.entity.TutorialQuiz;
 import com.rust.website.tutorial.model.entity.TutorialSub;
 import com.rust.website.tutorial.model.dto.AnswersDTO;
@@ -138,5 +139,11 @@ public class TutorialController {
     public ResponseDTO<String> deleteTutorialQuiz(@PathVariable int quizId)
     {
         return tutorialService.deleteTutorialQuiz(quizId);
+    }
+
+    @GetMapping("/test/tuto/{id}")
+    public List<TutorialDone> test(@PathVariable String id)
+    {
+        return tutorialService.test(id);
     }
 }
