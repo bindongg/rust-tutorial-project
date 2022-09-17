@@ -51,7 +51,7 @@ function Header(){
                         />
                     </NavLink>
                     <Nav className="me-auto">
-
+                        <NavLink className={"nav-link"} to="/aboutRust">About_Rust</NavLink>
                         <NavLink className={"nav-link"} to="/tutorial">Tutorial</NavLink>
                         <NavLink className={"nav-link"} to="/reference">Reference</NavLink>
                         <NavDropdown title="Exercise" id="basic-nav-dropdown">

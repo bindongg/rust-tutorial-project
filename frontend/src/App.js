@@ -41,6 +41,7 @@ import ReferenceCreate from "./pages/Reference/ReferenceCreate";
 import ReferenceDetail from "./pages/Reference/ReferenceDetail";
 import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
 import QuestionUpdate from "./pages/Question/QuestionUpdate";
+import AboutRust from "./pages/AboutRust/AboutRust";
 
 function App() {
     return (
@@ -53,6 +54,8 @@ function App() {
                         <Route path="home" exact={true} element={<Home />}/>
                         {/* compile */}
                         <Route path="compile" exact={true} element={<Compile/>}/>
+                        {/*AboutRust*/}
+                        <Route path="aboutRust" exact={true} element={<AboutRust/>}/>
                         {/*tutorial*/}
                         <Route path="tutorial" exact={true} element={<Tutorial/>}/>
                         <Route path="tutorial/:id/sub/:subId" exact={true} element={<TutorialSub/>}/>
