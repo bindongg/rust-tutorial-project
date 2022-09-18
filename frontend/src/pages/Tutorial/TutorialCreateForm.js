@@ -1,9 +1,10 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { customAxios } from "../../Common/Modules/CustomAxios";
 import TutorialRelationCheck from "./components/TutorialRelationCheck";
+import {EXERCISE_TAG} from "../../Common/Modules/Common";
 
 
 
@@ -12,13 +13,14 @@ function TutorialCreateForm() {
     const { register, handleSubmit, formState: {errors} } = useForm();
     const navigate = useNavigate();
 
-    const Tags = ['입출력', '제어문', '반복문', '자료구조', '기타'];
     const [checkAll,setCheckAll] = useState(false);
     const [checkedList] = useState(new Set());
         
     const onSubmit = (data) => {
         setLoading(true);
         data.number = data.number * 1;
+        data.checkedList = [];
+        checkedList.forEach((elem)=>{data.checkedList.push(elem)})
         customAxios.post(`/tutorial`, {...data})
         .then((response) =>
         {
@@ -31,6 +33,9 @@ function TutorialCreateForm() {
         .catch((Error) =>
         {
             alert(Error.response.status + " error");
+        })
+        .finally(()=>{
+            setLoading(false);
         })
     }
 
@@ -80,7 +85,7 @@ function TutorialCreateForm() {
                                         onChange={(e)=>{checkAllHandler(e)}}
                                     />
                                 </span>
-                                {Tags.map((elem)=>(
+                                {EXERCISE_TAG.map((elem)=>(
                                     <span key={`checkbox-${elem}`} className="mb-3">
                                         <TutorialRelationCheck id={elem} checkedRelationsHandler={checkedRelationsHandler} checkAll={checkAll}/>
                                     </span>

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rust.website.exercise.model.myEnum.ExerciseTag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Data
 public class TutorialRelation {
 
     @Id
@@ -25,5 +27,6 @@ public class TutorialRelation {
     Tutorial tutorial;
 
     @Nullable
+    @Enumerated(EnumType.STRING)
     ExerciseTag exerciseTag;
 }

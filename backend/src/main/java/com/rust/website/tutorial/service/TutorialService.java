@@ -1,5 +1,6 @@
 package com.rust.website.tutorial.service;
 
+import com.rust.website.exercise.model.myEnum.ExerciseTag;
 import com.rust.website.tutorial.model.entity.*;
 import com.rust.website.common.dto.QuizResponseDTO;
 import com.rust.website.common.dto.ResponseDTO;
@@ -22,6 +23,8 @@ public class TutorialService {
     private final TutorialSubRepository tutorialSubRepository;
     private final TutorialQuizRepository tutorialQuizRepository;
     private final TutorialQuizQuestionRepository tutorialQuizQuestionRepository;
+
+    private final TutorialRelationRepository tutorialRelationRepository;
 
     @Transactional(readOnly = true)
     public List<Tutorial> getUserTutorials(String userId)
@@ -86,23 +89,34 @@ public class TutorialService {
     }
 
     @Transactional
-    public ResponseDTO<String> addTutorial(Tutorial newTutorial)
+    public /*ResponseDTO<String>*/void addTutorial(Tutorial newTutorial)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
+        //ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
         tutorialRepository.save(newTutorial);
 
-        return responseDTO;
+        //return responseDTO;
     }
 
     @Transactional
-    public ResponseDTO<String> updateTutorial(Tutorial newTutorial, int id)
+    public void addTutorialRelation(TutorialRelation tutorialRelation)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "변경이 완료되었습니다.");
-        Tutorial tutorial = tutorialRepository.findById(id).get();
-        tutorial.setName(newTutorial.getName());
-        tutorial.setNumber(newTutorial.getNumber());
+        tutorialRelationRepository.save(tutorialRelation);
+    }
 
-        return responseDTO;
+    @Transactional
+    public void updateTutorial(int number, String name, List<String> list, int id)
+    {
+        Tutorial tutorial = tutorialRepository.findById(id).orElseThrow(()->new IllegalArgumentException("No such Entity"));
+        tutorial.setName(name);
+        tutorial.setNumber(number);
+        tutorialRelationRepository.deleteAllByTutorial(tutorial);
+        list.forEach((elem)->{
+            TutorialRelation tutorialRelation = TutorialRelation.builder()
+                    .tutorial(tutorial)
+                    .exerciseTag(ExerciseTag.valueOf(elem))
+                    .build();
+            tutorialRelationRepository.save(tutorialRelation);
+        });
     }
 
     @Transactional
