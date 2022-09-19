@@ -7,24 +7,27 @@ import {customAxios} from "../../Common/Modules/CustomAxios";
 function ExerciseDetail() {
     const {id} = useParams();
     const [exerciseDetail, setExerciseDetail] = useState({});
+    const [code, setCode] = useState();    
 
     useEffect( () => {
-        const getExerciseDetail = async () => {
-             let exerciseDetail = await customAxios.get(`/exercise/${id}`);
-            exerciseDetail = exerciseDetail.data.data;
-            setExerciseDetail({...exerciseDetail});
-            console.log({exerciseDetail});
-        }
-        // 실행함으로써 데이타를 fetching합니다.
-        getExerciseDetail();
-
+        // const getExerciseDetail = async () => {
+        //      let exerciseDetail = await customAxios.get(`/exercise/${id}`);
+        //     exerciseDetail = exerciseDetail.data.data;
+        //     setExerciseDetail({...exerciseDetail});
+        //     console.log({exerciseDetail});
+        // }
+        // // 실행함으로써 데이타를 fetching합니다.
+        // getExerciseDetail();
+        customAxios.get(`/exercise/${id}`).then((response) =>
+        {
+            setExerciseDetail({...response.data.data});
+            setCode(response.data.data.exerciseContent.code)
+        })
     }, [id]);
 
     return (
         <>
-            <ExerciseDetailInfo id={exerciseDetail.id}  title={exerciseDetail.name} tag= {exerciseDetail.tag} difficulty = {exerciseDetail.difficulty}
-                                 Content={exerciseDetail.exerciseContent} Testcases={exerciseDetail.exerciseTestcases}
-            />
+            <ExerciseDetailInfo exerciseDetail={exerciseDetail} code={code} setCode={setCode}/>
         </>
     );
 }

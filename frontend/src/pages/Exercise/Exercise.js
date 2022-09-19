@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import {useNavigate, useParams} from "react-router";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 import Page from "../../Common/Page/Page";
+import { decodeToken } from "react-jwt";
 
 function Exercise(){
   const [isLoading, setIsLoading] = useState(true);
@@ -12,6 +13,7 @@ function Exercise(){
   const [total,setTotal] = useState(0);
   const [recPerPage] = useState(15);
   const [page,setPage] = useState(0);
+  const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
   const {tag, difficulty} = useParams();
   const navigate = useNavigate();
   const moveTo = (href) => {
@@ -26,7 +28,7 @@ function Exercise(){
         {
           setTotal(response.data.total);
           setExercises([...response.data.data]);
-          console.log(exercises.data.data);
+
         }
         else 
         {
@@ -41,7 +43,6 @@ function Exercise(){
         {
           setTotal(response.data.total);
           setExercises([...response.data.data]);
-          console.log(exercises.data.data);
         }
         else 
         {
@@ -56,7 +57,6 @@ function Exercise(){
         {
           setTotal(response.data.total);
           setExercises([...response.data.data]);
-          console.log(exercises.data.data);
         }
         else 
         {
@@ -71,7 +71,10 @@ function Exercise(){
     return (
       <>
         <div className="col-10 mx-auto pt-5">
-          <Button variant="secondary" onClick={() => moveTo("/exercise/add") }>Add Exercise</Button>
+        {
+            (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
+            <Button variant="secondary" onClick={() => moveTo("/exercise/add") }>Add Exercise</Button>
+        }                
           <Table striped bordered hover>
             <thead>
             <tr>

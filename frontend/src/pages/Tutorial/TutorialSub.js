@@ -105,7 +105,7 @@ function TutorialSub(props) {
             </div>
             <br/>
             <div className="col-8 mx-auto">
-                <div className=" nav justify-content-between">
+                <div className="nav justify-content-between">
                     {preSub ? <Button style={buttonStyle} onClick={goPre}>Prev</Button> : <Button variant="secondary" style={buttonStyle} disabled>Prev</Button>}
                     {nextSub ? <Button style={buttonStyle} onClick={goNext}>Next</Button> : <Button variant="secondary" style={buttonStyle} disabled>Next</Button>}
                 </div>

@@ -1,9 +1,7 @@
 import React from "react";
 import Header from "./pages/Header";
-
 import Footer from "./pages/Footer";
 import AfterAuthEmailSent from "./pages/Register/AfterAuthEmailSent";
-
 import {Route, Routes} from "react-router-dom";
 import LoginForm from "./pages/Login/LoginForm";
 import RegisterForm from "./pages/Register/RegisterForm";
@@ -41,6 +39,13 @@ import ReferenceCreate from "./pages/Reference/ReferenceCreate";
 import ReferenceDetail from "./pages/Reference/ReferenceDetail";
 import ReferenceUpdate from "./pages/Reference/ReferenceUpdate";
 import QuestionUpdate from "./pages/Question/QuestionUpdate";
+import AboutRust from "./pages/AboutRust/AboutRust";
+import RustPerformance from "./pages/AboutRust/RustPerformance";
+import RustEnterprise from "./pages/AboutRust/RustEnterprise";
+import RustSurvey from "./pages/AboutRust/RustSurvey";
+import RustHistory from "./pages/AboutRust/RustHistory";
+import RustAdvantages from "./pages/AboutRust/RustAdvantages";
+import RustIntro from "./pages/AboutRust/RustIntro";
 
 function App() {
     return (
@@ -53,6 +58,14 @@ function App() {
                         <Route path="home" exact={true} element={<Home />}/>
                         {/* compile */}
                         <Route path="compile" exact={true} element={<Compile/>}/>
+                        {/*AboutRust*/}
+                        <Route path="aboutRust" exact={true} element={<AboutRust/>}/>
+                        <Route path="aboutRust/Intro" exact={true} element={<RustIntro/>}/>
+                        <Route path="aboutRust/advantages" exact={true} element={<RustAdvantages/>}/>
+                        <Route path="aboutRust/history" exact={true} element={<RustHistory/>}/>
+                        <Route path="aboutRust/survey" exact={true} element={<RustSurvey/>}/>
+                        <Route path="aboutRust/enterprise" exact={true} element={<RustEnterprise/>}/>
+                        <Route path="aboutRust/performance" exact={true} element={<RustPerformance/>}/>
                         {/*tutorial*/}
                         <Route path="tutorial" exact={true} element={<Tutorial/>}/>
                         <Route path="tutorial/:id/sub/:subId" exact={true} element={<TutorialSub/>}/>

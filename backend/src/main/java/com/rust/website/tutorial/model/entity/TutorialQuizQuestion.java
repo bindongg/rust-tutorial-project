@@ -22,19 +22,19 @@ public class TutorialQuizQuestion implements Serializable {
     @Column(nullable = false)
     private int number;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String choice1;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String choice2;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String choice3;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 700)
     private String choice4;
 
     @Column(nullable = false)

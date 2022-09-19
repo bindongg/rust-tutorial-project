@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import CodeEditor from '@uiw/react-textarea-code-editor';
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { customAxios } from "../../Common/Modules/CustomAxios";
 
 function Compile() {
@@ -10,21 +10,35 @@ function Compile() {
   );
   const [input, setInput] = useState();
   const [output, setOutput] = useState();
+  const [lang, setLang] = useState("RUST");
 
   const compileCode = (data) => {
-        customAxios.post("/tutorial/compile",{code: code, stdIn: input})
+        customAxios.post("/tutorial/compile", {code: code, stdIn: input, language: lang})
         .then((response)=>{
+          if (response.data.code === 200)
+          {
             setOutput(response.data.data);
+          }
         })
   }
+  
 
   return ( 
   <div>
     <div className="col-8 mx-auto border m-3 p-2" data-color-mode="light">
-      <h4>Rust code</h4>
+    <div className="nav justify-content-between">
+      <div><h4>Rust code</h4></div>
+      <div>
+        <Form.Select style={{height: 30, width: 90}} size="sm" onChange={(e) => setLang(e.target.value)}>
+          <option value="RUST">rust</option>
+          <option value="PYTHON">python</option>
+          <option value="CPP">c++</option>
+        </Form.Select>
+      </div>
+    </div>
       <CodeEditor
         value={code}      
-        language="rust"
+        language={lang.toLowerCase()}
         placeholder="Please enter Rust code."
         onChange={(evn) => setCode(evn.target.value)}
         padding={15}
@@ -56,7 +70,7 @@ function Compile() {
       <h4>Output</h4>
       <CodeEditor
         disabled
-        value={output}      
+        value={output?.stdOut}      
         padding={15}
         style={{
           fontSize: 12,
@@ -64,6 +78,7 @@ function Compile() {
           fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
         }}
       />
+      <div className="nav justify-content-end" style={{fontSize: 12}}>time: {output ? output.time / 1000 + "sec" : "    sec"}</div>
     </div>
   </div>
   );

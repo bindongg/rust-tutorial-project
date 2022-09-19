@@ -30,7 +30,7 @@ function ReferenceUpdate() {
                         <Form onSubmit={handleSubmit(onSubmit)} >
                             <Form.Group className="mb-3" controlId="referenceNumber">
                                 <Form.Label>번호</Form.Label>
-                                <Form.Control placeholder="번호를 입력하세요" {...register("number",  {required: {value:true, message:"*번호를 입력하세요"} , pattern: {value: /^[0-9]+$/, message:"*번호는 숫자만 가능합니다"}})} />
+                                <Form.Control placeholder="번호를 입력하세요" defaultValue={referenceDetail.id} {...register("number",  {required: {value:true, message:"*번호를 입력하세요"} , pattern: {value: /^[0-9]+$/, message:"*번호는 숫자만 가능합니다"}})} />
                                 {errors.number && <p style={{color:'red', fontSize:"13px"}}>{errors.number.message}</p>}
                             </Form.Group>
 

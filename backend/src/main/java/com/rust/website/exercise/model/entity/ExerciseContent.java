@@ -35,6 +35,10 @@ public class ExerciseContent implements Serializable {
     @Column(nullable = false, length = 700)
     private String output_value;
 
+    @Lob
+    @Column(nullable = false)
+    private String code;
+
     @OneToOne
     @JoinColumn(name = "exercise_id", unique = true, nullable = false)
     @JsonIgnoreProperties({"exerciseContent", "exerciseTestcases"})
@@ -48,5 +52,6 @@ public class ExerciseContent implements Serializable {
         this.output_description = newExerciseContent.getOutput_description();
         this.input_value = newExerciseContent.getInput_value();
         this.output_value = newExerciseContent.getOutput_value();
+        this.code = newExerciseContent.getCode();
     }
 }

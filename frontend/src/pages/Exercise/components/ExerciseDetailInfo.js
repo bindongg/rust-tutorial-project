@@ -2,23 +2,15 @@ import React, { useState} from "react";
 import {Link,useNavigate, useParams} from "react-router-dom";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button} from "react-bootstrap";
+import { decodeToken } from "react-jwt";
 import {customAxios} from "../../../Common/Modules/CustomAxios";
 
-function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
+function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
     const {id} = useParams();
+    const [time, setTime] = useState();
     const navigate = useNavigate();
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
-    const exerciseDetail = {
-        title: title,
-        tag: tag,
-        Content: Content,
-        Testcases: Testcases,
-        difficulty: difficulty
-    }
-    const [code, setCode] = useState(`fn main() {
-  
-}
-`);
     const jsonCode ={
         "code": code
     }
@@ -28,7 +20,8 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
 
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
-            alert(response.data);
+            alert(response.data.data.stdOut);
+            setTime(response.data.data.time);
         })
     }
     const updateDetail = () => {
@@ -45,7 +38,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
         }
     }
 
-    let difficulty_emoji = difficulty;
+    let difficulty_emoji = exerciseDetail.difficulty;
     switch (difficulty_emoji){
         case 'STAR1':
             difficulty_emoji = '⭐';
@@ -69,34 +62,37 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
-                <h1>{title}</h1>
+                <h1>{exerciseDetail.title}</h1>
                 <h5  className="col-4 ms-auto m-1">난이도: {difficulty_emoji}</h5>
             </div>
+            {
+            (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
             <div className="col-4 ms-auto m-1">
                 <Button variant="warning" style={buttonStyle} onClick={updateDetail}>수정</Button>
                 <Button variant="danger" style={buttonStyle} onClick={deleteExercise}>삭제</Button>
             </div>
+            }                
             <div className="col-8 mx-auto mt-5">
                 <h3 style={{display:"inline-flex"}}>문제 &nbsp;</h3>
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
-                {Content?.description}
+                {exerciseDetail.exerciseContent?.description}
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>입력</h3>
-                {Content?.input_description}
+                {exerciseDetail.exerciseContent?.input_description}
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <h6>예시&#41;</h6>
-                {Content?.input_value}
+                {exerciseDetail.exerciseContent?.input_value}
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>출력</h3>
-                {Content?.output_description}
+                {exerciseDetail.exerciseContent?.output_description}
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <h6>예시&#41;</h6>
-                {Content?.output_value}
+                {exerciseDetail.exerciseContent?.output_value}
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>컴파일</h3>
@@ -115,6 +111,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
                         fontWeight: "bold"
                     }}
                 />
+                <div className="nav justify-content-end" style={{fontSize: 15}}>time: {time ? time / 1000 + "sec" : "    sec"}</div>
                 <Button variant="secondary" type="submit" onClick={compileCode} >
                     Compile
                 </Button>
@@ -124,7 +121,7 @@ function ExerciseDetailInfo({index, title,tag, Content, Testcases, difficulty}){
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <li>
-                    <Link to="#">{tag}</Link>
+                    <Link to={`/exercise/tag/${exerciseDetail.tag}`}>{exerciseDetail.tag}</Link>
                 </li>
             </div>
         </>

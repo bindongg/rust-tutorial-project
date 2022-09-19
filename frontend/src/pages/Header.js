@@ -3,6 +3,7 @@ import {Navbar, NavDropdown, Nav, Container} from "react-bootstrap";
 import {decodeToken, isExpired} from "react-jwt";
 import { NavLink, useNavigate} from "react-router-dom";
 import {customAxios} from "../Common/Modules/CustomAxios";
+import './Header.css'
 
 
 function Header(){
@@ -51,7 +52,7 @@ function Header(){
                         />
                     </NavLink>
                     <Nav className="me-auto">
-
+                        <NavLink className={"nav-link"} to="/aboutRust">About_Rust</NavLink>
                         <NavLink className={"nav-link"} to="/tutorial">Tutorial</NavLink>
                         <NavLink className={"nav-link"} to="/reference">Reference</NavLink>
                         <NavDropdown title="Exercise" id="basic-nav-dropdown">
