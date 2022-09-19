@@ -2,16 +2,17 @@ package com.rust.website.tutorial.contorller;
 
 import com.rust.website.common.config.jwt.JwtProperties;
 import com.rust.website.common.config.jwt.JwtUtil;
+import com.rust.website.compile.model.model.ExecutionConstraints;
 import com.rust.website.tutorial.model.dto.TutorialSubDTO;
 import com.rust.website.tutorial.model.entity.Tutorial;
 import com.rust.website.tutorial.model.entity.TutorialQuiz;
 import com.rust.website.tutorial.model.entity.TutorialSub;
 import com.rust.website.tutorial.model.dto.AnswersDTO;
-import com.rust.website.tutorial.model.dto.CompileInputDTO;
-import com.rust.website.tutorial.model.dto.CompileOutputDTO;
+import com.rust.website.compile.model.dto.CompileInputDTO;
+import com.rust.website.compile.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.QuizResponseDTO;
 import com.rust.website.common.dto.ResponseDTO;
-import com.rust.website.tutorial.service.CompileService;
+import com.rust.website.compile.service.CompileService;
 import com.rust.website.tutorial.service.TutorialService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -76,12 +77,11 @@ public class TutorialController {
     public ResponseDTO<CompileOutputDTO> executeTutorialCode(@RequestBody CompileInputDTO compileInputDTO)
     {
         CompileOutputDTO output = null;
-        try {
-            output = compileService.onlineCompile(compileInputDTO);
-        } catch (IOException e) {
-            e.printStackTrace();
-            output.setStdOut("IOException Error");
-        }
+        ExecutionConstraints constraints = ExecutionConstraints.builder()
+                .memoryLimit(64)
+                .timeLimit(10000)
+                .build();
+        output = compileService.onlineCompile(compileInputDTO, constraints);
         return new ResponseDTO<>(HttpStatus.OK.value(), output);
     }
 

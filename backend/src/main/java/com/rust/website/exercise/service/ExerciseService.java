@@ -1,5 +1,6 @@
 package com.rust.website.exercise.service;
 
+import com.rust.website.compile.model.model.ExecutionConstraints;
 import com.rust.website.exercise.model.entity.Exercise;
 import com.rust.website.exercise.model.entity.ExerciseTestcase;
 import com.rust.website.exercise.model.entity.ExerciseTry;
@@ -10,10 +11,10 @@ import com.rust.website.exercise.repository.ExerciseContentRepository;
 import com.rust.website.exercise.repository.ExerciseRepository;
 import com.rust.website.exercise.repository.ExerciseTestcaseRepository;
 import com.rust.website.exercise.repository.ExerciseTryRepository;
-import com.rust.website.tutorial.model.dto.CompileInputDTO;
-import com.rust.website.tutorial.model.dto.CompileOutputDTO;
+import com.rust.website.compile.model.dto.CompileInputDTO;
+import com.rust.website.compile.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.ResponseDTO;
-import com.rust.website.tutorial.service.CompileService;
+import com.rust.website.compile.service.CompileService;
 import com.rust.website.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -106,7 +107,7 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseDTO<CompileOutputDTO> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId)
+    public ResponseDTO<CompileOutputDTO> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId, ExecutionConstraints constraints)
     {
         CompileOutputDTO compileOutputDTO = CompileOutputDTO.builder().stdOut("맞았습니다!").build();
         Exercise exercise = exerciseRepository.findById(id).get();
@@ -116,13 +117,8 @@ public class ExerciseService {
         {
             compileInputDTO.setStdIn(exerciseTestcases.get(i).getInput());
             CompileOutputDTO curCompileOutputDTO = null;
-            try {
-                curCompileOutputDTO = compileService.onlineCompile(compileInputDTO);
-                compileOutputDTO.setTime(Math.max(compileOutputDTO.getTime(), curCompileOutputDTO.getTime()));
-            } catch (IOException e) {
-                e.printStackTrace();
-                break;
-            }
+            curCompileOutputDTO = compileService.onlineCompile(compileInputDTO, constraints);
+            compileOutputDTO.setTime(Math.max(compileOutputDTO.getTime(), curCompileOutputDTO.getTime()));
             if (!exerciseTestcases.get(i).getOutput().equals(curCompileOutputDTO.getStdOut())) { break; }
         }
 
