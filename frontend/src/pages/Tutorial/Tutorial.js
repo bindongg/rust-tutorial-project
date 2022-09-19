@@ -7,12 +7,13 @@ import { decodeToken } from "react-jwt";
 import { customAxios } from "../../Common/Modules/CustomAxios";
 
 
-function Tutorial(props) {
-  const [tutorials, setTutorials] = useState([]);
-  const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
-  const [rerender, setRerender] = useState(0);
+function Tutorial() {
+    const [tutorials, setTutorials] = useState([]);
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
+    const [rerender, setRerender] = useState(0);
 
-  useEffect( () => {
+
+    useEffect( () => {
         customAxios.get(`/tutorial`)
         .then((response) => 
         {

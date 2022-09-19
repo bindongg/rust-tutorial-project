@@ -28,6 +28,7 @@ function Exercise(){
         {
           setTotal(response.data.total);
           setExercises([...response.data.data]);
+
         }
         else 
         {

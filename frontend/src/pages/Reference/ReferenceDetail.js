@@ -39,6 +39,9 @@ function ReferenceDetail(props) {
             navigate(-1);
         })
     }
+    const createReference = () => {
+        navigate("/reference/create");
+    }
 
     const goPre = () => {
         navigate(`/reference/${preDetail.id}`);
@@ -58,6 +61,7 @@ function ReferenceDetail(props) {
                         <h1>{referenceDetail.name}</h1>
                     </div>
                     <div className="col-4 ms-auto m-1">
+                        <Button onClick={createReference}>레퍼런스 추가</Button> {/*//TODO 관리자만 사용 가능하게 추후 변경*/}
                         <Button variant="warning" style={buttonStyle} onClick={updateDetail}>수정</Button>
                         <Button variant="danger" style={buttonStyle} onClick={deleteDetail}>삭제</Button>
                     </div>
