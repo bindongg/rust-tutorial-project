@@ -18,70 +18,53 @@ function MarkdownContents(){
     //
     // console.log({contents});
 
-    const markdown = `# 함수에서의 소유권
-## 함수 파라미터에서의 참조
-#### 중복 사용 가능: &
-참조를 사용하면 여러 번 사용할 수 있습니다.
-\`\`\`rust
-fn print_country(country_name: &String){
-\tprintln!("My country is {country_name}");
-}
-fn main(){
-\tlet country = "대한민국".to_string();
-\tprint_country(&country); // \`print_greeting\`은 '&'를 통해서 'String'을 대여함
-\tprint_country(&country); //\`greeting\`은 \`print_greeting\`로 이동하지 않아 다시 사용가능함
-\tprint_country(&country);
-}
-\`\`\`
-출력 결과
-\`\`\`text
-My country is 대한민국
-My country is 대한민국
-My country is 대한민국
-\`\`\`
-대여를 사용하면 전체 소유권을 차지하지 않고 값을 사용할 수 있습니다.
-**그러나,** 값을 대여하는 경우 완전히 소유한 값으로 수행할 수 있는 모든 작업이 가능한 것은 아닙니다.
-### 변경 가능한 참조: &mut
-대여한 값을 변경하려고 하면 어떻게 될까요?
-&mut를 사용해서 변경이 가능한 참조를 사용할 수 있습니다.
-\`\`\`rust
-fn add_is_great(country_name: &mut String){
-\tcountry_name.push_str(" is great!");
-\tprintln!("Now it says {country_name}");
-}
-fn main(){
-\tlet mut my_country = "캐나다".to_string();
-\tadd_is_great(&mut my_country); //변경가능한 참조
-\tadd_is_great(&mut my_country); //변경가능한 참조
-}
-\`\`\`
-출력 결과
-\`\`\`text
-Now it says 캐나다 is great!
-Now it says 캐나다 is great! is great!
-\`\`\`
-‘변경 불가능 대여’:  \`&\` 대여를 사용하면 데이터를 읽을 수만 있고 변경할 수는 없습니다.
-‘변경 가능 대여’:  \`&mut\` 대여를 사용하면 데이터를 읽고 쓸 수 있습니다.
-# 소유권 심화
-### 소유권 심화
-헷갈리는 예제를 한번 같이 살펴봅시다.
-\`\`\`rust
-fn add_is_great(mut country_name: String){ //함수가 유일한 소유권자이므로 mut로 매개변수 입력 가능
-\tcountry_name.push_str(" is great");
-\tprintln!("Now it says: {country_name}");
-}
-fn main(){
-\tlet my_country = "대한민국".to_string();
-\tadd_is_great(my_country); //함수로 소유권 넘어감
-}
-\`\`\`
-출력 결과
-\`\`\`text
-Now it says: 대한민국 is great
-\`\`\`
-해당 코드는 에러가 나지 않습니다. 대체 왜 그런 걸까요?
-\`main\`함수에서 \`add_is_great\`로 소유권이 넘어갔기 때문입니다.
-따라서 해당 함수가 유일한 소유권자이므로 매개변수도 \`mut\`형식으로 변경가능합니다.
+    const markdown = `
+##### Rust를 배울 수 있는 여러가지 참고 사이트를 추가로 링크로 올립니다. 
+##### 우리가 제공하는 Rust Tutorial을 끝낸 다음,더 공부하고 싶다면 참고하면 좋은 자료들입니다. 
+
+
+
+### <영문>
+
+1. Rust Cookbook
+[https://rust-lang-nursery.github.io/rust-cookbook/intro.html](https://rust-lang-nursery.github.io/rust-cookbook/intro.html)
+2. Rust By Example(학습 페이지)
+[https://www.rust-lang.org/learn](https://www.rust-lang.org/learn)
+3. tutorialspoint
+[https://www.tutorialspoint.com/rust/index.htm](https://www.tutorialspoint.com/rust/index.htm)
+4. 영문/document 형식
+[https://learning-rust.github.io/docs/a1.why_rust.html](https://learning-rust.github.io/docs/a1.why_rust.html)  
+5. Easy Rust
+[https://dhghomon.github.io/easy_rust/Chapter_2.html](https://dhghomon.github.io/easy_rust/Chapter_2.html)
+6. freeCodeCamp
+[https://www.freecodecamp.org/news/rust-in-replit/](https://www.freecodecamp.org/news/rust-in-replit/)
+7. educative: ****Learn Rust from Scratch****
+[https://www.educative.io/courses/learn-rust-from-scratch?affiliate_id=5073518643380224](https://www.educative.io/courses/learn-rust-from-scratch?affiliate_id=5073518643380224)
+
+### <국문>
+
+1. Learn Rust 번역본
+[https://rinthel.github.io/rust-lang-book-ko/foreword.html](https://rinthel.github.io/rust-lang-book-ko/foreword.html)
+2. Microsoft Learn - Rust
+[https://docs.microsoft.com/ko-kr/learn/paths/rust-first-steps/](https://docs.microsoft.com/ko-kr/learn/paths/rust-first-steps/)
+3. 예제로 배우는 Rust 프로그래밍
+[http://rust-lang.xyz/](http://rust-lang.xyz/)
+
+### <동영상>
+
+1. Rust Programming Course for Beginners: freeCodeCamp - Tutorial(영문)
+[https://youtu.be/MsocPEZBd-M](https://youtu.be/MsocPEZBd-M)
+2. 한글 동영상 강의(개인)
+[https://youtu.be/W9DO6m8JSSs](https://youtu.be/W9DO6m8JSSs)
+
+### <책>
+
+1. The Rust Programming Language
+[https://lise-henry.github.io/books/trpl2.pdf](https://lise-henry.github.io/books/trpl2.pdf)
+
+### <인터뷰>
+
+rust를 사용하는 이유 : [https://stackoverflow.blog/2020/06/05/why-the-developers-who-use-rust-love-it-so-much/](https://stackoverflow.blog/2020/06/05/why-the-developers-who-use-rust-love-it-so-much/)
 `
     return(<ReactMarkdown children={markdown}
                           remarkPlugins={[remarkGfm]}
