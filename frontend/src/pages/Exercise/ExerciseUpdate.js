@@ -33,13 +33,12 @@ function ExerciseUpdate() {
         })
     }
 
-    const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.Testcases);
+    const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.exerciseTestcases);
     const testCaseForm = {id: "", number: "", input: "", output: ""}
 
     // const exerciseTestCases = exerciseDetail.Testcases;
     const addTestcase = () => {
         // setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
-        console.log(exerciseTestCases);
         setExerciseTestCases(arr => [...arr, testCaseForm] )
     };
 
@@ -72,7 +71,7 @@ function ExerciseUpdate() {
                         <Form onSubmit={handleSubmit(onSubmit, onInvalid)} onReset={reset} >
                             <Form.Group className="mb-3" controlId="exerciseTitle">
                                 <Form.Label>제목</Form.Label>
-                                <Form.Control type="title" defaultValue={exerciseDetail.title}  onChange={onEditChange} {...register("name")} />
+                                <Form.Control type="title" defaultValue={exerciseDetail.name}  onChange={onEditChange} {...register("name")} />
                             </Form.Group>
 
                             <Row className="mb-3">
@@ -103,27 +102,32 @@ function ExerciseUpdate() {
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>문제 설명</Form.Label>
-                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.description}   onChange={onEditChange} {...register("exerciseContent.description")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.exerciseContent.description}   onChange={onEditChange} {...register("exerciseContent.description")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 입력에 대한 설명</Form.Label>
-                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.input_description}   onChange={onEditChange}{...register("exerciseContent.input_description")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.exerciseContent.input_description}   onChange={onEditChange}{...register("exerciseContent.input_description")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 입력값 예시</Form.Label>
-                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.input_value}   onChange={onEditChange}{...register("exerciseContent.input_value")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.exerciseContent.input_value}   onChange={onEditChange}{...register("exerciseContent.input_value")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 출력에 대한 설명</Form.Label>
-                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.output_description}  onChange={onEditChange} {...register("exerciseContent.output_description")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.exerciseContent.output_description}  onChange={onEditChange} {...register("exerciseContent.output_description")} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>1번 출력값 예시</Form.Label>
-                                <Form.Control as="textarea" defaultValue={exerciseDetail.Content.output_value}  onChange={onEditChange} {...register("exerciseContent.output_value")} />
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.exerciseContent.output_value}  onChange={onEditChange} {...register("exerciseContent.output_value")} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="exerciseOutputExample">
+                                <Form.Label>초기 코드</Form.Label>
+                                <Form.Control as="textarea" defaultValue={exerciseDetail.exerciseContent.code} {...register("exerciseContent.code")} />
                             </Form.Group>
 
                             {testcases}

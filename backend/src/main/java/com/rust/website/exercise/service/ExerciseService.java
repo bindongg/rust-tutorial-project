@@ -1,5 +1,6 @@
 package com.rust.website.exercise.service;
 
+import com.rust.website.compile.model.model.ExecutionConstraints;
 import com.rust.website.exercise.model.entity.Exercise;
 import com.rust.website.exercise.model.entity.ExerciseTestcase;
 import com.rust.website.exercise.model.entity.ExerciseTry;
@@ -10,10 +11,10 @@ import com.rust.website.exercise.repository.ExerciseContentRepository;
 import com.rust.website.exercise.repository.ExerciseRepository;
 import com.rust.website.exercise.repository.ExerciseTestcaseRepository;
 import com.rust.website.exercise.repository.ExerciseTryRepository;
-import com.rust.website.tutorial.model.dto.CompileInputDTO;
-import com.rust.website.tutorial.model.dto.CompileOutputDTO;
+import com.rust.website.compile.model.dto.CompileInputDTO;
+import com.rust.website.compile.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.ResponseDTO;
-import com.rust.website.tutorial.service.CompileService;
+import com.rust.website.compile.service.CompileService;
 import com.rust.website.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -106,23 +107,19 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseDTO<String> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId)
+    public ResponseDTO<CompileOutputDTO> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId, ExecutionConstraints constraints)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<String>(HttpStatus.OK.value(), "맞았습니다!");
+        CompileOutputDTO compileOutputDTO = CompileOutputDTO.builder().stdOut("맞았습니다!").build();
         Exercise exercise = exerciseRepository.findById(id).get();
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         int i = 0;
         for (; i < exerciseTestcases.size(); ++i)
         {
             compileInputDTO.setStdIn(exerciseTestcases.get(i).getInput());
-            CompileOutputDTO compileOutputDTO = null;
-            try {
-                compileOutputDTO = compileService.onlineCompile(compileInputDTO);
-            } catch (IOException e) {
-                e.printStackTrace();
-                break;
-            }
-            if (!exerciseTestcases.get(i).getOutput().equals(compileOutputDTO.getStdOut())) { break; }
+            CompileOutputDTO curCompileOutputDTO = null;
+            curCompileOutputDTO = compileService.onlineCompile(compileInputDTO, constraints);
+            compileOutputDTO.setTime(Math.max(compileOutputDTO.getTime(), curCompileOutputDTO.getTime()));
+            if (!exerciseTestcases.get(i).getOutput().equals(curCompileOutputDTO.getStdOut())) { break; }
         }
 
         ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).orElse(null);
@@ -141,10 +138,11 @@ public class ExerciseService {
         else
         {
             exerciseTry.setSolved(ExerciseSolved.FAIL);
-            responseDTO.setData("틀렸습니다.");
+            compileOutputDTO.setStdOut("틀렸습니다.");
         }
-
         exerciseTryRepository.save(exerciseTry);
+
+        ResponseDTO<CompileOutputDTO> responseDTO = new ResponseDTO<CompileOutputDTO>(HttpStatus.OK.value(), compileOutputDTO);
         return responseDTO;
     }
 

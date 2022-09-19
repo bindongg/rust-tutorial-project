@@ -2,15 +2,16 @@ package com.rust.website.tutorial.contorller;
 
 import com.rust.website.common.config.jwt.JwtProperties;
 import com.rust.website.common.config.jwt.JwtUtil;
+import com.rust.website.compile.model.model.ExecutionConstraints;
 import com.rust.website.exercise.model.myEnum.ExerciseTag;
 import com.rust.website.tutorial.model.dto.TutorialSubDTO;
 import com.rust.website.tutorial.model.entity.*;
 import com.rust.website.tutorial.model.dto.AnswersDTO;
-import com.rust.website.tutorial.model.dto.CompileInputDTO;
-import com.rust.website.tutorial.model.dto.CompileOutputDTO;
+import com.rust.website.compile.model.dto.CompileInputDTO;
+import com.rust.website.compile.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.QuizResponseDTO;
 import com.rust.website.common.dto.ResponseDTO;
-import com.rust.website.tutorial.service.CompileService;
+import com.rust.website.compile.service.CompileService;
 import com.rust.website.tutorial.service.TutorialService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -74,17 +75,15 @@ public class TutorialController {
     }
 
     @PostMapping("tutorial/compile")
-    public ResponseDTO<String> executeTutorialCode(@RequestBody CompileInputDTO compileInputDTO)
+    public ResponseDTO<CompileOutputDTO> executeTutorialCode(@RequestBody CompileInputDTO compileInputDTO)
     {
-        String output = null;
-        try {
-            CompileOutputDTO compileOutputDTOModel = compileService.onlineCompile(compileInputDTO);
-            output = (compileOutputDTOModel.getStdOut().length() != 0) ? compileOutputDTOModel.getStdOut() : compileOutputDTOModel.getStdErr();
-        } catch (IOException e) {
-            e.printStackTrace();
-            output = "IOException Error";
-        }
-        return new ResponseDTO<String>(HttpStatus.OK.value(), output);
+        CompileOutputDTO output = null;
+        ExecutionConstraints constraints = ExecutionConstraints.builder()
+                .memoryLimit(64)
+                .timeLimit(10000)
+                .build();
+        output = compileService.onlineCompile(compileInputDTO, constraints);
+        return new ResponseDTO<>(HttpStatus.OK.value(), output);
     }
 
     @PostMapping("tutorial")

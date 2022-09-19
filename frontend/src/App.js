@@ -1,9 +1,7 @@
 import React from "react";
 import Header from "./pages/Header";
-
 import Footer from "./pages/Footer";
 import AfterAuthEmailSent from "./pages/Register/AfterAuthEmailSent";
-
 import {Route, Routes} from "react-router-dom";
 import LoginForm from "./pages/Login/LoginForm";
 import RegisterForm from "./pages/Register/RegisterForm";
