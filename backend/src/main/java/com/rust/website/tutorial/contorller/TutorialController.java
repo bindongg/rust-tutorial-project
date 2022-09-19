@@ -2,10 +2,9 @@ package com.rust.website.tutorial.contorller;
 
 import com.rust.website.common.config.jwt.JwtProperties;
 import com.rust.website.common.config.jwt.JwtUtil;
+import com.rust.website.exercise.model.myEnum.ExerciseTag;
 import com.rust.website.tutorial.model.dto.TutorialSubDTO;
-import com.rust.website.tutorial.model.entity.Tutorial;
-import com.rust.website.tutorial.model.entity.TutorialQuiz;
-import com.rust.website.tutorial.model.entity.TutorialSub;
+import com.rust.website.tutorial.model.entity.*;
 import com.rust.website.tutorial.model.dto.AnswersDTO;
 import com.rust.website.tutorial.model.dto.CompileInputDTO;
 import com.rust.website.tutorial.model.dto.CompileOutputDTO;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -87,15 +88,33 @@ public class TutorialController {
     }
 
     @PostMapping("tutorial")
-    public ResponseDTO<String> addTutorial(@RequestBody Tutorial tutorial)
+    public ResponseDTO<String> addTutorial(@RequestBody Map<String, Object> map/*Tutorial tutorial*/)
     {
-        return tutorialService.addTutorial(tutorial);
+        Tutorial tutorial = Tutorial.builder()
+                .number(Integer.parseInt(map.get("number").toString()))
+                .name(map.get("name").toString())
+                .build();
+        tutorialService.addTutorial(tutorial);
+        List<String> list = (List<String>) map.get("checkedList");
+        if(!list.isEmpty())
+        {
+            list.forEach((elem)->{
+                TutorialRelation tutorialRelation = TutorialRelation.builder()
+                        .tutorial(tutorial)
+                        .exerciseTag(ExerciseTag.valueOf(elem))
+                        .build();
+                tutorialService.addTutorialRelation(tutorialRelation);
+            });
+        }
+        return new ResponseDTO<>(HttpStatus.OK.value(),"추가 완료");
     }
 
     @PatchMapping("tutorial/{id}")
-    public ResponseDTO<String> updateTutorial(@RequestBody Tutorial tutorial, @PathVariable int id)
+    public ResponseDTO<String> updateTutorial(@RequestBody Map<String,Object> map, @PathVariable int id)
     {
-        return tutorialService.updateTutorial(tutorial, id);
+        List<String> list =(List<String>) map.get("checkedList");
+        tutorialService.updateTutorial(Integer.parseInt(map.get("number").toString()), map.get("name").toString(), list, id);
+        return new ResponseDTO<>(HttpStatus.OK.value(), "ok");
     }
 
     @DeleteMapping("tutorial/{id}")
@@ -138,5 +157,11 @@ public class TutorialController {
     public ResponseDTO<String> deleteTutorialQuiz(@PathVariable int quizId)
     {
         return tutorialService.deleteTutorialQuiz(quizId);
+    }
+
+    @GetMapping("/test/tuto/{id}")
+    public List<TutorialDone> test(@PathVariable String id)
+    {
+        return tutorialService.test(id);
     }
 }

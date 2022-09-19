@@ -39,4 +39,7 @@ public class Tutorial implements Serializable {
     @OneToOne(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"tutorial", "tutorialQuizQuestions"})
     private TutorialQuiz tutorialQuiz;
+
+    @OneToMany(mappedBy = "tutorial", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TutorialRelation> tutorialRelations;
 }

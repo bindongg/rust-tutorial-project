@@ -26,7 +26,7 @@ function Exercise(){
         {
           setTotal(response.data.total);
           setExercises([...response.data.data]);
-          console.log(exercises.data.data);
+          console.log(exercises.data);
         }
         else 
         {
@@ -41,7 +41,7 @@ function Exercise(){
         {
           setTotal(response.data.total);
           setExercises([...response.data.data]);
-          console.log(exercises.data.data);
+          console.log(exercises.data);
         }
         else 
         {
@@ -56,7 +56,7 @@ function Exercise(){
         {
           setTotal(response.data.total);
           setExercises([...response.data.data]);
-          console.log(exercises.data.data);
+          console.log(response.data.data)
         }
         else 
         {
