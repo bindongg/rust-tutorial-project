@@ -1,10 +1,16 @@
 import {Button, Col, Container, Navbar, Row} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 function AboutRust() {
+    const navigate = useNavigate();
+
+    const moveTo = (href) => {
+        navigate(href);
+    }
 
     function RustInfoButton({rustInfo}){
         return(
-            <Button className="mx-md-4" variant="secondary" >
+            <Button className="mx-md-4" variant="secondary" onClick={ () => moveTo(rustInfo.move) } >
                 <img src={rustInfo.icon} style={{ width: "20%", height: "70%" }}/>
                 <div className={"mt-2"}>
                     {rustInfo.title}
@@ -16,27 +22,33 @@ function AboutRust() {
     const rustInfos = [
         {
             title: "Rust 소개",
-            icon: "/icons/rust-logo-512-blk.png"
+            icon: "/icons/rust-logo-512-blk.png",
+            move: "./Intro"
         },
         {
             title: "Rust 장점 및 특징",
-            icon: "/icons/like.png"
+            icon: "/icons/like.png",
+            move: "./advantages"
         },
         {
             title: "Rust 역사",
-            icon: "/icons/history.png"
+            icon: "/icons/history.png",
+            move: "./history"
         },
         {
             title: "Rust 평판조사",
-            icon: "/icons/surveyor.png"
+            icon: "/icons/surveyor.png",
+            move: "./survey"
         },
         {
             title: "기업 이용 현황",
-            icon: "/icons/enterprise.png"
+            icon: "/icons/enterprise.png",
+            move: "./enterprise"
         },
         {
             title: "언어별 성능 비교",
-            icon: "/icons/justice-scale.png"
+            icon: "/icons/justice-scale.png",
+            move: "./performance"
         }
     ];
 
