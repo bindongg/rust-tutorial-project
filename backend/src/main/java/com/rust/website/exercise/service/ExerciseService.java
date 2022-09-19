@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Service
@@ -191,4 +188,9 @@ public class ExerciseService {
         return responseDTO;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Exercise> getExerciseByTag(List<ExerciseTag> relationList)
+    {
+        return exerciseRepository.findExercisesByTagIn(relationList);
+    }
 }
