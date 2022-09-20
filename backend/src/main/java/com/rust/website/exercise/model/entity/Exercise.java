@@ -55,4 +55,13 @@ public class Exercise {
         this.difficulty = newExercise.getDifficulty();
         this.tag = newExercise.getTag();
     }
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", difficulty=" + difficulty +
+                '}';
+    }
 }

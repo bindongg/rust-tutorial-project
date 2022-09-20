@@ -191,6 +191,12 @@ public class ExerciseService {
     @Transactional(readOnly = true)
     public Collection<Exercise> getExerciseByTag(List<ExerciseTag> relationList)
     {
-        return exerciseRepository.findExercisesByTagIn(relationList);
+        return exerciseRepository.findExercisesByTagInAndDifficultyIsLessThanEqual(relationList, ExerciseDifficulty.STAR3);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<ExerciseTry> getExerciseTryByUsernameAndExerciseId(String userId, ExerciseSolved solved, List<Exercise> exerciseList)
+    {
+        return exerciseTryRepository.findByUser_idAndSolvedAndExerciseIn(userId,solved,exerciseList);
     }
 }

@@ -6,22 +6,22 @@ import com.rust.website.common.dto.TupleResponseDTO;
 import com.rust.website.compile.model.model.ExecutionConstraints;
 import com.rust.website.compile.model.myEnum.Language;
 import com.rust.website.exercise.model.entity.Exercise;
+import com.rust.website.exercise.model.entity.ExerciseTry;
 import com.rust.website.exercise.model.myEnum.ExerciseDifficulty;
+import com.rust.website.exercise.model.myEnum.ExerciseSolved;
 import com.rust.website.exercise.model.myEnum.ExerciseTag;
 import com.rust.website.exercise.service.ExerciseService;
 import com.rust.website.compile.model.dto.CompileInputDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.compile.model.dto.CompileOutputDTO;
+import com.sun.xml.bind.v2.model.core.EnumConstant;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -87,7 +87,7 @@ public class ExerciseController {
     }
 
     @GetMapping("/exercise/recommend")
-    public void recommendExercise(@RequestParam Map<String,String> map)
+    public Map<String,Object> recommendExercise(@RequestParam Map<String,String> map, HttpServletRequest request)
     {
         String relationString = map.get("relations");
         String[] temp = relationString.split("_");
@@ -96,6 +96,15 @@ public class ExerciseController {
             relationList.add(ExerciseTag.valueOf(elem));
         });
         List<Exercise> exerciseList = (List<Exercise>) exerciseService.getExerciseByTag(relationList);
-        System.out.println(exerciseList);
+        Map<Integer,Exercise> exerciseMap = new HashMap<>();
+        exerciseList.forEach((elem)->{
+            exerciseMap.put(elem.getId(),elem);
+        });
+        List<ExerciseTry> exerciseTryList = (List<ExerciseTry>) exerciseService.getExerciseTryByUsernameAndExerciseId(
+                JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME),ExerciseSolved.SOLVE,exerciseList);
+        exerciseTryList.forEach((elem)->{
+            exerciseMap.remove(elem.getExercise_id());
+        }); //태그에 해당하는 문제에서 유저가 이미 푼 문제 제거
+        return null;
     }
 }

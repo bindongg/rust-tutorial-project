@@ -18,5 +18,5 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
     Page<Exercise> findByDifficultyOrderByIdAsc(ExerciseDifficulty difficulty, Pageable pageable);
     long countByTag(ExerciseTag tag);
     long countByDifficulty(ExerciseDifficulty difficulty);
-    Collection<Exercise> findExercisesByTagIn(List<ExerciseTag> relationList);
+    Collection<Exercise> findExercisesByTagInAndDifficultyIsLessThanEqual(List<ExerciseTag> relationList, ExerciseDifficulty difficulty);
 }

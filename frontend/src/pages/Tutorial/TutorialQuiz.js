@@ -67,7 +67,13 @@ function TutorialQuiz() {
                             relationString += elem.exerciseTag;
                             relationString += "_";
                         })
-                        customAxios.get("/exercise/recommend",{params:{relations:relationString}}).then()
+                        customAxios.get("/exercise/recommend",{params:{relations:relationString}})
+                            .then((response)=>{
+
+                            })
+                            .catch((error)=>{
+                                alert("error");
+                            })
                     }
                 }
             })
