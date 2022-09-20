@@ -72,12 +72,14 @@ public class SecurityConfig{
 
                 .authorizeHttpRequests(authorize -> authorize
                         .mvcMatchers("/register/**", "/login", "/logout", "/duplicateId" , "/duplicateEmail",
-                                "/authConfirm/**", "/reference/**", "/id", "/password","/question/**","/test/**").permitAll()
+                                "/authConfirm/**", "/reference/**", "/id", "/password","/question/**","/test/**",
+                                "/aboutRust/**").permitAll()
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                         .mvcMatchers("/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")
                         .mvcMatchers("/exercise/**").hasAnyRole("ADMIN", "MANAGER", "USER")
                         .mvcMatchers("/tutorial/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                        .mvcMatchers("/aboutRust/**").hasAnyRole("ADMIN", "MANAGER", "USER")
                         .anyRequest().denyAll()
                 );
 
