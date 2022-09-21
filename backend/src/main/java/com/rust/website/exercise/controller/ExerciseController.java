@@ -87,24 +87,48 @@ public class ExerciseController {
     }
 
     @GetMapping("/exercise/recommend")
-    public Map<String,Object> recommendExercise(@RequestParam Map<String,String> map, HttpServletRequest request)
+    public Map<String,String> recommendExercise(@RequestParam Map<String,String> map, HttpServletRequest request)
     {
         String relationString = map.get("relations");
         String[] temp = relationString.split("_");
+
+        if(relationString.equals(""))
+        {
+            return null;
+        }
+
         List<ExerciseTag> relationList = new ArrayList<>();
         Arrays.stream(temp).forEach((elem)->{
             relationList.add(ExerciseTag.valueOf(elem));
         });
+
         List<Exercise> exerciseList = (List<Exercise>) exerciseService.getExerciseByTag(relationList);
-        Map<Integer,Exercise> exerciseMap = new HashMap<>();
-        exerciseList.forEach((elem)->{
-            exerciseMap.put(elem.getId(),elem);
-        });
         List<ExerciseTry> exerciseTryList = (List<ExerciseTry>) exerciseService.getExerciseTryByUsernameAndExerciseId(
                 JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME),ExerciseSolved.SOLVE,exerciseList);
+        List<Exercise> listToRemove = new ArrayList<>();
+
+        Map<Integer,ExerciseTry> exerciseTryMap = new HashMap<>();
+
         exerciseTryList.forEach((elem)->{
-            exerciseMap.remove(elem.getExercise_id());
-        }); //태그에 해당하는 문제에서 유저가 이미 푼 문제 제거
-        return null;
+            exerciseTryMap.put(elem.getExercise_id(),elem);
+        });
+
+        exerciseList.forEach((elem)->{
+            if(exerciseTryMap.containsKey(elem.getId()))
+            {
+                listToRemove.add(elem);
+            }
+        });
+
+        exerciseList.removeAll(listToRemove);
+
+        Random random = new Random();
+        Exercise recommendExercise = exerciseList.get(random.nextInt(exerciseList.size()));
+
+        Map<String,String> response = new HashMap<>();
+        response.put("id",String.valueOf(recommendExercise.getId()));
+        response.put("name",recommendExercise.getName());
+
+        return response;
     }
 }

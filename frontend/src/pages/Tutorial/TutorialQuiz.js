@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import { Button } from "react-bootstrap";
 import TutorialQuizQuestionList from "./components/TutorialQuestionList";
 import { decodeToken } from "react-jwt";
@@ -17,6 +17,8 @@ function TutorialQuiz() {
     const [loading,setLoading] = useState(false);
     const [answers, setAnswers] = useState([]);
     const [correctList, setCorrectList] = useState([]);
+    const [recommendExerciseId,setRecommendExerciseId] = useState(-1);
+    const [recommendExerciseName,setRecommendExerciseName] = useState("");
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
@@ -69,7 +71,11 @@ function TutorialQuiz() {
                         })
                         customAxios.get("/exercise/recommend",{params:{relations:relationString}})
                             .then((response)=>{
-
+                                if(response.data != null)
+                                {
+                                    setRecommendExerciseId(response.data.id);
+                                    setRecommendExerciseName(response.data.name);
+                                }
                             })
                             .catch((error)=>{
                                 alert("error");
@@ -128,6 +134,11 @@ function TutorialQuiz() {
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <TutorialQuizQuestionList questions={tutorialQuiz.tutorialQuizQuestions} setAnswer={setAnswer} correctList={correctList}></TutorialQuizQuestionList>
+                {
+                    recommendExerciseName === ""
+                        ? (<></>)
+                        : (<>추천문제: <Link to={`/exercise/${recommendExerciseId}`}>{recommendExerciseName}</Link></>)
+                }
             </div>
            <br/>
             <div className="col-8 mx-auto">
