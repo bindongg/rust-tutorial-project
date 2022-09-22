@@ -48,7 +48,7 @@ public class ExerciseController {
         String userId = JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING), JwtProperties.CLAIM_NAME);
         compileInputDTO.setLanguage(Language.RUST);
         ExecutionConstraints constraints = ExecutionConstraints.builder()
-                .memoryLimit(64)
+                .memoryLimit(200)
                 .timeLimit(10000)
                 .build();
         return exerciseService.compileUserCode(compileInputDTO, id, userId, constraints);

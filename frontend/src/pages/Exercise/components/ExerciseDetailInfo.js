@@ -8,6 +8,7 @@ import {customAxios} from "../../../Common/Modules/CustomAxios";
 function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
     const {id} = useParams();
     const [time, setTime] = useState();
+    const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
@@ -17,12 +18,13 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
 
     const compileCode = (data) => {
         console.log(jsonCode);
-
+        setLoading(true);
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
             alert(response.data.data.stdOut);
             setTime(response.data.data.time);
         })
+        setLoading(false);
     }
     const updateDetail = () => {
         navigate(`/exercise/${id}/update`, {state: {exerciseDetail: exerciseDetail}});
@@ -62,7 +64,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
-                <h1>{exerciseDetail.title}</h1>
+                <h1>{exerciseDetail.name}</h1>
                 <h5  className="col-4 ms-auto m-1">난이도: {difficulty_emoji}</h5>
             </div>
             {
@@ -112,7 +114,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
                     }}
                 />
                 <div className="nav justify-content-end" style={{fontSize: 15}}>time: {time ? time / 1000 + "sec" : "    sec"}</div>
-                <Button variant="secondary" type="submit" onClick={compileCode} >
+                <Button variant="secondary" type="submit" disabled={loading} onClick={compileCode} >
                     Compile
                 </Button>
             </div>

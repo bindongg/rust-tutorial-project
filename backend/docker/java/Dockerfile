@@ -1,1 +1,1 @@
-FROM java:alpine
+FROM openjdk:11

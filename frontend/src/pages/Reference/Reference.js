@@ -19,7 +19,6 @@ function Reference() {
     }, []);
 
     const navigate = useNavigate();
-
     return (
         <>
             <div id="page-wrapper">
