@@ -79,7 +79,7 @@ public class TutorialController {
     {
         CompileOutputDTO output = null;
         ExecutionConstraints constraints = ExecutionConstraints.builder()
-                .memoryLimit(64)
+                .memoryLimit(200)
                 .timeLimit(10000)
                 .build();
         output = compileService.onlineCompile(compileInputDTO, constraints);

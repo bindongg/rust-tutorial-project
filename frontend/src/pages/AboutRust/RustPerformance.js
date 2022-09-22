@@ -20,6 +20,7 @@ function RustPerformance(){
     });
     const [title, setTitle] = useState();
     const [output, setOutput] = useState();
+    const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
     const language = ["RUST", "JAVA", "PYTHON", "CPP"];
@@ -38,7 +39,7 @@ function RustPerformance(){
             {
                 alert(Error.response.status + " error");
             })
-
+            
     }, []);
     const updatePage = () => {      
         navigate(`./updateForm`, {state: {aboutRust : aboutRust}});
@@ -62,6 +63,7 @@ function RustPerformance(){
     }
 
     const compileCode = (data) => {
+        setLoading(true);
         customAxios.post("/tutorial/compile", {code: aboutRust.content, stdIn: "", language: aboutRust.aboutType})
         .then((response)=>{
           if (response.data.code === 200)
@@ -69,6 +71,7 @@ function RustPerformance(){
             setOutput(response.data.data);
           }
         })
+        setLoading(false);
     }
 
     const tabs = language.map((language) => {
@@ -98,7 +101,7 @@ function RustPerformance(){
                     }}
                 />   
                 <div className="nav justify-content-between">
-                <div><Button onClick={compileCode} >Compile</Button></div>
+                <div><Button onClick={compileCode} disabled={loading}>Compile</Button></div>
                 <div  style={{fontSize: 20}}>time: {output ? output.time / 1000 + "sec" : "    sec"}</div>
                 </div>
             </Tab>
