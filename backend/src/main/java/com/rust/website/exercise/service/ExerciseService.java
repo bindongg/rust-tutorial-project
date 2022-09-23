@@ -1,6 +1,7 @@
 package com.rust.website.exercise.service;
 
 import com.rust.website.compile.model.model.ExecutionConstraints;
+import com.rust.website.compile.model.myEnum.Language;
 import com.rust.website.exercise.model.entity.Exercise;
 import com.rust.website.exercise.model.entity.ExerciseTestcase;
 import com.rust.website.exercise.model.entity.ExerciseTry;
@@ -162,10 +163,10 @@ public class ExerciseService {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
-        //일단 수정할 때는 코드만 바꿔놓고 나중에 재채점 등 할 예정 + 테스트 케이스 바껴도 재채점
+        //+ 테스트 케이스 바껴도 재채점
         if(!exercise.getTestCode().equals(newExercise.getTestCode()))
         {
-            exercise.setTestCode(newExercise.getTestCode());
+            updateTestCodeAndExecutionTime(exercise, newExercise);
         }
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
 
@@ -204,5 +205,38 @@ public class ExerciseService {
     public Collection<ExerciseTry> getExerciseTryByUsernameAndExerciseId(String userId, ExerciseSolved solved, List<Exercise> exerciseList)
     {
         return exerciseTryRepository.findByUser_idAndSolvedAndExerciseIn(userId,solved,exerciseList);
+    }
+
+    void updateTestCodeAndExecutionTime(Exercise exercise, Exercise newExercise)
+    {
+        CompileInputDTO compileInputDTO = CompileInputDTO.builder()
+                .code(exercise.getTestCode())
+                .language(Language.RUST)
+                .build();
+        ExecutionConstraints constraints = ExecutionConstraints.builder()
+                .memoryLimit(200)
+                .timeLimit(10000)
+                .build();
+        long runTime = 0;
+
+        int idx = 0;
+        for(;idx < exercise.getExerciseTestcases().size(); idx++)
+        {
+            compileInputDTO.setStdIn(exercise.getExerciseTestcases().get(idx).getInput());
+            CompileOutputDTO temp = compileService.onlineCompile(compileInputDTO, constraints);
+            if(!temp.getStdOut().equals(exercise.getExerciseTestcases().get(idx).getOutput()))
+            {
+                break;
+            }
+            runTime = Math.max(temp.getTime(), runTime);
+        }
+
+        if(idx != exercise.getExerciseTestcases().size())
+        {
+            throw new IllegalArgumentException("wrong test code");
+        }
+
+        exercise.setTime(runTime);
+        exercise.setTestCode(newExercise.getTestCode());
     }
 }
