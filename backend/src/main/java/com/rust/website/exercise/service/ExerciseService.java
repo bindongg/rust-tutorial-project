@@ -131,6 +131,7 @@ public class ExerciseService {
         if (exerciseTestcases.size() == i)
         {
             exerciseTry.setSolved(ExerciseSolved.SOLVE);
+            exerciseTry.setTime(compileOutputDTO.getTime());
         }
         else
         {
@@ -161,6 +162,11 @@ public class ExerciseService {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
+        //일단 수정할 때는 코드만 바꿔놓고 나중에 재채점 등 할 예정 + 테스트 케이스 바껴도 재채점
+        if(!exercise.getTestCode().equals(newExercise.getTestCode()))
+        {
+            exercise.setTestCode(newExercise.getTestCode());
+        }
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
 
         exerciseTestcaseRepository.deleteByExercise_id(id);

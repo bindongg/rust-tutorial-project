@@ -5,6 +5,7 @@ import com.rust.website.common.config.jwt.JwtUtil;
 import com.rust.website.common.dto.TupleResponseDTO;
 import com.rust.website.compile.model.model.ExecutionConstraints;
 import com.rust.website.compile.model.myEnum.Language;
+import com.rust.website.compile.service.CompileService;
 import com.rust.website.exercise.model.entity.Exercise;
 import com.rust.website.exercise.model.entity.ExerciseTry;
 import com.rust.website.exercise.model.myEnum.ExerciseDifficulty;
@@ -27,6 +28,8 @@ import java.util.*;
 @AllArgsConstructor
 public class ExerciseController {
     private final ExerciseService exerciseService;
+
+    private final CompileService compileService;
 
     @GetMapping("/exercise")
     public TupleResponseDTO<List<Exercise>> getExercises(HttpServletRequest request, Pageable pageable)
@@ -57,6 +60,39 @@ public class ExerciseController {
     @PostMapping("/exercise")
     public ResponseDTO<String> addExercise(@RequestBody Exercise exercise)
     {
+        if(exercise.getTestCode() == null || exercise.getTestCode().equals(""))
+        {
+            return exerciseService.addExercise(exercise);
+        }
+
+        CompileInputDTO compileInputDTO = CompileInputDTO.builder()
+                .code(exercise.getTestCode())
+                .language(Language.RUST)
+                .build();
+        ExecutionConstraints constraints = ExecutionConstraints.builder()
+                .memoryLimit(200)
+                .timeLimit(10000)
+                .build();
+        long runTime = 0;
+
+        int idx = 0;
+        for(;idx < exercise.getExerciseTestcases().size(); idx++)
+        {
+            compileInputDTO.setStdIn(exercise.getExerciseTestcases().get(idx).getInput());
+            CompileOutputDTO temp = compileService.onlineCompile(compileInputDTO, constraints);
+            if(!temp.getStdOut().equals(exercise.getExerciseTestcases().get(idx).getOutput()))
+            {
+                break;
+            }
+            runTime = Math.max(temp.getTime(), runTime);
+        }
+
+        if(idx != exercise.getExerciseTestcases().size())
+        {
+            throw new IllegalArgumentException("wrong test code");
+        }
+
+        exercise.setTime(runTime);
         return exerciseService.addExercise(exercise);
     }
 
@@ -130,5 +166,11 @@ public class ExerciseController {
         response.put("name",recommendExercise.getName());
 
         return response;
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Map<String,String> illegalArgumentExceptionHandler()
+    {
+        return null;
     }
 }

@@ -28,6 +28,11 @@ public class Exercise {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Lob
+    private String testCode;
+
+    private long time;
+
     @Enumerated(EnumType.STRING)
     private ExerciseDifficulty difficulty;
 
@@ -54,5 +59,17 @@ public class Exercise {
         this.name = newExercise.getName();
         this.difficulty = newExercise.getDifficulty();
         this.tag = newExercise.getTag();
+    }
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", testCode='" + testCode + '\'' +
+                ", time=" + time +
+                ", difficulty=" + difficulty +
+                ", tag=" + tag +
+                '}';
     }
 }
