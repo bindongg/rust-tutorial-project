@@ -43,6 +43,7 @@ import AboutRust from "./pages/AboutRust/AboutRust";
 import AboutRustUpdate from "./pages/AboutRust/AboutRustUpdate";
 import AboutRustDetail from "./pages/AboutRust/AboutRustDetail";
 import RustPerformance from "./pages/AboutRust/RustPerformance";
+import AuthConfirm from "./pages/Register/AuthConfirm";
 
 function App() {
     return (
@@ -95,6 +96,7 @@ function App() {
                         <Route path="logout" exact={true}/>
                         <Route path="register" exact={true} element={<RegisterForm/>}/>
                         <Route path="register/certification" exact={true} element={<AfterAuthEmailSent/>}/>
+                        <Route path="authConfirm/:authId" exact={true} element={<AuthConfirm/>}/>
                         {/*idPwdForgot*/}
                         <Route path="idForgot" exact={true} element={<IdForgot/>}/>
                         <Route path="idForgot/getId" exact={true} element={<IdForgotGetId/>}/>

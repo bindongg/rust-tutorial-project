@@ -28,7 +28,9 @@ function Compile() {
             setOutput(response.data.data);
           }
         })
-        setLoading(false);
+        .finally(()=>{
+          setLoading(false);
+        })
   }
 
   const changeLang = (lang) => {
