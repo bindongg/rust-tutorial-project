@@ -1,12 +1,12 @@
 import React, { useState} from "react";
-import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import {useNavigate} from "react-router-dom"
 import {customAxios} from "../../Common/Modules/CustomAxios";
 
 
 function ExerciseCreate() {
-    const { register, watch, reset,handleSubmit, formState: {errors} } = useForm();
+    const { register, reset,handleSubmit, formState: {errors} } = useForm();
     const [testcaseNums, setTestcaseNums] = useState([1 ]);
     const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ function ExerciseCreate() {
     const onInvalid = (data) => console.log(data, "onInvalid");
 
     const onSubmit = (data) => {
-        console.log('data', data)
+        // console.log('data', data);
         data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
         customAxios.post(`/exercise`, {...data}
         ).then(function(response) {

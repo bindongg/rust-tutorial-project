@@ -1,5 +1,5 @@
 import React, { useState} from "react";
-import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, useParams} from "react-router-dom"
 import {customAxios} from "../../Common/Modules/CustomAxios";
@@ -10,7 +10,7 @@ function ExerciseUpdate() {
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
-    const { register, watch, setValue, reset,handleSubmit } = useForm();
+    const { register, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
 
     const onEditChange = (e) => {
@@ -25,7 +25,7 @@ function ExerciseUpdate() {
     const onInvalid = (data) => console.log(data, "onInvalid");
 
     const onSubmit = (data) => {
-        console.log('data', data);
+        // console.log('data', data);
         customAxios.patch(`/exercise/${id}`, {...data}
         ).then(function(response) {
             alert(response.data.data);
