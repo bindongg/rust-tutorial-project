@@ -164,7 +164,7 @@ public class ExerciseService {
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
         //+ 테스트 케이스 바껴도 재채점
-        if(!exercise.getTestCode().equals(newExercise.getTestCode()))
+        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode()))
         {
             updateTestCodeAndExecutionTime(exercise, newExercise);
         }
@@ -210,7 +210,7 @@ public class ExerciseService {
     void updateTestCodeAndExecutionTime(Exercise exercise, Exercise newExercise)
     {
         CompileInputDTO compileInputDTO = CompileInputDTO.builder()
-                .code(exercise.getTestCode())
+                .code(exercise.getExerciseContent().getTestCode())
                 .language(Language.RUST)
                 .build();
         ExecutionConstraints constraints = ExecutionConstraints.builder()
@@ -236,7 +236,7 @@ public class ExerciseService {
             throw new IllegalArgumentException("wrong test code");
         }
 
-        exercise.setTime(runTime);
-        exercise.setTestCode(newExercise.getTestCode());
+        exercise.getExerciseContent().setTime(runTime);
+        exercise.getExerciseContent().setTestCode(newExercise.getExerciseContent().getTestCode());
     }
 }

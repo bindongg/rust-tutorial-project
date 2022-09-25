@@ -128,7 +128,7 @@ function ExerciseCreate() {
                                     : (
                                         <><br/><br/><Form.Group className="mb-3" controlId="exerciseExampleCode">
                                             <Form.Label>테스트 코드</Form.Label>
-                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("testCode")} />
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.testCode")} />
                                         </Form.Group></>)
                             }
                             {

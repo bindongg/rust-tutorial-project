@@ -147,7 +147,7 @@ function ExerciseUpdate() {
                                     : (
                                         <Form.Group className="mb-3" controlId="exerciseExampleCode">
                                             <Form.Label>테스트 코드</Form.Label>
-                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={exerciseDetail.testCode} {...register("testCode")} />
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={exerciseDetail.exerciseContent.testCode} {...register("exerciseContent.testCode")} />
                                         </Form.Group>)
                             }
                             {
@@ -156,7 +156,7 @@ function ExerciseUpdate() {
                                     : (
                                         <Form.Group className="mb-3" controlId="exerciseExampleCode">
                                             <Form.Label>테스트 코드</Form.Label>
-                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("testCode")} />
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.testCode")} />
                                         </Form.Group>)
                             }
                             {

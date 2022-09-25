@@ -39,6 +39,13 @@ public class ExerciseContent implements Serializable {
     @Column(nullable = false)
     private String code;
 
+    @Lob
+    @Column
+    private String testCode;
+
+    @Column
+    private long time;
+
     @OneToOne
     @JoinColumn(name = "exercise_id", unique = true, nullable = false)
     @JsonIgnoreProperties({"exerciseContent", "exerciseTestcases"})

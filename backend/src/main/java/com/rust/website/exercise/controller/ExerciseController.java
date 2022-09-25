@@ -60,13 +60,13 @@ public class ExerciseController {
     @PostMapping("/exercise")
     public ResponseDTO<String> addExercise(@RequestBody Exercise exercise)
     {
-        if(exercise.getTestCode() == null || exercise.getTestCode().equals(""))
+        if(exercise.getExerciseContent().getTestCode() == null || exercise.getExerciseContent().getTestCode().equals(""))
         {
             return exerciseService.addExercise(exercise);
         }
 
         CompileInputDTO compileInputDTO = CompileInputDTO.builder()
-                .code(exercise.getTestCode())
+                .code(exercise.getExerciseContent().getTestCode())
                 .language(Language.RUST)
                 .build();
         ExecutionConstraints constraints = ExecutionConstraints.builder()
@@ -91,8 +91,7 @@ public class ExerciseController {
         {
             throw new IllegalArgumentException("wrong test code");
         }
-
-        exercise.setTime(runTime);
+        exercise.getExerciseContent().setTime(runTime);
         return exerciseService.addExercise(exercise);
     }
 
