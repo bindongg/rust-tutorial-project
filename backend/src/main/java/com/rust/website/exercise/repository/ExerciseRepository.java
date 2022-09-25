@@ -9,12 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
-    public Page<Exercise> findAllByOrderByIdAsc(Pageable pageable);
-    public Page<Exercise> findByTagOrderByIdAsc(ExerciseTag tag, Pageable pageable);
-    public Page<Exercise> findByDifficultyOrderByIdAsc(ExerciseDifficulty difficulty, Pageable pageable);
-    public long countByTag(ExerciseTag tag);
-    public long countByDifficulty(ExerciseDifficulty difficulty);
+    Page<Exercise> findAllByOrderByIdAsc(Pageable pageable);
+    Page<Exercise> findByTagOrderByIdAsc(ExerciseTag tag, Pageable pageable);
+    Page<Exercise> findByDifficultyOrderByIdAsc(ExerciseDifficulty difficulty, Pageable pageable);
+    long countByTag(ExerciseTag tag);
+    long countByDifficulty(ExerciseDifficulty difficulty);
+    Collection<Exercise> findExercisesByTagInAndDifficultyIsLessThanEqual(List<ExerciseTag> relationList, ExerciseDifficulty difficulty);
 }
