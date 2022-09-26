@@ -77,7 +77,7 @@ function RustPerformance(){
 
     const tabs = language.map((language) => {
         return (
-            <Tab eventKey={language} title={language}>
+            <Tab key={language} eventKey={language} title={language}>
                 <h4>Code</h4>
                 <CodeEditor
                     value={aboutRust.content}      
