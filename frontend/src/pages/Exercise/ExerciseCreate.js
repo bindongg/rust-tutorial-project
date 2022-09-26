@@ -8,7 +8,11 @@ import {customAxios} from "../../Common/Modules/CustomAxios";
 function ExerciseCreate() {
     const { register, watch, reset,handleSubmit, formState: {errors} } = useForm();
     const [testcaseNums, setTestcaseNums] = useState([1 ]);
+<<<<<<< HEAD
     const [loading,setLoading] = useState(false);
+=======
+    const [testCodeExists, setTestCodeExists] = useState(false);
+>>>>>>> d4eda04722ae110fa726fbee4933543ed502e2af
     const navigate = useNavigate();
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
@@ -32,6 +36,10 @@ function ExerciseCreate() {
     const addTestcase = () => {
         setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
     };
+
+    const addTestCode = () => {
+        setTestCodeExists(true);
+    }
 
     const testcases = testcaseNums.map(function (testcasesNum, index){
         return (
@@ -120,12 +128,25 @@ function ExerciseCreate() {
                                 <Form.Label>초기 코드</Form.Label>
                                 <Form.Control as="textarea" placeholder="초기 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.code")} />
                             </Form.Group>
-
                             {testcases}
-                            <input type="button" onClick={ addTestcase } disabled={loading} value="Test Case 추가하기" />
+                            <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
+                            {
+                                testCodeExists === false
+                                    ? (<></>)
+                                    : (
+                                        <><br/><br/><Form.Group className="mb-3" controlId="exerciseExampleCode">
+                                            <Form.Label>테스트 코드</Form.Label>
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.testCode")} />
+                                        </Form.Group></>)
+                            }
+                            {
+                                testCodeExists === true
+                                    ? (<></>)
+                                    : (<input type="button" onClick={ addTestCode } value="Test Code 추가하기" />)
+                            }
                             <br/>
                             <br/>
-                           <Button variant="info" type="submit" onSubmit={handleSubmit(onValid, onInvalid)}>
+                           <Button variant="info" type="submit" disabled={loading} onSubmit={handleSubmit(onValid, onInvalid)}>
                                 문제 추가
                             </Button>
                         </Form>

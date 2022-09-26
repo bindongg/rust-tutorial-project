@@ -10,7 +10,11 @@ function ExerciseUpdate() {
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
+<<<<<<< HEAD
     const [loading,setLoading] = useState(false);
+=======
+    const [testCodeExists, setTestCodeExists] = useState(false);
+>>>>>>> d4eda04722ae110fa726fbee4933543ed502e2af
     const { register, watch, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
 
@@ -20,6 +24,8 @@ function ExerciseUpdate() {
             [e.target.name]: e.target.value
         })
     }
+
+    console.log(location)
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
     const onValid = (data) => console.log(data, "onValid");
@@ -46,6 +52,10 @@ function ExerciseUpdate() {
         // setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
         setExerciseTestCases(arr => [...arr, testCaseForm] )
     };
+
+    const addTestCode = () => {
+        setTestCodeExists(true);
+    }
 
     const testcases = exerciseTestCases.map(function (exerciseTestCase, index){
         setValue("exerciseTestcases["+ index+ "].number", (index+1));
@@ -137,6 +147,31 @@ function ExerciseUpdate() {
 
                             {testcases}
                             <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
+                            <br/>
+                            <br/>
+                            {
+                                exerciseDetail.testCode === null || exerciseDetail.testCode === ""
+                                    ? (<></>)
+                                    : (
+                                        <Form.Group className="mb-3" controlId="exerciseExampleCode">
+                                            <Form.Label>테스트 코드</Form.Label>
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={exerciseDetail.exerciseContent.testCode} {...register("exerciseContent.testCode")} />
+                                        </Form.Group>)
+                            }
+                            {
+                                testCodeExists === false
+                                    ? (<></>)
+                                    : (
+                                        <Form.Group className="mb-3" controlId="exerciseExampleCode">
+                                            <Form.Label>테스트 코드</Form.Label>
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.testCode")} />
+                                        </Form.Group>)
+                            }
+                            {
+                                (exerciseDetail.testCode === null || exerciseDetail.testCode === "") && testCodeExists === false
+                                    ? (<input type="button" onClick={ addTestCode } value="Test Code 추가하기" />)
+                                    : (<></>)
+                            }
                             <br/>
                             <br/>
                            <Button variant="info" type="submit" disabled={loading}>
