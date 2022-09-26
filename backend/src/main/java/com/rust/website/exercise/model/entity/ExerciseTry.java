@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -34,12 +35,14 @@ public class ExerciseTry {
     @CreationTimestamp
     private Timestamp date;
 
-    @ManyToOne //many exerciseTries one user
+    private long time;
+
+    @ManyToOne(fetch = FetchType.LAZY) //many exerciseTries one user
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user; //foreign key
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id", nullable = false)
     @JsonIgnoreProperties({"exerciseContent","exerciseTestcases"})
     private Exercise exercise;

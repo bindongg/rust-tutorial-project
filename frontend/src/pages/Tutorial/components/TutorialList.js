@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
 import { decodeToken } from "react-jwt";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { customAxios } from "../../../Common/Modules/CustomAxios";
 import TutorialSubList from "./TutorialSubList";
 
@@ -11,6 +11,8 @@ function TutorialList({tutorials, rerender, setRerender}) {
     const navigate = useNavigate();
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [loading,setLoading] = useState(false);
+
+    const buttonStyle = { marginLeft:"5px", fontSize:"14px"};
 
     const updateTutorial = (tutorial) => {      
         navigate("/tutorial/updateForm", {state: {tutorial : tutorial}});
@@ -39,8 +41,6 @@ function TutorialList({tutorials, rerender, setRerender}) {
     const createQuiz = (tutorial) => {
         navigate("/tutorial/quiz/createForm", {state: {tutorial : tutorial}});
     }
-    
-    const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
 
     let key = tutorials.length;    
     const list = tutorials.map(
@@ -52,7 +52,9 @@ function TutorialList({tutorials, rerender, setRerender}) {
                 <Accordion.Body>
                     <TutorialSubList tutorialSubs={tutorial.tutorialSubs} id={tutorial.id}/>
                     {tutorial.tutorialQuiz &&                    
-                    <NavLink className="nav-link" to={`/tutorial/quiz/${tutorial.id}`}>{tutorial.tutorialQuiz.name}</NavLink>
+                    <span className="nav-link pb-3" onClick={()=>{navigate(`/tutorial/quiz/${tutorial.id}`,{state:{relation:tutorial.tutorialRelations}})}}
+                        style={{cursor: "pointer", display:"inline-block"}}
+                    >퀴즈. {tutorial.tutorialQuiz.name}</span>
                     }
                     <br></br>
                     <div className="nav justify-content-between">

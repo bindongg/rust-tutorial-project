@@ -70,8 +70,9 @@ function RustPerformance(){
           {
             setOutput(response.data.data);
           }
+        }).finally(()=>{
+            setLoading(false);
         })
-        setLoading(false);
     }
 
     const tabs = language.map((language) => {

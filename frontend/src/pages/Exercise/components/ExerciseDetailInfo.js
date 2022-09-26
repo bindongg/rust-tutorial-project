@@ -24,7 +24,9 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
             alert(response.data.data.stdOut);
             setTime(response.data.data.time);
         })
-        setLoading(false);
+        .finally(()=>{
+            setLoading(false);
+        })
     }
     const updateDetail = () => {
         navigate(`/exercise/${id}/update`, {state: {exerciseDetail: exerciseDetail}});
@@ -107,11 +109,10 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
                     onChange={(event) => setCode(event.target.value)}
                     padding={15}
                     style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         backgroundColor: "#f5f5f5",
                         fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                        fontWeight: "bold"
-                    }}
+                      }}
                 />
                 <div className="nav justify-content-end" style={{fontSize: 15}}>time: {time ? time / 1000 + "sec" : "    sec"}</div>
                 <Button variant="secondary" type="submit" disabled={loading} onClick={compileCode} >

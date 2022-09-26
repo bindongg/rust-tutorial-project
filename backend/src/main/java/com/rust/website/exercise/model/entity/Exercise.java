@@ -55,5 +55,4 @@ public class Exercise {
         this.difficulty = newExercise.getDifficulty();
         this.tag = newExercise.getTag();
     }
-
 }
