@@ -207,10 +207,10 @@ public class ExerciseService {
         return exerciseTryRepository.findByUser_idAndSolvedAndExerciseIn(userId,solved,exerciseList);
     }
 
-    void updateTestCodeAndExecutionTime(Exercise exercise, Exercise newExercise)
+    void updateTestCodeAndExecutionTime(Exercise exercise, Exercise newExercise) //컴파일 할 때 newexercise의 테스트케이스 사용
     {
         CompileInputDTO compileInputDTO = CompileInputDTO.builder()
-                .code(exercise.getExerciseContent().getTestCode())
+                .code(newExercise.getExerciseContent().getTestCode())
                 .language(Language.RUST)
                 .build();
         ExecutionConstraints constraints = ExecutionConstraints.builder()
@@ -220,18 +220,18 @@ public class ExerciseService {
         long runTime = 0;
 
         int idx = 0;
-        for(;idx < exercise.getExerciseTestcases().size(); idx++)
+        for(;idx < newExercise.getExerciseTestcases().size(); idx++)
         {
-            compileInputDTO.setStdIn(exercise.getExerciseTestcases().get(idx).getInput());
+            compileInputDTO.setStdIn(newExercise.getExerciseTestcases().get(idx).getInput());
             CompileOutputDTO temp = compileService.onlineCompile(compileInputDTO, constraints);
-            if(!temp.getStdOut().equals(exercise.getExerciseTestcases().get(idx).getOutput()))
+            if(!temp.getStdOut().equals(newExercise.getExerciseTestcases().get(idx).getOutput()))
             {
                 break;
             }
             runTime = Math.max(temp.getTime(), runTime);
         }
 
-        if(idx != exercise.getExerciseTestcases().size())
+        if(idx != newExercise.getExerciseTestcases().size())
         {
             throw new IllegalArgumentException("wrong test code");
         }
