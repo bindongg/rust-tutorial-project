@@ -109,7 +109,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
                     onChange={(event) => setCode(event.target.value)}
                     padding={15}
                     style={{
-                        fontSize: 12,
+                        fontSize: 14,
                         backgroundColor: "#f5f5f5",
                         fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
                       }}
