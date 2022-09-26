@@ -8,6 +8,7 @@ import {customAxios} from "../../Common/Modules/CustomAxios";
 function ExerciseCreate() {
     const { register, watch, reset,handleSubmit, formState: {errors} } = useForm();
     const [testcaseNums, setTestcaseNums] = useState([1 ]);
+    const [loading,setLoading] = useState(false);
     const [testCodeExists, setTestCodeExists] = useState(false);
     const navigate = useNavigate();
 
@@ -17,11 +18,15 @@ function ExerciseCreate() {
 
     const onSubmit = (data) => {
         console.log('data', data)
+        setLoading(true);
         data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
         customAxios.post(`/exercise`, {...data}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
+        })
+        .finally(()=>{
+            setLoading(false);
         })
     }
 
@@ -138,7 +143,7 @@ function ExerciseCreate() {
                             }
                             <br/>
                             <br/>
-                           <Button variant="info" type="submit" onSubmit={handleSubmit(onValid, onInvalid)}>
+                           <Button variant="info" type="submit" disabled={loading} onSubmit={handleSubmit(onValid, onInvalid)}>
                                 문제 추가
                             </Button>
                         </Form>
