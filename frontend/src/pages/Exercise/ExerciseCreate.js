@@ -8,7 +8,11 @@ import {customAxios} from "../../Common/Modules/CustomAxios";
 function ExerciseCreate() {
     const { register, watch, reset,handleSubmit, formState: {errors} } = useForm();
     const [testcaseNums, setTestcaseNums] = useState([1 ]);
+<<<<<<< HEAD
+    const [loading,setLoading] = useState(false);
+=======
     const [testCodeExists, setTestCodeExists] = useState(false);
+>>>>>>> d4eda04722ae110fa726fbee4933543ed502e2af
     const navigate = useNavigate();
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
@@ -17,11 +21,15 @@ function ExerciseCreate() {
 
     const onSubmit = (data) => {
         console.log('data', data)
+        setLoading(true);
         data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
         customAxios.post(`/exercise`, {...data}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
+        })
+        .finally(()=>{
+            setLoading(false);
         })
     }
 
@@ -138,7 +146,7 @@ function ExerciseCreate() {
                             }
                             <br/>
                             <br/>
-                           <Button variant="info" type="submit" onSubmit={handleSubmit(onValid, onInvalid)}>
+                           <Button variant="info" type="submit" disabled={loading} onSubmit={handleSubmit(onValid, onInvalid)}>
                                 문제 추가
                             </Button>
                         </Form>

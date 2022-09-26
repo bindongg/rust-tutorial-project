@@ -10,7 +10,11 @@ function ExerciseUpdate() {
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
+<<<<<<< HEAD
+    const [loading,setLoading] = useState(false);
+=======
     const [testCodeExists, setTestCodeExists] = useState(false);
+>>>>>>> d4eda04722ae110fa726fbee4933543ed502e2af
     const { register, watch, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
 
@@ -29,11 +33,15 @@ function ExerciseUpdate() {
 
     const onSubmit = (data) => {
         console.log('data', data);
+        setLoading(true);
         customAxios.patch(`/exercise/${id}`, {...data}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
         })
+        .finally(()=>{
+            setLoading(false);
+          })
     }
 
     const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.exerciseTestcases);
@@ -166,7 +174,7 @@ function ExerciseUpdate() {
                             }
                             <br/>
                             <br/>
-                           <Button variant="info" type="submit" >
+                           <Button variant="info" type="submit" disabled={loading}>
                                 문제 수정
                             </Button>
                         </Form>

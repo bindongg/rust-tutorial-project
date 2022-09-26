@@ -110,7 +110,7 @@ public class CompileService {
             compileOutputDTO.setTime(getRunningTime(uuid));
         } catch (final TimeoutException e) {
             compileOutputDTO.setStdOut("Calculation took to long");
-            compileOutputDTO.setTime(-1000);
+            compileOutputDTO.setTime(-2000);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -133,7 +133,7 @@ public class CompileService {
         stdout = collectProcessStdOutOutput(process).trim();
         long endTime = Date.from(Instant.parse(stdout)).getTime();
 
-        return endTime - startTime;
+        return Math.max(endTime - startTime, 0L);
     }
 
     @SneakyThrows
