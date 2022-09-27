@@ -67,8 +67,12 @@ public class ExerciseService {
         List<Exercise> returnList = new ArrayList<>();
         exercises.stream()
                 .forEach(e -> {
-                    if (exerciseTries.get(e.getId()) != null) { e.setSolved(exerciseTries.get(e.getId()).getSolved()); }
+                    if (exerciseTries.get(e.getId()) != null) {
+                        e.setSolved(exerciseTries.get(e.getId()).getSolved());
+                        e.setTryTime(exerciseTries.get(e.getId()).getTime());
+                    }
                     else { e.setSolved(ExerciseSolved.NO_TRY);}
+                    e.setTime(e.getExerciseContent().getTime());
                     e.setExerciseContent(null);
                     e.setExerciseTestcases(null);
                     returnList.add(e);

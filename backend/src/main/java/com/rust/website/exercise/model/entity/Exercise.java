@@ -49,6 +49,12 @@ public class Exercise {
     @Transient
     private ExerciseSolved solved;
 
+    @Transient
+    private long time;
+
+    @Transient
+    private long tryTime;
+
     public void copy(Exercise newExercise)
     {
         this.name = newExercise.getName();

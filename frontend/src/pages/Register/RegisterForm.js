@@ -187,12 +187,10 @@ function RegisterForm() {
                             <Form.Group className="mb-3">
                                 <Form.Label>비밀번호</Form.Label>
                                 <Form.Control type="password" placeholder="8~20길이의 영어, 숫자, 특수문자의 조합" onChange={onChangePwd}/>
-                                <Form.Text>적합 여부</Form.Text>
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>비밀번호 확인</Form.Label>
                                 <Form.Control type="password" placeholder="비밀번호 확인" onChange={onChangePwdCheck}/>
-                                <Form.Text>일치 여부</Form.Text>
                             </Form.Group>
                             <FormGroup className="mb-3">
                                 <Form.Label>이메일</Form.Label>
