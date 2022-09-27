@@ -163,8 +163,10 @@ public class ExerciseService {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
+        System.out.println(exercise.getExerciseTestcases());
         //+ 테스트 케이스 바껴도 재채점
-        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode()))
+        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode())
+                || !exercise.getExerciseTestcases().equals(newExercise.getExerciseTestcases()))
         {
             updateTestCodeAndExecutionTime(exercise, newExercise);
         }
