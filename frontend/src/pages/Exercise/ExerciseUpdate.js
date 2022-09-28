@@ -10,11 +10,8 @@ function ExerciseUpdate() {
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
-<<<<<<< HEAD
     const [loading,setLoading] = useState(false);
-=======
     const [testCodeExists, setTestCodeExists] = useState(false);
->>>>>>> d4eda04722ae110fa726fbee4933543ed502e2af
     const { register, watch, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
 

@@ -8,11 +8,8 @@ import {customAxios} from "../../Common/Modules/CustomAxios";
 function ExerciseCreate() {
     const { register, watch, reset,handleSubmit, formState: {errors} } = useForm();
     const [testcaseNums, setTestcaseNums] = useState([1 ]);
-<<<<<<< HEAD
     const [loading,setLoading] = useState(false);
-=======
     const [testCodeExists, setTestCodeExists] = useState(false);
->>>>>>> d4eda04722ae110fa726fbee4933543ed502e2af
     const navigate = useNavigate();
 
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.

@@ -1,4 +1,4 @@
-import {Button, Container, Nav, Navbar, NavLink, Tab, Tabs} from "react-bootstrap";
+import {Accordion, Button, Container, Form, Nav, Navbar, NavLink, Tab, Tabs} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {customAxios} from "../../Common/Modules/CustomAxios";
@@ -10,7 +10,7 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import React from "react";
 import { decodeToken } from "react-jwt";
 
-function RustPerformance(){
+function Performance(){
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [aboutRust, setAboutRust] = useState({
         id: "",
@@ -18,6 +18,7 @@ function RustPerformance(){
         title: "",
         aboutType: "PERFORMANCE"
     });
+    const [input, setInput] = useState();
     const [title, setTitle] = useState();
     const [output, setOutput] = useState();
     const [loading,setLoading] = useState(false);
@@ -39,13 +40,34 @@ function RustPerformance(){
             {
                 alert(Error.response.status + " error");
             })
+        customAxios.get(`/aboutRust/INPUT`)
+            .then((response) =>
+            {
+                if (response.data.code === 200)
+                {
+                    let data = response.data.data;
+                    setInput({...data});
+                }
+            })
+            .catch((Error) =>
+            {
+                alert(Error.response.status + " error");
+            })
             
     }, []);
-    const updatePage = () => {      
-        navigate(`./updateForm`, {state: {aboutRust : aboutRust}});
+    const updatePage = () => {
+        if (language.includes(aboutRust.aboutType))      
+        {
+            navigate(`./updateForm`, {state: {aboutRust: aboutRust, input: input}});
+        }
+        else
+        {
+            navigate(`/aboutRust/performanceTitle/updateForm`, {state: {aboutRust: aboutRust}});
+        }
     }
 
     const changeKey = (key) => {
+        setAboutRust(null)
         customAxios.get(`/aboutRust/` + key)
             .then((response) =>
             {
@@ -64,7 +86,7 @@ function RustPerformance(){
 
     const compileCode = (data) => {
         setLoading(true);
-        customAxios.post("/tutorial/compile", {code: aboutRust.content, stdIn: "", language: aboutRust.aboutType})
+        customAxios.post("/tutorial/compile", {code: aboutRust.content, stdIn: input.content, language: aboutRust.aboutType})
         .then((response)=>{
           if (response.data.code === 200)
           {
@@ -78,18 +100,36 @@ function RustPerformance(){
     const tabs = language.map((language) => {
         return (
             <Tab eventKey={language} title={language}>
-                <h4>Code</h4>
-                <CodeEditor
-                    value={aboutRust.content}      
-                    language={aboutRust.aboutType.toLowerCase()}
-                    disabled
-                    padding={15}
-                    style={{
-                    fontSize: 12,
-                    backgroundColor: "#f5f5f5",
-                    fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                    }}
-                />
+                <Accordion defaultActiveKey={0}>
+                    <Accordion.Item eventKey={0} key={0}>
+                        <Accordion.Header>Code</Accordion.Header>
+                        <Accordion.Body>
+                            <CodeEditor
+                                rows={5}
+                                value={aboutRust?.content}      
+                                language={aboutRust?.aboutType.toLowerCase()}
+                                disabled
+                                padding={15}
+                                style={{
+                                fontSize: 12,
+                                backgroundColor: "#f5f5f5",
+                                fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                                }}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey={1} key={1}>
+                        <Accordion.Header>Input</Accordion.Header>
+                        <Accordion.Body>
+                            <Form.Control 
+                                as="textarea" 
+                                rows={5} 
+                                value={input?.content} 
+                                disabled
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
                 <h4>Output</h4>
                 <CodeEditor
                     disabled
@@ -143,7 +183,7 @@ function RustPerformance(){
                     onSelect={(e) => changeKey(e)}
                 >
                     <Tab eventKey={"PERFORMANCE"} title="개요">
-                        {aboutRust.content}
+                        {aboutRust?.content}
                     </Tab>
                     {tabs}
                 </Tabs>
@@ -152,4 +192,4 @@ function RustPerformance(){
         </>
     );
 }
-export default RustPerformance;
+export default Performance;
