@@ -13,7 +13,7 @@ function ReferenceUpdate() {
 
     const onSubmit = (data) => {
         data.number = data.number * 1;
-        console.log('data', data);
+        // console.log('data', data);
         customAxios.patch(`/reference/${referenceDetail.id}`, {...data}
         ).then(function(response) {
             alert(response.data.data);

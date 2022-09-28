@@ -32,4 +32,14 @@ public class ExerciseTestcase {
     @JoinColumn(name = "exercise_id")
     @JsonIgnoreProperties({"exerciseTestcases, exerciseContent"})
     private Exercise exercise;
+
+    @Override
+    public String toString() {
+        return "ExerciseTestcase{" +
+                "id=" + id +
+                ", number=" + number +
+                ", input='" + input + '\'' +
+                ", output='" + output + '\'' +
+                '}';
+    }
 }

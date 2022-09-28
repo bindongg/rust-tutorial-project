@@ -17,7 +17,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
     }
 
     const compileCode = (data) => {
-        console.log(jsonCode);
+        // console.log(jsonCode);
         setLoading(true);
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
