@@ -1,5 +1,6 @@
 package com.rust.website.exercise.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +50,7 @@ public class ExerciseContent implements Serializable {
     @OneToOne
     @JoinColumn(name = "exercise_id", unique = true, nullable = false)
     @JsonIgnoreProperties({"exerciseContent", "exerciseTestcases"})
+    @JsonIgnore
     private Exercise exercise;
 
     @Transient

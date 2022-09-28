@@ -67,8 +67,12 @@ public class ExerciseService {
         List<Exercise> returnList = new ArrayList<>();
         exercises.stream()
                 .forEach(e -> {
-                    if (exerciseTries.get(e.getId()) != null) { e.setSolved(exerciseTries.get(e.getId()).getSolved()); }
+                    if (exerciseTries.get(e.getId()) != null) {
+                        e.setSolved(exerciseTries.get(e.getId()).getSolved());
+                        e.setTryTime(exerciseTries.get(e.getId()).getTime());
+                    }
                     else { e.setSolved(ExerciseSolved.NO_TRY);}
+                    e.setTime(e.getExerciseContent().getTime());
                     e.setExerciseContent(null);
                     e.setExerciseTestcases(null);
                     returnList.add(e);
@@ -163,8 +167,10 @@ public class ExerciseService {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
+        System.out.println(exercise.getExerciseTestcases());
         //+ 테스트 케이스 바껴도 재채점
-        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode()))
+        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode())
+                || !exercise.getExerciseTestcases().equals(newExercise.getExerciseTestcases()))
         {
             updateTestCodeAndExecutionTime(exercise, newExercise);
         }

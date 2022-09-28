@@ -1,5 +1,6 @@
 import {Col, Row} from "react-bootstrap";
-import React, {useEffect} from "react";
+import React from "react";
+import {EXERCISE_STATE} from "../../../Common/Modules/Common";
 
 function ExerciseTryContainer(props) {
     return(
@@ -13,7 +14,7 @@ function ExerciseTryContainer(props) {
                             : (<>
                                 {
                                     props.exerciseTry.map((exerciseTry) =>
-                                        exerciseTry.solved === "SUCCESS"
+                                        exerciseTry.solved === EXERCISE_STATE[0]
                                             ? (<li key={exerciseTry.date} style={{listStyleType: "none"}}>
                                                 {exerciseTry.date.substring(0,10) + " " + exerciseTry.date.substring(11,16)}&nbsp;&nbsp;{exerciseTry.exercise.name}
                                             </li>)
