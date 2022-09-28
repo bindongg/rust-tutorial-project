@@ -1,5 +1,5 @@
 import React, { useState} from "react";
-import {Button, Col, Container, Form, NavLink, Row, Card} from "react-bootstrap";
+import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, useParams} from "react-router-dom"
 import {customAxios} from "../../Common/Modules/CustomAxios";
@@ -10,7 +10,9 @@ function ExerciseUpdate() {
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
-    const { register, watch, setValue, reset,handleSubmit } = useForm();
+    const { register, setValue, reset,handleSubmit } = useForm();
+    const [loading,setLoading] = useState(false);
+    const [testCodeExists, setTestCodeExists] = useState(false);
     const navigate = useNavigate();
 
     const onEditChange = (e) => {
@@ -20,17 +22,22 @@ function ExerciseUpdate() {
         })
     }
 
+    console.log(location)
+
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
     const onValid = (data) => console.log(data, "onValid");
     const onInvalid = (data) => console.log(data, "onInvalid");
 
     const onSubmit = (data) => {
-        console.log('data', data);
+        setLoading(true);
         customAxios.patch(`/exercise/${id}`, {...data}
         ).then(function(response) {
             alert(response.data.data);
             navigate(-1);
         })
+        .finally(()=>{
+            setLoading(false);
+          })
     }
 
     const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.exerciseTestcases);
@@ -41,6 +48,10 @@ function ExerciseUpdate() {
         // setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
         setExerciseTestCases(arr => [...arr, testCaseForm] )
     };
+
+    const addTestCode = () => {
+        setTestCodeExists(true);
+    }
 
     const testcases = exerciseTestCases.map(function (exerciseTestCase, index){
         setValue("exerciseTestcases["+ index+ "].number", (index+1));
@@ -134,7 +145,32 @@ function ExerciseUpdate() {
                             <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
                             <br/>
                             <br/>
-                           <Button variant="info" type="submit" >
+                            {
+                                exerciseDetail.testCode === null || exerciseDetail.testCode === ""
+                                    ? (<></>)
+                                    : (
+                                        <Form.Group className="mb-3" controlId="exerciseExampleCode">
+                                            <Form.Label>테스트 코드</Form.Label>
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={exerciseDetail.exerciseContent.testCode} {...register("exerciseContent.testCode")} />
+                                        </Form.Group>)
+                            }
+                            {
+                                testCodeExists === false
+                                    ? (<></>)
+                                    : (
+                                        <Form.Group className="mb-3" controlId="exerciseExampleCode">
+                                            <Form.Label>테스트 코드</Form.Label>
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.testCode")} />
+                                        </Form.Group>)
+                            }
+                            {
+                                (exerciseDetail.testCode === null || exerciseDetail.testCode === "") && testCodeExists === false
+                                    ? (<input type="button" onClick={ addTestCode } value="Test Code 추가하기" />)
+                                    : (<></>)
+                            }
+                            <br/>
+                            <br/>
+                           <Button variant="info" type="submit" disabled={loading}>
                                 문제 수정
                             </Button>
                         </Form>

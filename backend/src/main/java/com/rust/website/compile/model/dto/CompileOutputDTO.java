@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CompileOutputDTO {
-	private String stdOut;
-	private long time;
+	private String stdOut="";
+	private long time=0;
 }

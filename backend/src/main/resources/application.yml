@@ -22,7 +22,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: false
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -39,7 +39,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: rusttutorial@gmail.com
-    password:
+    password: 
     properties:
       mail:
         smtp:

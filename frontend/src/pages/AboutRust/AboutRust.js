@@ -81,7 +81,7 @@ function AboutRust() {
             <div className="col-10 mx-auto pt-5">
                 <Row xs={2} md={3} className="g-4">
                     {rustInfos.map(rustInfo => (
-                        <Col>
+                        <Col  key={rustInfo.title} >
                             <RustInfoButton rustInfo={rustInfo}/>
                         </Col>
                     ))}

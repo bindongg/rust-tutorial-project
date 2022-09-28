@@ -1,6 +1,7 @@
 package com.rust.website.exercise.service;
 
 import com.rust.website.compile.model.model.ExecutionConstraints;
+import com.rust.website.compile.model.myEnum.Language;
 import com.rust.website.exercise.model.entity.Exercise;
 import com.rust.website.exercise.model.entity.ExerciseTestcase;
 import com.rust.website.exercise.model.entity.ExerciseTry;
@@ -23,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Service
@@ -134,6 +132,7 @@ public class ExerciseService {
         if (exerciseTestcases.size() == i)
         {
             exerciseTry.setSolved(ExerciseSolved.SOLVE);
+            exerciseTry.setTime(compileOutputDTO.getTime());
         }
         else
         {
@@ -164,6 +163,11 @@ public class ExerciseService {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
+        //+ 테스트 케이스 바껴도 재채점
+        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode()))
+        {
+            updateTestCodeAndExecutionTime(exercise, newExercise);
+        }
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
 
         exerciseTestcaseRepository.deleteByExercise_id(id);
@@ -191,4 +195,48 @@ public class ExerciseService {
         return responseDTO;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Exercise> getExerciseByTag(List<ExerciseTag> relationList)
+    {
+        return exerciseRepository.findExercisesByTagInAndDifficultyIsLessThanEqual(relationList, ExerciseDifficulty.STAR3);
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<ExerciseTry> getExerciseTryByUsernameAndExerciseId(String userId, ExerciseSolved solved, List<Exercise> exerciseList)
+    {
+        return exerciseTryRepository.findByUser_idAndSolvedAndExerciseIn(userId,solved,exerciseList);
+    }
+
+    void updateTestCodeAndExecutionTime(Exercise exercise, Exercise newExercise) //컴파일 할 때 newexercise의 테스트케이스 사용
+    {
+        CompileInputDTO compileInputDTO = CompileInputDTO.builder()
+                .code(newExercise.getExerciseContent().getTestCode())
+                .language(Language.RUST)
+                .build();
+        ExecutionConstraints constraints = ExecutionConstraints.builder()
+                .memoryLimit(200)
+                .timeLimit(10000)
+                .build();
+        long runTime = 0;
+
+        int idx = 0;
+        for(;idx < newExercise.getExerciseTestcases().size(); idx++)
+        {
+            compileInputDTO.setStdIn(newExercise.getExerciseTestcases().get(idx).getInput());
+            CompileOutputDTO temp = compileService.onlineCompile(compileInputDTO, constraints);
+            if(!temp.getStdOut().equals(newExercise.getExerciseTestcases().get(idx).getOutput()))
+            {
+                break;
+            }
+            runTime = Math.max(temp.getTime(), runTime);
+        }
+
+        if(idx != newExercise.getExerciseTestcases().size())
+        {
+            throw new IllegalArgumentException("wrong test code");
+        }
+
+        exercise.getExerciseContent().setTime(runTime);
+        exercise.getExerciseContent().setTestCode(newExercise.getExerciseContent().getTestCode());
+    }
 }

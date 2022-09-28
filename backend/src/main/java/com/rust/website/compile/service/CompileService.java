@@ -14,10 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.*;
 
 @Service
@@ -30,14 +28,64 @@ public class CompileService {
         final long timeLimit = constraints.getTimeLimit();
         final String uuid = UUID.randomUUID().toString();
         final File cwd = new File(System.getProperty("user.dir") + "/docker/code/" + uuid);
-        final String[] cmd = {"docker", code, input , lang, "" + memoryLimit};
 
         makeDirAndCodefile(code, lang, input, cwd);
         ProcessBuilder processBuilder = new ProcessBuilder()
-                                            .directory(cwd)
-                                            .command(makeCommand(lang, memoryLimit, uuid, cwd));
-        return monitoredCommandExecution(processBuilder, timeLimit, uuid, cwd);
+                                            .command(makeCompileCommand(lang, memoryLimit, uuid, cwd))
+                                            .directory(cwd);
+        HashMap<String, String> compileResult = compileCodeExecution(processBuilder, timeLimit,cwd);
+        if (compileResult.get("success").equals("false"))
+        {
+            return CompileOutputDTO.builder()
+                    .stdOut(compileResult.get("stdout"))
+                    .time(-1000)
+                    .build();
+        }
+        processBuilder = new ProcessBuilder()
+                                .command(makeRunCommand(lang, memoryLimit, uuid, cwd))
+                                .directory(cwd);
+        return runCodeExecution(processBuilder, timeLimit, uuid, cwd);
     }
+
+    private HashMap<String, String> compileCodeExecution(final ProcessBuilder processBuilder, final long maxExecutionTime, final File cwd) {
+        final ExecutorService service = Executors.newSingleThreadExecutor();
+        HashMap<String, String> result = new HashMap<>();
+        try {
+            final Future<HashMap<String, String>> executionContext = service.submit(( ) -> {
+                // start the process
+                final Process process = processBuilder.start();
+                String stdout = collectProcessStdOutOutput(process);
+                String stderr = collectProcessStdErrOutput(process);
+                HashMap<String, String> processResult = new HashMap<>();
+                if (stderr.length() == 0)
+                {
+                    processResult.put("stdout", stdout);
+                    processResult.put("success", "true");
+                }
+                else
+                {
+                    processResult.put("stdout", stderr);
+                    processResult.put("success", "false");
+                }
+                return processResult;
+            });
+            result = executionContext.get(maxExecutionTime, TimeUnit.MILLISECONDS);
+        } catch (final TimeoutException e) {
+            result.put("stdout", "Compile time took to long");
+            result.put("success", "false");
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            service.shutdown();
+            if (result.get("success").equals("false"))
+            {
+                removeFiles(cwd);
+            }
+        }
+        return result;
+    }
+
+
 
 
     /**
@@ -47,7 +95,7 @@ public class CompileService {
      * @param maxExecutionTime
      * @return
      */
-    private CompileOutputDTO monitoredCommandExecution(final ProcessBuilder processBuilder, final long maxExecutionTime, final String uuid, final File cwd) {
+    private CompileOutputDTO runCodeExecution(final ProcessBuilder processBuilder, final long maxExecutionTime, final String uuid, final File cwd) {
         final ExecutorService service = Executors.newSingleThreadExecutor();
         CompileOutputDTO compileOutputDTO = new CompileOutputDTO();
         try {
@@ -58,20 +106,34 @@ public class CompileService {
                 String stderr = collectProcessStdErrOutput(process);
                 return stdout.length() != 0 ? stdout : stderr;
             });
-            long startTime = System.currentTimeMillis();
             compileOutputDTO.setStdOut(executionContext.get(maxExecutionTime, TimeUnit.MILLISECONDS));
-            compileOutputDTO.setTime(System.currentTimeMillis() - startTime);
+            compileOutputDTO.setTime(getRunningTime(uuid));
         } catch (final TimeoutException e) {
             compileOutputDTO.setStdOut("Calculation took to long");
-            compileOutputDTO.setTime(-1000);
-            killDockerPs(uuid);
+            compileOutputDTO.setTime(-2000);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         } finally {
+            killDockerPs(uuid);
             service.shutdown();
             removeFiles(cwd);
         }
         return compileOutputDTO;
+    }
+
+    @SneakyThrows
+    private long getRunningTime(String uuid) {
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "echo $(docker inspect --format='{{.State.StartedAt}}' " + uuid + ")");
+        Process process = processBuilder.start();
+        String stdout = collectProcessStdOutOutput(process).trim();
+        long startTime = Date.from(Instant.parse(stdout)).getTime();
+
+        processBuilder = new ProcessBuilder("bash", "-c", "echo $(docker inspect --format='{{.State.FinishedAt}}' " + uuid + ")");
+        process = processBuilder.start();
+        stdout = collectProcessStdOutOutput(process).trim();
+        long endTime = Date.from(Instant.parse(stdout)).getTime();
+
+        return Math.max(endTime - startTime, 0L);
     }
 
     @SneakyThrows
@@ -89,13 +151,13 @@ public class CompileService {
     @SneakyThrows
     private void makeDirAndCodefile(String code, String lang, String input, File cwd) {
         cwd.mkdirs();
-        Path codePath = Paths.get(cwd.toString() + "/file." + lang);
+        Path codePath = Paths.get(cwd.toString() + "/Code." + lang);
         Path inputPath = Paths.get(cwd.toString() + "/in.in");
         Files.writeString(codePath, code, StandardCharsets.UTF_8);
         Files.writeString(inputPath, input, StandardCharsets.UTF_8);
     }
 
-    private String[] makeCommand(String lang, long memoryLimit, String uuid, File cwd) {
+    private String[] makeCompileCommand(String lang, long memoryLimit, String uuid, File cwd) {
         String docker = "docker run --rm ";
         String nameTag = "--name \"" + uuid + "\" ";
         String memoryTag = "-m \"" + memoryLimit + "m\" --memory-swap \"" + memoryLimit + "m\" ";
@@ -104,18 +166,49 @@ public class CompileService {
         String command = docker + nameTag + memoryTag + vTag + wTag;
         switch (lang) {
             case "rs":
-                command += "rust /bin/sh -c \"rustc -o file.exe file.rs && ./file.exe < in.in >&1 | tee\"";
+                command += "rust /bin/sh -c \"rustc -o Code.exe Code.rs\"";
                 break;
             case "cpp":
-                command += "cpp /bin/sh -c \"g++ -Wall file.cpp -o a && ./a < in.in >&1 | tee\"";
+                command += "cpp /bin/sh -c \"g++ -Wall Code.cpp -o a\"";
                 break;
             case "py":
-                command += "python python3 -u file.py < in.in >&1 | tee";
+                command += "python /bin/sh -c \"\"";
+                break;
+            case "java":
+                command += "java /bin/sh -c \"javac Code.java\"";
+                break;
         }
 
         String[] commands = {"bash", "-c", command};
         return commands;
     }
+
+    private String[] makeRunCommand(String lang, long memoryLimit, String uuid, File cwd) {
+        String docker = "docker run ";
+        String nameTag = "--name \"" + uuid + "\" ";
+        String memoryTag = "-m \"" + memoryLimit + "m\" --memory-swap \"" + memoryLimit + "m\" ";
+        String vTag = "-v \"" + cwd + "\":/code ";
+        String wTag = "-w /code ";
+        String command = docker + nameTag + memoryTag + vTag + wTag;
+        switch (lang) {
+            case "rs":
+                command += "rust /bin/sh -c \"./Code.exe < in.in >&1 | tee\"";
+                break;
+            case "cpp":
+                command += "cpp /bin/sh -c \"./a < in.in >&1 | tee\"";
+                break;
+            case "py":
+                command += "python python3 -u Code.py < in.in >&1 | tee";
+                break;
+            case "java":
+                command += "java /bin/sh -c \"java Code < in.in >&1 | tee\"";
+                break;
+        }
+
+        String[] commands = {"bash", "-c", command};
+        return commands;
+    }
+
 
     /**
      * collect the output (stdout) of the given process
