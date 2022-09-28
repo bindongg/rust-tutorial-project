@@ -56,7 +56,7 @@ function Compile() {
           <option value="JAVA">java</option>
         </Form.Select>
       </div>
-    </div>
+    </div>    
       <CodeEditor
         value={code}      
         language={lang.toLowerCase()}
