@@ -26,14 +26,9 @@ public class QuestionService {
     private final SubReplyRepository subReplyRepository;
 
     @Transactional
-    public void add(String title, String content, String username)
+    public void add(Question question, String username)
     {
-        Question question = Question.builder()
-                .title(title)
-                .content(content)
-                .user(userRepository.findById(username).orElseThrow(()->new IllegalArgumentException("No such element")))
-                .done(false)
-                .build();
+        question.setUser(userRepository.findById(username).orElseThrow(()->new IllegalArgumentException("No such element")));
         questionRepository.save(question);
     }
 

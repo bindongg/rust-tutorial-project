@@ -82,7 +82,7 @@ function QuestionDetail()
                             </div>)
                             : (<></>)
                     }
-                    <h6 style={{display: "inline-block"}}>작성자: {author}</h6>
+                    <h6 style={{display: "inline-block"}} className="ps-3">작성자: {author}</h6>
                 </div>
                 <Row className="mt-7">
                     <Col lg={12} md={10} sm={12} className="p-5 m-auto shadow-sm rounded-lg">

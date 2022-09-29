@@ -5,6 +5,7 @@ import com.rust.website.common.dto.TupleResponseDTO;
 import com.rust.website.common.dto.ReplyDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.question.model.entity.Question;
+import com.rust.website.question.model.entity.myEnum.QuestionType;
 import com.rust.website.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,18 @@ public class QuestionController { //delete 하는 메소드 경우 나중에 받
     @PostMapping("/user/question/add")
     public ResponseDTO<String> addQuestion(@RequestBody Map<String,String> mp, HttpServletRequest request)
     {
-        questionService.add(mp.get("title"),mp.get("content"),
+        if(QuestionType.valueOf(mp.get("type")).equals(QuestionType.질문) && mp.get("exerciseId") == null)
+        {
+            throw new IllegalArgumentException();
+        }
+        Question question = Question.builder()
+                .title(mp.get("title"))
+                .content(mp.get("content"))
+                .questionType(QuestionType.valueOf(mp.get("type")))
+                .exerciseId(QuestionType.valueOf(mp.get("type")).equals(QuestionType.질문) ? Integer.parseInt(mp.get("exerciseId")) : null)
+                .done(false)
+                .build();
+        questionService.add(question,
                 JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME));
         return new ResponseDTO<>(HttpStatus.OK.value(),null);
     }
