@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import "./sidebar.css";
+import "./component/sidebar.css";
 import {Button, CloseButton, Col, Container, Navbar, Row} from "react-bootstrap";
 import ReferenceSidebar from "./component/ReferenceSidebar";
 import {useNavigate} from "react-router";
