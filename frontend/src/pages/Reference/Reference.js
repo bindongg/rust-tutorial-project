@@ -16,6 +16,9 @@ function Reference() {
         // 실행함으로써 데이타를 fetching합니다.
         getTitles();
     }, []);
+    const createReference = () => {
+        navigate("/reference/create");
+    }
 
     const navigate = useNavigate();
     return (
@@ -27,6 +30,10 @@ function Reference() {
                         <div></div>
                     </Container>
                 </Navbar>
+
+                <div className="col-2 ms-auto m-1">
+                    <Button  onClick={createReference}>레퍼런스 추가</Button>
+                </div>
                 <div id="page-content-wrapper">
                     <div className="container-fluid">
                         <div id="page-content-wrapper">
