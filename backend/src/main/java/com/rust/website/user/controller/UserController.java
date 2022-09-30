@@ -87,10 +87,10 @@ public class UserController {
         return new ResponseDTO<>(HttpStatus.OK.value(), authId);
     }
 
-    @GetMapping("/authConfirm/{authId}")
-    public String authConfirm(@PathVariable String authId) {
+    @PatchMapping("/authConfirm/{authId}")
+    public ResponseDTO<String> authConfirm(@PathVariable String authId) {
         userService.confirmAuth(authId);
-        return "인증 완료되었습니다";
+        return new ResponseDTO<>(HttpStatus.OK.value(), "인증이 완료되었습니다");
     }
 
     @PostMapping("/id")
