@@ -22,10 +22,28 @@ public class QuestionController { //delete 하는 메소드 경우 나중에 받
     private final QuestionService questionService;
 
 
-    @GetMapping("/question")
+    /*@GetMapping("/question")
     public TupleResponseDTO<List<Question>> getQuestion(Pageable pageable)
     {
         return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotal(),questionService.getQuestionList(pageable));
+    }*/
+
+    @GetMapping("/question/notice")
+    public TupleResponseDTO<List<Question>> getQuestionNotice(Pageable pageable)
+    {
+        return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotalByType(QuestionType.공지),questionService.getQuestionListByType(pageable, QuestionType.공지));
+    }
+
+    @GetMapping("/question/exercise")
+    public TupleResponseDTO<List<Question>> getQuestionExercise(Pageable pageable)
+    {
+        return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotalByType(QuestionType.질문),questionService.getQuestionListByType(pageable, QuestionType.질문));
+    }
+
+    @GetMapping("/question/free")
+    public TupleResponseDTO<List<Question>> getQuestionFree(Pageable pageable)
+    {
+        return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotalByType(QuestionType.자유),questionService.getQuestionListByType(pageable, QuestionType.자유));
     }
 
     @PostMapping("/user/question/add")
@@ -105,7 +123,8 @@ public class QuestionController { //delete 하는 메소드 경우 나중에 받
     {
         if(JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME).equals(mp.get("author").toString()))
         {
-            questionService.updateQuestion(Integer.parseInt(mp.get("id").toString()),mp.get("title").toString(),mp.get("content").toString());
+            questionService.updateQuestion(Integer.parseInt(mp.get("id").toString()), mp.get("title").toString(), mp.get("content").toString(),
+                    mp.get("exerciseId") == null ? null : mp.get("exerciseId").toString(), mp.get("questionType").toString());
         }
         else throw new IllegalArgumentException();
         return new ResponseDTO<>(HttpStatus.OK.value(),null);

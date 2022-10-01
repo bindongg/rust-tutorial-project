@@ -28,8 +28,6 @@ function QuestionWrite()
         });
     };
 
-    const [exerciseReqState,setExerciseReqState] = useState(false);
-
     function onSubmit(data)
     {
         if(window.confirm("작성하시겠어요?")) {
