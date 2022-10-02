@@ -45,7 +45,7 @@ function ExerciseListInfo ({ exercise}) {
     return (
         <tr>
             <td>{exercise.id}</td>
-            <td><Link to= {`/exercise/${exercise.id}`} style={{color: "black", textDecorationLine: "none"}}>{exercise.name}</Link></td>
+            <td><Link to= {`/exercise/${exercise.id}`} style={{color: "blue", textDecorationLine: "none"}}>{exercise.name}</Link></td>
             <td>{exercise.tag}</td>
             <td>{difficulty}</td>
             <td style={solvedStyle}>{solved}{score}</td>

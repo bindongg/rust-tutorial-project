@@ -124,7 +124,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <li>
-                    <Link to={`/exercise/tag/${exerciseDetail.tag}`}>{exerciseDetail.tag}</Link>
+                    <Link to={`/exercise/tag/${exerciseDetail.tag}`} style={{color: "blue", textDecorationLine: "none"}}>{exerciseDetail.tag}</Link>
                 </li>
             </div>
         </>

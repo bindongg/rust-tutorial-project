@@ -111,18 +111,11 @@ public class ExerciseService {
     @Transactional
     public ResponseDTO<CompileOutputDTO> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId, ExecutionConstraints constraints)
     {
-        CompileOutputDTO compileOutputDTO = CompileOutputDTO.builder().stdOut("맞았습니다!").build();
+        CompileOutputDTO compileOutputDTO = new CompileOutputDTO();
         Exercise exercise = exerciseRepository.findById(id).get();
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
-        int i = 0;
-        for (; i < exerciseTestcases.size(); ++i)
-        {
-            compileInputDTO.setStdIn(exerciseTestcases.get(i).getInput());
-            CompileOutputDTO curCompileOutputDTO = null;
-            curCompileOutputDTO = compileService.onlineCompile(compileInputDTO, constraints);
-            compileOutputDTO.setTime(Math.max(compileOutputDTO.getTime(), curCompileOutputDTO.getTime()));
-            if (!exerciseTestcases.get(i).getOutput().equals(curCompileOutputDTO.getStdOut())) { break; }
-        }
+
+        HashMap<String, String> result = compileService.exerciseCompile(compileInputDTO, constraints, exerciseTestcases);
 
         ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).orElse(null);
         if (exerciseTry == null) {
@@ -133,15 +126,24 @@ public class ExerciseService {
         }
         exerciseTry.setSourceCode(compileInputDTO.getCode());
 
-        if (exerciseTestcases.size() == i)
-        {
-            exerciseTry.setSolved(ExerciseSolved.SOLVE);
-            exerciseTry.setTime(compileOutputDTO.getTime());
-        }
-        else
+        if (result.get("success").equals("false"))
         {
             exerciseTry.setSolved(ExerciseSolved.FAIL);
-            compileOutputDTO.setStdOut("틀렸습니다.");
+            compileOutputDTO.setStdOut("컴파일실패.");
+        }
+        else {
+            if (exerciseTestcases.size() == Integer.valueOf(result.get("index")))
+            {
+                exerciseTry.setSolved(ExerciseSolved.SOLVE);
+                exerciseTry.setTime(Integer.valueOf(result.get("time")));
+                compileOutputDTO.setStdOut("맞았습니다.");
+                compileOutputDTO.setTime(Integer.valueOf(result.get("time")));
+            }
+            else
+            {
+                exerciseTry.setSolved(ExerciseSolved.FAIL);
+                compileOutputDTO.setStdOut("틀렸습니다.");
+            }
         }
         exerciseTryRepository.save(exerciseTry);
 

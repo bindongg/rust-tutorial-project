@@ -112,6 +112,7 @@ function App() {
                         <Route path="admin/user/:id" exact={true} element={<UserInfoPage/>}/>
                     </Routes>
             </main>
+            <Footer/>
         </div>
     );
 }

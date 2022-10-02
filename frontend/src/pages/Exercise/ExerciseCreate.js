@@ -18,6 +18,7 @@ function ExerciseCreate() {
 
     const onSubmit = (data) => {
         setLoading(true);
+        data.exerciseTestcases = data.exerciseTestcases.slice(0, testcaseNums.length);
         data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
         customAxios.post(`/exercise`, {...data}
         ).then(function(response) {
@@ -32,6 +33,9 @@ function ExerciseCreate() {
     const addTestcase = () => {
         setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
     };
+    const removeTestcase = () => {
+        setTestcaseNums(testcaseNums.slice(0, testcaseNums.length - 1));
+    }
 
     const addTestCode = () => {
         setTestCodeExists(true);
@@ -50,6 +54,11 @@ function ExerciseCreate() {
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>Test Case 출력 {testcasesNum}번 </Form.Label>
                         <Form.Control as="textarea" placeholder="테스트 케이스 output을 입력하세요" {...register("exerciseTestcases["+ index+ "].output")} />
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Control as="textarea" value={testcasesNum} hidden {...register("exerciseTestcases["+ index+ "].number")} />
                     </Form.Group>
                 </Col>
             </Row>
@@ -126,6 +135,7 @@ function ExerciseCreate() {
                             </Form.Group>
                             {testcases}
                             <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
+                            <input type="button" onClick={ removeTestcase } value="Test Case 삭제하기" />
                             {
                                 testCodeExists === false
                                     ? (<></>)
