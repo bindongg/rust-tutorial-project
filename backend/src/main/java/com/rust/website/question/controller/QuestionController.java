@@ -5,6 +5,7 @@ import com.rust.website.common.dto.TupleResponseDTO;
 import com.rust.website.common.dto.ReplyDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.question.model.entity.Question;
+import com.rust.website.question.model.entity.myEnum.QuestionType;
 import com.rust.website.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,16 +22,45 @@ public class QuestionController { //delete 하는 메소드 경우 나중에 받
     private final QuestionService questionService;
 
 
-    @GetMapping("/question")
+    /*@GetMapping("/question")
     public TupleResponseDTO<List<Question>> getQuestion(Pageable pageable)
     {
         return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotal(),questionService.getQuestionList(pageable));
+    }*/
+
+    @GetMapping("/question/notice")
+    public TupleResponseDTO<List<Question>> getQuestionNotice(Pageable pageable)
+    {
+        return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotalByType(QuestionType.공지),questionService.getQuestionListByType(pageable, QuestionType.공지));
+    }
+
+    @GetMapping("/question/exercise")
+    public TupleResponseDTO<List<Question>> getQuestionExercise(Pageable pageable)
+    {
+        return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotalByType(QuestionType.질문),questionService.getQuestionListByType(pageable, QuestionType.질문));
+    }
+
+    @GetMapping("/question/free")
+    public TupleResponseDTO<List<Question>> getQuestionFree(Pageable pageable)
+    {
+        return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotalByType(QuestionType.자유),questionService.getQuestionListByType(pageable, QuestionType.자유));
     }
 
     @PostMapping("/user/question/add")
     public ResponseDTO<String> addQuestion(@RequestBody Map<String,String> mp, HttpServletRequest request)
     {
-        questionService.add(mp.get("title"),mp.get("content"),
+        if(QuestionType.valueOf(mp.get("type")).equals(QuestionType.질문) && mp.get("exerciseId") == null)
+        {
+            throw new IllegalArgumentException();
+        }
+        Question question = Question.builder()
+                .title(mp.get("title"))
+                .content(mp.get("content"))
+                .questionType(QuestionType.valueOf(mp.get("type")))
+                .exerciseId(QuestionType.valueOf(mp.get("type")).equals(QuestionType.질문) ? Integer.parseInt(mp.get("exerciseId")) : null)
+                .done(false)
+                .build();
+        questionService.add(question,
                 JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME));
         return new ResponseDTO<>(HttpStatus.OK.value(),null);
     }
@@ -93,7 +123,8 @@ public class QuestionController { //delete 하는 메소드 경우 나중에 받
     {
         if(JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME).equals(mp.get("author").toString()))
         {
-            questionService.updateQuestion(Integer.parseInt(mp.get("id").toString()),mp.get("title").toString(),mp.get("content").toString());
+            questionService.updateQuestion(Integer.parseInt(mp.get("id").toString()), mp.get("title").toString(), mp.get("content").toString(),
+                    mp.get("exerciseId") == null ? null : mp.get("exerciseId").toString(), mp.get("questionType").toString());
         }
         else throw new IllegalArgumentException();
         return new ResponseDTO<>(HttpStatus.OK.value(),null);
