@@ -27,7 +27,6 @@ public class AboutRustService {
     @Transactional
     public ResponseDTO<String> updatePage(AboutRust aboutRust)
     {
-        System.out.println(aboutRust);
         ResponseDTO<String> responseDTO = new ResponseDTO<>(200, "수정이 완료되었습니다.");
         Optional<AboutRust> optional = aboutRustRepository.findById(aboutRust.getId());
         if (optional.isPresent())

@@ -7,6 +7,7 @@ import { dark } from "react-syntax-highlighter/src/styles/hljs";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { customAxios } from "../../Common/Modules/CustomAxios";
+import ScrollToTop from "../../Common/Modules/ScrollToTop";
 
 function TutorialSub(props) {
     const {id, subId} = useParams();
@@ -70,6 +71,7 @@ function TutorialSub(props) {
     
     return (
         <>
+            <ScrollToTop />
             <div className="col-8 mx-auto m-3 p-2">
                 <br/>
                 <h1>{tutorialSub.name}</h1>

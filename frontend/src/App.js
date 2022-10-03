@@ -42,11 +42,12 @@ import QuestionUpdate from "./pages/Question/QuestionUpdate";
 import AboutRust from "./pages/AboutRust/AboutRust";
 import AboutRustUpdate from "./pages/AboutRust/AboutRustUpdate";
 import AboutRustDetail from "./pages/AboutRust/AboutRustDetail";
-import RustPerformance from "./pages/AboutRust/RustPerformance";
+import Performance from "./pages/AboutRust/Performance";
 import AuthConfirm from "./pages/Register/AuthConfirm";
 import QuestionNotice from "./pages/Question/QuestionNotice";
 import QuestionExercise from "./pages/Question/QuestionExercise";
 import QuestionFree from "./pages/Question/QuestionFree";
+import PerformanceUpdate from "./pages/AboutRust/PerformanceUpdate";
 
 function App() {
     return (
@@ -61,8 +62,8 @@ function App() {
                         <Route path="compile" exact={true} element={<Compile/>}/>
                         {/*AboutRust*/}
                         <Route path="aboutRust" exact={true} element={<AboutRust/>}/>
-                        <Route path="aboutRust/performance" exact={true} element={<RustPerformance/>}/>
-                        <Route path="aboutRust/performance/updateForm" exact={true} element={<AboutRustUpdate/>}/>
+                        <Route path="aboutRust/performance" exact={true} element={<Performance/>}/>
+                        <Route path="aboutRust/performance/updateForm" exact={true} element={<PerformanceUpdate/>}/>
                         <Route path="aboutRust/:aboutType" exact={true} element={<AboutRustDetail/>}/>
                         <Route path="aboutRust/:aboutType/updateForm" exact={true} element={<AboutRustUpdate/>}/>
                         {/*tutorial*/}
