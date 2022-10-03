@@ -14,19 +14,19 @@ function ExerciseByTag() {
           </thead>
           <tbody>
             <tr>
-              <td><Link to="/exercise/tag/입출력">입출력</Link></td>
+              <td><Link to="/exercise/tag/입출력" style={{color: "blue", textDecorationLine: "none"}}>입출력</Link></td>
             </tr>
             <tr>
-              <td><Link to="/exercise/tag/제어문">제어문</Link></td>
+              <td><Link to="/exercise/tag/제어문" style={{color: "blue", textDecorationLine: "none"}}>제어문</Link></td>
             </tr>
             <tr>
-              <td><Link to="/exercise/tag/반복문">반복문</Link></td>
+              <td><Link to="/exercise/tag/반복문" style={{color: "blue", textDecorationLine: "none"}}>반복문</Link></td>
             </tr>
             <tr>
-              <td><Link to="/exercise/tag/자료구조">자료구조</Link></td>
+              <td><Link to="/exercise/tag/자료구조" style={{color: "blue", textDecorationLine: "none"}}>자료구조</Link></td>
             </tr>
             <tr>
-              <td><Link to="/exercise/tag/기타">기타</Link></td>
+              <td><Link to="/exercise/tag/기타" style={{color: "blue", textDecorationLine: "none"}}>기타</Link></td>
             </tr>
           </tbody>
         </Table>

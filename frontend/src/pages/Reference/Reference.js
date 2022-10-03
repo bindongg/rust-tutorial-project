@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from "react";
-import "./sidebar.css";
+import "./component/sidebar.css";
 import {Button, CloseButton, Col, Container, Navbar, Row} from "react-bootstrap";
 import ReferenceSidebar from "./component/ReferenceSidebar";
 import {useNavigate} from "react-router";
 import {customAxios} from "../../Common/Modules/CustomAxios";
+import {decodeToken} from "react-jwt";
 
 function Reference() {
     const [titles, setTitles] = useState([]);
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
 
     useEffect( () => {
         const getTitles = async () => {
@@ -16,6 +18,9 @@ function Reference() {
         // 실행함으로써 데이타를 fetching합니다.
         getTitles();
     }, []);
+    const createReference = () => {
+        navigate("/reference/create");
+    }
 
     const navigate = useNavigate();
     return (
@@ -27,6 +32,14 @@ function Reference() {
                         <div></div>
                     </Container>
                 </Navbar>
+                {
+                    (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
+                    <div className="col-2 ms-auto m-1">
+                        <Button  onClick={createReference}>레퍼런스 추가</Button>
+                    </div>
+                }
+
+
                 <div id="page-content-wrapper">
                     <div className="container-fluid">
                         <div id="page-content-wrapper">

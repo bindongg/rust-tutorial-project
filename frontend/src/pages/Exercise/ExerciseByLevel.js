@@ -14,19 +14,19 @@ function ExerciseByLevel() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td><Link to="/exercise/level/STAR1">⭐</Link></td>
+                            <td><Link to="/exercise/level/STAR1" style={{color: "blue", textDecorationLine: "none"}}>⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="/exercise/level/STAR2">⭐⭐</Link></td>
+                            <td><Link to="/exercise/level/STAR2" style={{color: "blue", textDecorationLine: "none"}}>⭐⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="/exercise/level/STAR3">⭐⭐⭐</Link></td>
+                            <td><Link to="/exercise/level/STAR3" style={{color: "blue", textDecorationLine: "none"}}>⭐⭐⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="/exercise/level/STAR4">⭐⭐⭐⭐</Link></td>
+                            <td><Link to="/exercise/level/STAR4" style={{color: "blue", textDecorationLine: "none"}}>⭐⭐⭐⭐</Link></td>
                         </tr>
                         <tr>
-                            <td><Link to="/exercise/level/STAR5">⭐⭐⭐⭐⭐</Link></td>
+                            <td><Link to="/exercise/level/STAR5" style={{color: "blue", textDecorationLine: "none"}}>⭐⭐⭐⭐⭐</Link></td>
                         </tr>
                     </tbody>
                 </Table>

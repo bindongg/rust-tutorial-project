@@ -8,11 +8,14 @@ import draftToHtml from 'draftjs-to-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Loading from "../Loading";
 import {customAxios} from "../../Common/Modules/CustomAxios";
+import React from "react";
+import {QUESTION_TYPE} from "../../Common/Modules/Common";
+import {decodeToken} from "react-jwt";
 
 function QuestionWrite()
 {
     const navigate = useNavigate();
-
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
 
     const [loadingState,setLoadingState] = useState(false);
     const { register, handleSubmit, formState: {errors} } = useForm();
@@ -35,7 +38,7 @@ function QuestionWrite()
                     if (response.data.code === 200) {
                         navigate("/question");
                     } else {
-                        alert("failed");
+                        alert("잘못된 입력입니다");
                     }
                 })
                 .finally(() => {
@@ -43,6 +46,7 @@ function QuestionWrite()
                 })
         }
     }
+
     return (
         <>
             {
@@ -57,8 +61,20 @@ function QuestionWrite()
                         <Form onSubmit={handleSubmit(onSubmit)} >
                             <Form.Group className="mb-3">
                                 <Form.Label>제목</Form.Label>
-                                <input className="form-control" {...register("title",  {required: {value: true, message: "제목을 입력하세요"}})}/>
+                                <input className="form-control" style={{width:"50%"}} {...register("title",  {required: {value: true, message: "제목을 입력하세요"}})}/>
                                 {errors.title && <p style={{color:'red', fontSize:"13px"}}>{errors.title.message}</p>}
+                                <Form.Label>종류</Form.Label>
+                                <Form.Select size="sm" defaultValue={QUESTION_TYPE[2]} style={{width:"10%"}}
+                                             {...register("type",  {required: {value: true}})}>
+                                    {
+                                        role !== "ROLE_USER" ? (<option>{QUESTION_TYPE[0]}</option>) : (<></>)
+                                    }
+                                    <option>{QUESTION_TYPE[1]}</option>
+                                    <option>{QUESTION_TYPE[2]}</option>
+                                </Form.Select>
+                                <Form.Label>문제 번호</Form.Label>
+                                <input className="form-control" style={{width:"10%"}}  {...register("exerciseId",  {required: {value: false}, pattern: {value: /^[0-9]+$/}})}/>
+                                {errors.exerciseId && <p style={{color:'red', fontSize:"13px"}}>"숫자를 입력해주세요"</p>}
                             </Form.Group>
                             <Editor
                                 editorState={editorState}

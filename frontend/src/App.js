@@ -42,8 +42,12 @@ import QuestionUpdate from "./pages/Question/QuestionUpdate";
 import AboutRust from "./pages/AboutRust/AboutRust";
 import AboutRustUpdate from "./pages/AboutRust/AboutRustUpdate";
 import AboutRustDetail from "./pages/AboutRust/AboutRustDetail";
-import RustPerformance from "./pages/AboutRust/RustPerformance";
+import Performance from "./pages/AboutRust/Performance";
 import AuthConfirm from "./pages/Register/AuthConfirm";
+import QuestionNotice from "./pages/Question/QuestionNotice";
+import QuestionExercise from "./pages/Question/QuestionExercise";
+import QuestionFree from "./pages/Question/QuestionFree";
+import PerformanceUpdate from "./pages/AboutRust/PerformanceUpdate";
 
 function App() {
     return (
@@ -58,8 +62,8 @@ function App() {
                         <Route path="compile" exact={true} element={<Compile/>}/>
                         {/*AboutRust*/}
                         <Route path="aboutRust" exact={true} element={<AboutRust/>}/>
-                        <Route path="aboutRust/performance" exact={true} element={<RustPerformance/>}/>
-                        <Route path="aboutRust/performance/updateForm" exact={true} element={<AboutRustUpdate/>}/>
+                        <Route path="aboutRust/performance" exact={true} element={<Performance/>}/>
+                        <Route path="aboutRust/performance/updateForm" exact={true} element={<PerformanceUpdate/>}/>
                         <Route path="aboutRust/:aboutType" exact={true} element={<AboutRustDetail/>}/>
                         <Route path="aboutRust/:aboutType/updateForm" exact={true} element={<AboutRustUpdate/>}/>
                         {/*tutorial*/}
@@ -87,10 +91,13 @@ function App() {
                         <Route path="exercise/add" exact={true}  element={<ExerciseCreate/>}/>
                         <Route path="exercise/:id/update" exact={true}  element={<ExerciseUpdate/>}/>
                         {/*question*/}
-                        <Route path="/question" exact={true} element={<QuestionMain/>}/>
+                        {/*<Route path="/question" exact={true} element={<QuestionMain/>}/>*/}
                         <Route path="/question/:id" exact={true} element={<QuestionDetail/>}/>
                         <Route path="/question/add" exact={true} element={<QuestionWrite/>}/>
                         <Route path="/question/update/:id" exact={true} element={<QuestionUpdate/>}/>
+                        <Route path="/question/notice" exact={true} element={<QuestionNotice/>}/>
+                        <Route path="/question/exercise" exact={true} element={<QuestionExercise/>}/>
+                        <Route path="/question/free" exact={true} element={<QuestionFree/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
                         <Route path="logout" exact={true}/>
@@ -111,6 +118,7 @@ function App() {
                         <Route path="admin/user/:id" exact={true} element={<UserInfoPage/>}/>
                     </Routes>
             </main>
+            <Footer/>
         </div>
     );
 }

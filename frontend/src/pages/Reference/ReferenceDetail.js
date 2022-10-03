@@ -7,6 +7,8 @@ import {dark} from "react-syntax-highlighter/src/styles/hljs";
 import ReactMarkdown from "react-markdown";
 import ReferenceSidebar from "./component/ReferenceSidebar";
 import {customAxios} from "../../Common/Modules/CustomAxios";
+import {decodeToken} from "react-jwt";
+import ScrollToTop from "../../Common/Modules/ScrollToTop";
 
 function ReferenceDetail(props) {
     const {id} = useParams();
@@ -16,6 +18,7 @@ function ReferenceDetail(props) {
     const navigate = useNavigate();
     const buttonStyle = { marginLeft:"5px", fontSize:"14px"}
     const [titles, setTitles] = useState(useLocation().state); //목차 전달을 위함
+    const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
 
     useEffect( () => {
     const getReferenceDetail = async (nextSub, preSub) => {
@@ -53,6 +56,7 @@ function ReferenceDetail(props) {
 
     return (
         <>
+            <ScrollToTop />
             <div id="page-wrapper">
                 <ReferenceSidebar titles={titles} />
                 <div id="page-content-wrapper">
@@ -60,11 +64,15 @@ function ReferenceDetail(props) {
                         <br/>
                         <h1>{referenceDetail.name}</h1>
                     </div>
-                    <div className="col-4 ms-auto m-1">
-                        <Button onClick={createReference}>레퍼런스 추가</Button> {/*//TODO 관리자만 사용 가능하게 추후 변경*/}
-                        <Button variant="warning" style={buttonStyle} onClick={updateDetail}>수정</Button>
-                        <Button variant="danger" style={buttonStyle} onClick={deleteDetail}>삭제</Button>
-                    </div>
+                    {
+                        (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
+                        <div className="col-4 ms-auto m-1">
+                            <Button onClick={createReference}>레퍼런스 추가</Button> {/*//TODO 관리자만 사용 가능하게 추후 변경*/}
+                            <Button variant="warning" style={buttonStyle} onClick={updateDetail}>수정</Button>
+                            <Button variant="danger" style={buttonStyle} onClick={deleteDetail}>삭제</Button>
+                        </div>
+                    }
+
 
                     <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                         <ReactMarkdown children={referenceDetail.content}

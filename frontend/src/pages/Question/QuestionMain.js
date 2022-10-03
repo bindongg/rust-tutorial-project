@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import Page from "../../Common/Page/Page";
 import {customAxios} from "../../Common/Modules/CustomAxios";
+import {QUESTION_TYPE} from "../../Common/Modules/Common";
 
 function QuestionMain()
 {
@@ -52,6 +53,7 @@ function QuestionMain()
                         <tr>
                             <th className="col-1">번호</th>
                             <th className="col-5">제목</th>
+                            <th className="col-1">카테고리</th>
                             <th className="col-1">날짜</th>
                             <th className="col-1">작성자</th>
                             <th className="col-1">완료</th>
@@ -65,6 +67,7 @@ function QuestionMain()
                                         questions.map((question,index)=>(<tr key={index}>
                                                 <td>{question.id}</td>
                                                 <td><Link to={`/question/${question.id}`} style={{color: "black", textDecorationLine: "none"}}>{question.title}&nbsp;[{question.reply.length + getCnt(question.reply)}]</Link></td>
+                                                <td>{question.questionType}{question.questionType === QUESTION_TYPE[1] ? (<Link to={`/exercise/${question.exerciseId}`} >{'/' + question.exerciseId + '번 문제'}</Link>) : ""}</td>
                                                 <td>{question.createDate.substring(0,10) + " " + question.createDate.substring(11,16)}</td>
                                                 <td>{question.user.id}</td>
                                                 <td>{question.done === true ? "✔" : ""}</td>

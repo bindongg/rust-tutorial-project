@@ -67,8 +67,13 @@ public class ExerciseService {
         List<Exercise> returnList = new ArrayList<>();
         exercises.stream()
                 .forEach(e -> {
-                    if (exerciseTries.get(e.getId()) != null) { e.setSolved(exerciseTries.get(e.getId()).getSolved()); }
+                    if (exerciseTries.get(e.getId()) != null) {
+                        e.setSolved(exerciseTries.get(e.getId()).getSolved());
+                        e.setTryTime(exerciseTries.get(e.getId()).getTime());
+                        e.setUserCode(exerciseTries.get(e.getId()).getSourceCode());
+                    }
                     else { e.setSolved(ExerciseSolved.NO_TRY);}
+                    e.setTime(e.getExerciseContent().getTime());
                     e.setExerciseContent(null);
                     e.setExerciseTestcases(null);
                     returnList.add(e);
@@ -107,18 +112,11 @@ public class ExerciseService {
     @Transactional
     public ResponseDTO<CompileOutputDTO> compileUserCode(CompileInputDTO compileInputDTO, int id, String userId, ExecutionConstraints constraints)
     {
-        CompileOutputDTO compileOutputDTO = CompileOutputDTO.builder().stdOut("맞았습니다!").build();
+        CompileOutputDTO compileOutputDTO = new CompileOutputDTO();
         Exercise exercise = exerciseRepository.findById(id).get();
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
-        int i = 0;
-        for (; i < exerciseTestcases.size(); ++i)
-        {
-            compileInputDTO.setStdIn(exerciseTestcases.get(i).getInput());
-            CompileOutputDTO curCompileOutputDTO = null;
-            curCompileOutputDTO = compileService.onlineCompile(compileInputDTO, constraints);
-            compileOutputDTO.setTime(Math.max(compileOutputDTO.getTime(), curCompileOutputDTO.getTime()));
-            if (!exerciseTestcases.get(i).getOutput().equals(curCompileOutputDTO.getStdOut())) { break; }
-        }
+
+        HashMap<String, String> result = compileService.exerciseCompile(compileInputDTO, constraints, exerciseTestcases);
 
         ExerciseTry exerciseTry =  exerciseTryRepository.findByUser_idAndExercise_id(userId, id).orElse(null);
         if (exerciseTry == null) {
@@ -129,15 +127,24 @@ public class ExerciseService {
         }
         exerciseTry.setSourceCode(compileInputDTO.getCode());
 
-        if (exerciseTestcases.size() == i)
-        {
-            exerciseTry.setSolved(ExerciseSolved.SOLVE);
-            exerciseTry.setTime(compileOutputDTO.getTime());
-        }
-        else
+        if (result.get("success").equals("false"))
         {
             exerciseTry.setSolved(ExerciseSolved.FAIL);
-            compileOutputDTO.setStdOut("틀렸습니다.");
+            compileOutputDTO.setStdOut("컴파일실패.");
+        }
+        else {
+            if (exerciseTestcases.size() == Integer.valueOf(result.get("index")))
+            {
+                exerciseTry.setSolved(ExerciseSolved.SOLVE);
+                exerciseTry.setTime(Integer.valueOf(result.get("time")));
+                compileOutputDTO.setStdOut("맞았습니다.");
+                compileOutputDTO.setTime(Integer.valueOf(result.get("time")));
+            }
+            else
+            {
+                exerciseTry.setSolved(ExerciseSolved.FAIL);
+                compileOutputDTO.setStdOut("틀렸습니다.");
+            }
         }
         exerciseTryRepository.save(exerciseTry);
 
@@ -163,8 +170,10 @@ public class ExerciseService {
         ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
         Exercise exercise = exerciseRepository.findById(id).get();
         exercise.copy(newExercise);
+        System.out.println(exercise.getExerciseTestcases());
         //+ 테스트 케이스 바껴도 재채점
-        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode()))
+        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode())
+                || !exercise.getExerciseTestcases().equals(newExercise.getExerciseTestcases()))
         {
             updateTestCodeAndExecutionTime(exercise, newExercise);
         }

@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Button, Form } from "react-bootstrap";
 import { customAxios } from "../../Common/Modules/CustomAxios";
+import { useNavigate } from "react-router";
 
 function Compile() {
 
@@ -12,6 +13,7 @@ function Compile() {
   const [output, setOutput] = useState();
   const [lang, setLang] = useState("RUST");
   const [loading,setLoading] = useState(false);
+  const navigate = useNavigate();
   const initCode = {
     RUST: `fn main() {\n\tprintln!("Hello World!"); \n}`,
     PYTHON: 'print("Hello World!")',
@@ -27,8 +29,19 @@ function Compile() {
           {
             setOutput(response.data.data);
           }
-        })
-        .finally(()=>{
+        }).catch((Error) => 
+        {
+            const status = Error.response.status
+            if (status === 403)
+            {
+                alert("권한이 없습니다.")
+                navigate("/login")
+            }
+            else
+            {
+                alert(status + " error");
+            }
+        }).finally(()=>{
           setLoading(false);
         })
   }
@@ -56,7 +69,7 @@ function Compile() {
           <option value="JAVA">java</option>
         </Form.Select>
       </div>
-    </div>
+    </div>    
       <CodeEditor
         value={code}      
         language={lang.toLowerCase()}

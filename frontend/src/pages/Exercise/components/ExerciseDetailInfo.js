@@ -63,6 +63,8 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
             difficulty_emoji = 'etc';
     }
 
+    console.log(exerciseDetail)
+
     return (
         <>
             <div className="col-8 mx-auto m-3 p-2">
@@ -103,7 +105,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <CodeEditor
-                    value={code}
+                    value={code} //if exerciseDetail.solve == null -> code else exerciseDetail.userCode
                     language="rust"
                     placeholder="Please enter RUST code."
                     onChange={(event) => setCode(event.target.value)}
@@ -124,7 +126,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <li>
-                    <Link to={`/exercise/tag/${exerciseDetail.tag}`}>{exerciseDetail.tag}</Link>
+                    <Link to={`/exercise/tag/${exerciseDetail.tag}`} style={{color: "blue", textDecorationLine: "none"}}>{exerciseDetail.tag}</Link>
                 </li>
             </div>
         </>

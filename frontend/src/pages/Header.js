@@ -60,7 +60,13 @@ function Header(){
                             <NavLink className={"nav-link"} to="/exercise/tag">분류별 문제</NavLink>
                             <NavLink className={"nav-link"} to="/exercise/level">난이도별 문제</NavLink>
                         </NavDropdown>
-                        <NavLink className={"nav-link"} to="/question">QnA</NavLink>
+                        <NavDropdown title="Board" id="basic-nav-dropdown">
+                            <NavLink className={"nav-link"} to="/question/notice">공지</NavLink>
+                            <NavLink className={"nav-link"} to="/question/exercise">질문</NavLink>
+                            <NavLink className={"nav-link"} to="/question/free">자유</NavLink>
+                            <NavLink className={"nav-link"} to="/question/add">작성하기</NavLink>
+                        </NavDropdown>
+                        {/*<NavLink className={"nav-link"} to="/question">QnA</NavLink>*/}
                         <NavLink className={"nav-link"} to="/compile">Online Compiler</NavLink>
                     </Nav>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

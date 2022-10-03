@@ -11,7 +11,7 @@ function Tutorial() {
     const [tutorials, setTutorials] = useState([]);
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
     const [rerender, setRerender] = useState(0);
-
+    const navigate = useNavigate();
 
     useEffect( () => {
         customAxios.get(`/tutorial`)
@@ -24,11 +24,20 @@ function Tutorial() {
         })
         .catch((Error) => 
         {
-            alert(Error.response.status + " error");
-            });
+            const status = Error.response.status
+            if (status === 403)
+            {
+                alert("권한이 없습니다.")
+                navigate("/login")
+            }
+            else
+            {
+                alert(status + " error");
+            }
+        });
     }, [rerender]);
 
-    const navigate = useNavigate();
+    
     const createTutorial = () => {                
         navigate("/tutorial/createForm");
     }
