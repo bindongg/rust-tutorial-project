@@ -55,6 +55,9 @@ public class Exercise {
     @Transient
     private long tryTime;
 
+    @Transient
+    private String userCode;
+
     public void copy(Exercise newExercise)
     {
         this.name = newExercise.getName();

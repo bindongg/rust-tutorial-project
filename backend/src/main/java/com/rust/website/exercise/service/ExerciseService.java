@@ -70,6 +70,7 @@ public class ExerciseService {
                     if (exerciseTries.get(e.getId()) != null) {
                         e.setSolved(exerciseTries.get(e.getId()).getSolved());
                         e.setTryTime(exerciseTries.get(e.getId()).getTime());
+                        e.setUserCode(exerciseTries.get(e.getId()).getSourceCode());
                     }
                     else { e.setSolved(ExerciseSolved.NO_TRY);}
                     e.setTime(e.getExerciseContent().getTime());

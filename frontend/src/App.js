@@ -44,6 +44,9 @@ import AboutRustUpdate from "./pages/AboutRust/AboutRustUpdate";
 import AboutRustDetail from "./pages/AboutRust/AboutRustDetail";
 import Performance from "./pages/AboutRust/Performance";
 import AuthConfirm from "./pages/Register/AuthConfirm";
+import QuestionNotice from "./pages/Question/QuestionNotice";
+import QuestionExercise from "./pages/Question/QuestionExercise";
+import QuestionFree from "./pages/Question/QuestionFree";
 import PerformanceUpdate from "./pages/AboutRust/PerformanceUpdate";
 
 function App() {
@@ -88,10 +91,13 @@ function App() {
                         <Route path="exercise/add" exact={true}  element={<ExerciseCreate/>}/>
                         <Route path="exercise/:id/update" exact={true}  element={<ExerciseUpdate/>}/>
                         {/*question*/}
-                        <Route path="/question" exact={true} element={<QuestionMain/>}/>
+                        {/*<Route path="/question" exact={true} element={<QuestionMain/>}/>*/}
                         <Route path="/question/:id" exact={true} element={<QuestionDetail/>}/>
                         <Route path="/question/add" exact={true} element={<QuestionWrite/>}/>
                         <Route path="/question/update/:id" exact={true} element={<QuestionUpdate/>}/>
+                        <Route path="/question/notice" exact={true} element={<QuestionNotice/>}/>
+                        <Route path="/question/exercise" exact={true} element={<QuestionExercise/>}/>
+                        <Route path="/question/free" exact={true} element={<QuestionFree/>}/>
                         {/*login*/}
                         <Route path="login" exact={true} element={<LoginForm/>}/>
                         <Route path="logout" exact={true}/>
