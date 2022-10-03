@@ -92,6 +92,18 @@ function Performance(){
           {
             setOutput(response.data.data);
           }
+        }).catch((Error) => 
+        {
+            const status = Error.response.status
+            if (status === 403)
+            {
+                alert("권한이 없습니다.")
+                navigate("/login")
+            }
+            else
+            {
+                alert(status + " error");
+            }
         }).finally(()=>{
             setLoading(false);
         })
@@ -175,7 +187,7 @@ function Performance(){
                 </Container>
             </Navbar>
 
-            <div className="col-10 mx-auto pt-5">
+            <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <Tabs
                     defaultActiveKey="PERFORMANCE"
                     id="uncontrolled-tab-example"
@@ -183,7 +195,26 @@ function Performance(){
                     onSelect={(e) => changeKey(e)}
                 >
                     <Tab eventKey={"PERFORMANCE"} title="개요">
-                        {aboutRust?.content}
+                        <ReactMarkdown children={aboutRust?.content}
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                                code({node, inline, className, children, ...props}) {
+                                    const match = /language-(\w+)/.exec(className || '')
+                                    return !inline && match ? (
+                                        <SyntaxHighlighter
+                                            children={String(children).replace(/\n$/, '')}
+                                            style={dark}
+                                            language={match[1]}
+                                            PreTag="div"
+                                            {...props}
+                                        />
+                                    ) : (
+                                        <code className={className} {...props}>
+                                            {children}
+                                        </code>
+                                    )
+                                }
+                            }}/>
                     </Tab>
                     {tabs}
                 </Tabs>

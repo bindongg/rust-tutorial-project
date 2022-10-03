@@ -21,58 +21,43 @@ function Exercise(){
   }
 
   useEffect( () => {
+    var request = '/exercise'
+    var requestParams = {page: page, size: recPerPage}
     if (tag) 
     {
-      customAxios.get(`/exercise/tag`, {params: {page: page, size: recPerPage, tag: tag}}).then((response) => {
-        if (response.data.code === 200)  
-        {
-          setTotal(response.data.total);
-          setExercises([...response.data.data]);
-
-        }
-        else 
-        {
-          alert("failed");
-        }
-      }).catch((Error) =>
-      {
-        alert("연습문제를 보려면, 로그인을 해주세요.");
-      });
+      request = '/exercise/tag'
+      requestParams = {...requestParams, tag: tag}
     }
     else if (difficulty)
     {
-      customAxios.get(`/exercise/difficulty`, {params: {page: page, size: recPerPage, difficulty: difficulty}}).then((response) => {
-        if (response.data.code === 200)  
-        {
-          setTotal(response.data.total);
-          setExercises([...response.data.data]);
-        }
-        else 
-        {
-          alert("failed");
-        }
-      }).catch((Error) =>
-      {
-        alert("연습문제를 보려면, 로그인을 해주세요.");
-      });
+      request = '/exercise/difficulty'
+      requestParams = {...requestParams, difficulty: difficulty}
     }
-    else
+    console.log(requestParams);
+    customAxios.get(request, {params: {...requestParams}}).then((response) => {
+      if (response.data.code === 200)  
+      {
+        setTotal(response.data.total);
+        setExercises([...response.data.data]);
+
+      }
+      else 
+      {
+        alert("failed");
+      }
+    }).catch((Error) => 
     {
-      customAxios.get(`/exercise`, {params: {page: page, size: recPerPage}}).then((response) => {
-        if (response.data.code === 200)  
+        const status = Error.response.status
+        if (status === 403)
         {
-          setTotal(response.data.total);
-          setExercises([...response.data.data]);
+            alert("권한이 없습니다.")
+            navigate("/login")
         }
-        else 
+        else
         {
-          alert("failed");
+            alert(status + " error");
         }
-      }).catch((Error) =>
-      {
-        alert("연습문제를 보려면, 로그인을 해주세요.");
-      });
-    }
+    });
     
     }, [page, window.location.href]);
     

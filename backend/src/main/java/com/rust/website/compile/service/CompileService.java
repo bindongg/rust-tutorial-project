@@ -3,6 +3,7 @@ package com.rust.website.compile.service;
 import com.rust.website.compile.model.dto.CompileInputDTO;
 import com.rust.website.compile.model.dto.CompileOutputDTO;
 import com.rust.website.compile.model.model.ExecutionConstraints;
+import com.rust.website.exercise.model.entity.ExerciseTestcase;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,50 @@ public class CompileService {
         processBuilder = new ProcessBuilder()
                                 .command(makeRunCommand(lang, memoryLimit, uuid, cwd))
                                 .directory(cwd);
-        return runCodeExecution(processBuilder, timeLimit, uuid, cwd);
+        CompileOutputDTO result = runCodeExecution(processBuilder, timeLimit, uuid);
+
+        removeFiles(cwd);
+        return result;
+    }
+
+    public HashMap<String, String> exerciseCompile(CompileInputDTO compileInputDTO, ExecutionConstraints constraints, List<ExerciseTestcase> exerciseTestcases) {
+        final String code = compileInputDTO.getCode();
+        final String lang = compileInputDTO.getLanguage().getLang();
+        String input = compileInputDTO.getStdIn();
+        final long memoryLimit = constraints.getMemoryLimit();
+        final long timeLimit = constraints.getTimeLimit();
+        final String uuid = UUID.randomUUID().toString();
+        final File cwd = new File(System.getProperty("user.dir") + "/docker/code/" + uuid);
+
+        makeDirAndCodefile(code, lang, input, cwd);
+        ProcessBuilder processBuilder = new ProcessBuilder()
+                .command(makeCompileCommand(lang, memoryLimit, uuid, cwd))
+                .directory(cwd);
+        HashMap<String, String> compileResult = compileCodeExecution(processBuilder, timeLimit,cwd);
+        if (compileResult.get("success").equals("false"))
+        {
+            return compileResult;
+        }
+
+        int index = 0;
+        long time = 0;
+        for (; index < exerciseTestcases.size(); ++index) {
+            processBuilder = new ProcessBuilder()
+                    .command(makeRunCommand(lang, memoryLimit, uuid + index, cwd))
+                    .directory(cwd);
+            ExerciseTestcase tempTestcase = exerciseTestcases.get(index);
+            input = tempTestcase.getInput();
+            makeDirAndCodefile(code, lang, input, cwd);
+
+            CompileOutputDTO output = runCodeExecution(processBuilder, timeLimit, uuid + index);
+            if (!output.getStdOut().equals(tempTestcase.getOutput())) { break; }
+            time = Math.max(time, output.getTime());
+        }
+        compileResult.put("index", String.valueOf(index));
+        compileResult.put("time", String.valueOf(time));
+
+        removeFiles(cwd);
+        return compileResult;
     }
 
     private HashMap<String, String> compileCodeExecution(final ProcessBuilder processBuilder, final long maxExecutionTime, final File cwd) {
@@ -95,7 +139,7 @@ public class CompileService {
      * @param maxExecutionTime
      * @return
      */
-    private CompileOutputDTO runCodeExecution(final ProcessBuilder processBuilder, final long maxExecutionTime, final String uuid, final File cwd) {
+    private CompileOutputDTO runCodeExecution(final ProcessBuilder processBuilder, final long maxExecutionTime, final String name) {
         final ExecutorService service = Executors.newSingleThreadExecutor();
         CompileOutputDTO compileOutputDTO = new CompileOutputDTO();
         try {
@@ -107,16 +151,15 @@ public class CompileService {
                 return stdout.length() != 0 ? stdout : stderr;
             });
             compileOutputDTO.setStdOut(executionContext.get(maxExecutionTime, TimeUnit.MILLISECONDS));
-            compileOutputDTO.setTime(getRunningTime(uuid));
+            compileOutputDTO.setTime(getRunningTime(name));
         } catch (final TimeoutException e) {
             compileOutputDTO.setStdOut("Calculation took to long");
             compileOutputDTO.setTime(-2000);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         } finally {
-            killDockerPs(uuid);
             service.shutdown();
-            removeFiles(cwd);
+            killDockerPs(name);
         }
         return compileOutputDTO;
     }
@@ -154,6 +197,7 @@ public class CompileService {
         Path codePath = Paths.get(cwd.toString() + "/Code." + lang);
         Path inputPath = Paths.get(cwd.toString() + "/in.in");
         Files.writeString(codePath, code, StandardCharsets.UTF_8);
+        input = input == null ? "" : input;
         Files.writeString(inputPath, input, StandardCharsets.UTF_8);
     }
 
@@ -183,9 +227,9 @@ public class CompileService {
         return commands;
     }
 
-    private String[] makeRunCommand(String lang, long memoryLimit, String uuid, File cwd) {
+    private String[] makeRunCommand(String lang, long memoryLimit, String name, File cwd) {
         String docker = "docker run ";
-        String nameTag = "--name \"" + uuid + "\" ";
+        String nameTag = "--name \"" + name + "\" ";
         String memoryTag = "-m \"" + memoryLimit + "m\" --memory-swap \"" + memoryLimit + "m\" ";
         String vTag = "-v \"" + cwd + "\":/code ";
         String wTag = "-w /code ";
@@ -257,4 +301,6 @@ public class CompileService {
     private String parseOutput(String output){
         return output;
     }
+
+
 }

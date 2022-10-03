@@ -73,19 +73,10 @@ public class ExerciseController {
                 .memoryLimit(200)
                 .timeLimit(10000)
                 .build();
-        long runTime = 0;
 
-        int idx = 0;
-        for(;idx < exercise.getExerciseTestcases().size(); idx++)
-        {
-            compileInputDTO.setStdIn(exercise.getExerciseTestcases().get(idx).getInput());
-            CompileOutputDTO temp = compileService.onlineCompile(compileInputDTO, constraints);
-            if(!temp.getStdOut().equals(exercise.getExerciseTestcases().get(idx).getOutput()))
-            {
-                break;
-            }
-            runTime = Math.max(temp.getTime(), runTime);
-        }
+        HashMap<String, String> result = compileService.exerciseCompile(compileInputDTO, constraints, exercise.getExerciseTestcases());
+        int idx = Integer.valueOf(result.get("index"));
+        long runTime = Integer.valueOf(result.get("time"));
 
         if(idx != exercise.getExerciseTestcases().size())
         {

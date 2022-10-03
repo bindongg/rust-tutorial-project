@@ -10,6 +10,9 @@ function ExerciseUpdate() {
     const location = useLocation();
     const exerciseDetail = location.state.exerciseDetail;
     const [editedExercise, setEditedExercise] = useState({exerciseDetail});
+    const [testcaseNums, setTestcaseNums] = useState([...Array(exerciseDetail.exerciseTestcases.length)].map((v,i) => i+1));
+    // const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.exerciseTestcases);
+    const testCaseForm = {id: "", number: "", input: "", output: ""}
     const [loading,setLoading] = useState(false);
     const [testCodeExists, setTestCodeExists] = useState(false);
     const { register, setValue, reset,handleSubmit } = useForm();
@@ -30,6 +33,7 @@ function ExerciseUpdate() {
 
     const onSubmit = (data) => {
         setLoading(true);
+        data.exerciseTestcases = data.exerciseTestcases.slice(0, testcaseNums.length);
         customAxios.patch(`/exercise/${id}`, {...data}
         ).then(function(response) {
             alert(response.data.data);
@@ -40,33 +44,61 @@ function ExerciseUpdate() {
           })
     }
 
-    const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.exerciseTestcases);
-    const testCaseForm = {id: "", number: "", input: "", output: ""}
+    
 
     // const exerciseTestCases = exerciseDetail.Testcases;
     const addTestcase = () => {
-        // setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
-        setExerciseTestCases(arr => [...arr, testCaseForm] )
+        setTestcaseNums( arr => [...arr, `${arr.length + 1}`]);
     };
+    const removeTestcase = () => {
+        setTestcaseNums(testcaseNums.slice(0, testcaseNums.length - 1));
+    }
 
     const addTestCode = () => {
         setTestCodeExists(true);
     }
 
-    const testcases = exerciseTestCases.map(function (exerciseTestCase, index){
-        setValue("exerciseTestcases["+ index+ "].number", (index+1));
+    const testcases = testcaseNums.map(function (testcasesNum, index){
+        if (exerciseDetail.exerciseTestcases[index]) 
+            return (
+                <Row key={index} className="mb-3">
+                    <Col>
+                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Label>Test Case 입력 {testcasesNum}번</Form.Label>
+                            <Form.Control as="textarea" placeholder="테스트 케이스 input을 입력하세요" defaultValue={exerciseDetail.exerciseTestcases[index].input} {...register("exerciseTestcases["+ index+ "].input")} />
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Label>Test Case 출력 {testcasesNum}번 </Form.Label>
+                            <Form.Control as="textarea" placeholder="테스트 케이스 output을 입력하세요" defaultValue={exerciseDetail.exerciseTestcases[index].output} {...register("exerciseTestcases["+ index+ "].output")} />
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Control as="textarea" value={exerciseDetail.exerciseTestcases[index].number} hidden {...register("exerciseTestcases["+ index+ "].number")} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+            )
+        else
         return (
             <Row key={index} className="mb-3">
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>TestCase 입력 {exerciseTestCase.number}번 </Form.Label>
-                        <Form.Control as="textarea" defaultValue={exerciseTestCase.input }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].input")} />
+                        <Form.Label>Test Case 입력 {testcasesNum}번 </Form.Label>
+                        <Form.Control as="textarea" placeholder="테스트 케이스 input을 입력하세요" {...register("exerciseTestcases["+ index+ "].input")} />
                     </Form.Group>
                 </Col>
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>TestCase 출력 {exerciseTestCase.number}번 </Form.Label>
-                        <Form.Control as="textarea" defaultValue={exerciseTestCase.output }  onChange={onEditChange} {...register("exerciseTestcases["+ index+ "].output")} />
+                        <Form.Label>Test Case 출력 {testcasesNum}번 </Form.Label>
+                        <Form.Control as="textarea" placeholder="테스트 케이스 output을 입력하세요" {...register("exerciseTestcases["+ index+ "].output")} />
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Control as="textarea" value={testcasesNum} hidden {...register("exerciseTestcases["+ index+ "].number")} />
                     </Form.Group>
                 </Col>
             </Row>
@@ -143,6 +175,7 @@ function ExerciseUpdate() {
 
                             {testcases}
                             <input type="button" onClick={ addTestcase } value="Test Case 추가하기" />
+                            <input type="button" onClick={ removeTestcase } value="Test Case 삭제하기" />
                             <br/>
                             <br/>
                             {
