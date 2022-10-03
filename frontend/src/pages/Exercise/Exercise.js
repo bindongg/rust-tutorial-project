@@ -34,7 +34,10 @@ function Exercise(){
         {
           alert("failed");
         }
-      })
+      }).catch((Error) =>
+      {
+        alert("연습문제를 보려면, 로그인을 해주세요.");
+      });
     }
     else if (difficulty)
     {
@@ -48,7 +51,10 @@ function Exercise(){
         {
           alert("failed");
         }
-      })
+      }).catch((Error) =>
+      {
+        alert("연습문제를 보려면, 로그인을 해주세요.");
+      });
     }
     else
     {
@@ -63,7 +69,10 @@ function Exercise(){
         {
           alert("failed");
         }
-      })
+      }).catch((Error) =>
+      {
+        alert("연습문제를 보려면, 로그인을 해주세요.");
+      });
     }
     
     }, [page, window.location.href]);
@@ -74,7 +83,7 @@ function Exercise(){
         <div className="col-10 mx-auto pt-5">
         {
             (role === "ROLE_ADMIN" || role === "ROLE_MANAGER") &&
-            <Button variant="secondary" onClick={() => moveTo("/exercise/add") }>Add Exercise</Button>
+            <Button className="mb-3" variant="secondary" onClick={() => moveTo("/exercise/add") }>Add Exercise</Button>
         }                
           <Table striped bordered hover>
             <thead>
