@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown";
 import ReferenceSidebar from "./component/ReferenceSidebar";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 import {decodeToken} from "react-jwt";
+import ScrollToTop from "../../Common/Modules/ScrollToTop";
 
 function ReferenceDetail(props) {
     const {id} = useParams();
@@ -55,6 +56,7 @@ function ReferenceDetail(props) {
 
     return (
         <>
+            <ScrollToTop />
             <div id="page-wrapper">
                 <ReferenceSidebar titles={titles} />
                 <div id="page-content-wrapper">
