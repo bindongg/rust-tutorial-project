@@ -167,16 +167,19 @@ public class ExerciseService {
     @Transactional
     public ResponseDTO<String> updateExercise(Exercise newExercise, int id)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
-        Exercise exercise = exerciseRepository.findById(id).get();
+        Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->{throw new IllegalArgumentException();});
         exercise.copy(newExercise);
-        System.out.println(exercise.getExerciseTestcases());
         //+ 테스트 케이스 바껴도 재채점
-        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode())
-                || !exercise.getExerciseTestcases().equals(newExercise.getExerciseTestcases()))
+        if(newExercise.getExerciseContent().getTestCode() != null)
         {
             updateTestCodeAndExecutionTime(exercise, newExercise);
         }
+        else
+        {
+            exercise.getExerciseContent().setTestCode(null);
+            exercise.getExerciseContent().setTime(0);
+        }
+
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
 
         exerciseTestcaseRepository.deleteByExercise_id(id);
@@ -191,7 +194,7 @@ public class ExerciseService {
                 )
                 .forEach(tc -> exerciseTestcaseRepository.save(tc));
 
-        return responseDTO;
+        return new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
     }
 
     @Transactional
