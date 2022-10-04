@@ -11,31 +11,30 @@
  * Redis - 유저의 세션을 유지하기 위한 토큰을 저장하기 위해 사용합니다.
  * Mysql - 데이터를 저장하기 위한 데이터베이스입니다.
  * React - 프론트엔드입니다.  
-
+<br>
 ## 시작하기
  프로젝트는 리눅스 환경에서 관리자 권한으로 실행해야 정상적으로 동작합니다. 툴들을 모두 다운로드 받으신 후, 아래의 단계를 진행하시면 프로젝트를 실행시킬 수 있습니다.  
- 
- 
+ <br>
  1. 프로젝트 내려받기
  ```
  git clone https://github.com/bindongg/rust-tutorial-project.git # 프로젝트 내려받기
  cd rust-tutorial-project
  ```  
- 
+ <br>
  2. 프론트엔드 실행
  ```
  cd frontend
  npm install # module 다운로드
  npm run start # react 실행
  ```  
- 
+<br> 
  3. 벡엔드 데이터베이스 설정  
  SpringBoot 실행을 위해 application.yml 파일에 Mysql의 엔드포인트와 유저이름, 비밀번호를 입력합니다. 필수는 아니지만, 회원가입의 인증 기능을 사용하려면 google mail의 아이디와 비밀번호를 입력합니다.
  ```
  cd ../backend
  vi src/main/resources/application.yml # mysql, mail 설정
  ```  
- 
+ <br>
  4. docker 이미지 빌드  
  언어를 컴파일, 실행할 수 있는 컨테이너를 만들기 위해 각 언어별 이미지를 빌드합니다.
  ```
@@ -43,7 +42,7 @@
  chmod +x init.sh
  ./init.sh # rust, java, python, c++ image 빌드
  ```  
- 
+ <br>
  5. 벡엔드 실행
 ```
 cd ..
