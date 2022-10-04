@@ -4,7 +4,7 @@ import {EXERCISE_STATE, SCORE} from "../../../Common/Modules/Common";
 
 function ExerciseListInfo ({ exercise}) {
     let solved = exercise?.solved;
-    let score = solved !== EXERCISE_STATE[2] ? (exercise.tryTime < exercise.time ? '/'+SCORE[0] : (exercise.tryTime === exercise.time ? '/'+SCORE[1] : '/'+SCORE[2])) : "";
+    let score = "";
     let solvedStyle = {color: 'green'};
 
     if(solved === EXERCISE_STATE[2] ){
@@ -15,6 +15,22 @@ function ExerciseListInfo ({ exercise}) {
     }else if(solved === EXERCISE_STATE[0]){
         solved = "성공";
         solvedStyle = {color: 'forestgreen'};
+        if(exercise.tryTime !== 0 && exercise.tryTime < exercise.time)
+        {
+            score = '/'+SCORE[0];
+        }
+        else if(exercise.tryTime !== 0 && exercise.tryTime === exercise.time)
+        {
+            score = '/'+SCORE[1];
+        }
+        else if(exercise.tryTime !== 0 && exercise.tryTime > exercise.time)
+        {
+            score = '/' + SCORE[2];
+        }
+        else if(exercise.tryTime === 0)
+        {
+            score = "";
+        }
     }else{
         solved = "오류";
     }

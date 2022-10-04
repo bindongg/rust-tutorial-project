@@ -6,6 +6,7 @@ import com.rust.website.common.dto.ReplyDTO;
 import com.rust.website.question.model.entity.Question;
 import com.rust.website.question.model.entity.Reply;
 import com.rust.website.question.model.entity.SubReply;
+import com.rust.website.question.model.entity.myEnum.QuestionType;
 import com.rust.website.question.repository.QuestionRepository;
 import com.rust.website.question.repository.ReplyRepository;
 import com.rust.website.question.repository.SubReplyRepository;
@@ -26,14 +27,16 @@ public class QuestionService {
     private final SubReplyRepository subReplyRepository;
 
     @Transactional
-    public void add(String title, String content, String username)
+    public void add(Question question, String username)
     {
-        Question question = Question.builder()
-                .title(title)
-                .content(content)
-                .user(userRepository.findById(username).orElseThrow(()->new IllegalArgumentException("No such element")))
-                .done(false)
-                .build();
+        if(question.getQuestionType().equals(QuestionType.질문))
+        {
+            if(!questionRepository.existsById(question.getId()))
+            {
+                throw new IllegalArgumentException();
+            }
+        }
+        question.setUser(userRepository.findById(username).orElseThrow(()->new IllegalArgumentException("No such element")));
         questionRepository.save(question);
     }
 
@@ -66,9 +69,21 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
+    public long getTotalByType(QuestionType questionType)
+    {
+        return questionRepository.countByQuestionType(questionType);
+    }
+
+    @Transactional(readOnly = true)
     public List<Question> getQuestionList(Pageable pageable)
     {
         return questionRepository.findAllByOrderByIdDesc(pageable).getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Question> getQuestionListByType(Pageable pageable, QuestionType questionType)
+    {
+        return questionRepository.findAllByQuestionTypeOrderByIdDesc(pageable, questionType).getContent();
     }
 
     @Transactional(readOnly = true)
@@ -96,13 +111,21 @@ public class QuestionService {
     }
 
     @Transactional
-    public void updateQuestion(int id, String title, String content)
+    public void updateQuestion(int id, String title, String content, String exerciseId, String questionType)
     {
         Optional<Question> optQuestion = questionRepository.findById(id);
         if(optQuestion.isPresent())
         {
+            if (questionType.equals(QuestionType.질문.toString()))
+            {
+                if(!questionRepository.existsById(Integer.parseInt(exerciseId)))
+                {
+                    throw new IllegalArgumentException();
+                }
+            }
             optQuestion.get().setTitle(title);
             optQuestion.get().setContent(content);
+            optQuestion.get().setExerciseId(exerciseId == null ? null : Integer.parseInt(exerciseId));
         }
         else throw new IllegalArgumentException("No such entity");
     }
