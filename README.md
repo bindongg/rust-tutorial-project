@@ -46,6 +46,7 @@
  5. 벡엔드 실행
 ```
 cd ..
+
 ./mvnw spring-boot:run
 ```
 ![Footer](https://capsule-render.vercel.app/api?type=waving&color=F68400&height=200&section=footer)
