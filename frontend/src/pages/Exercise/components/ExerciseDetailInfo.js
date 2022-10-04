@@ -5,7 +5,7 @@ import {Button} from "react-bootstrap";
 import { decodeToken } from "react-jwt";
 import {customAxios} from "../../../Common/Modules/CustomAxios";
 
-function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
+function ExerciseDetailInfo({exerciseDetail, code, setCode, tryCode, setTryCode}) {
     const {id} = useParams();
     const [time, setTime] = useState();
     const [loading,setLoading] = useState(false);
@@ -17,7 +17,6 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
     }
 
     const compileCode = (data) => {
-        // console.log(jsonCode);
         setLoading(true);
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
@@ -30,6 +29,20 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
     }
     const updateDetail = () => {
         navigate(`/exercise/${id}/update`, {state: {exerciseDetail: exerciseDetail}});
+    }
+    const initTryCode = () => {
+        if(window.confirm("초기화하시겠어요?")) {
+            setLoading(true);
+            customAxios.patch(`/exercise/exerciseTry/init/${id}`).then((response) => {
+                if (response.data.code === 200) {
+                    setTryCode("");
+                } else {
+                    alert("error");
+                }
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
     }
 
     const deleteExercise = () => {
@@ -62,8 +75,6 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
         default:
             difficulty_emoji = 'etc';
     }
-
-    console.log(exerciseDetail)
 
     return (
         <>
@@ -105,7 +116,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <CodeEditor
-                    value={code} //if exerciseDetail.solve == null -> code else exerciseDetail.userCode
+                    value={tryCode === "" ? code : tryCode} //if exerciseDetail.solve == null -> code else exerciseDetail.userCode
                     language="rust"
                     placeholder="Please enter RUST code."
                     onChange={(event) => setCode(event.target.value)}
@@ -117,9 +128,15 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
                       }}
                 />
                 <div className="nav justify-content-end" style={{fontSize: 15}}>time: {time ? time / 1000 + "sec" : "    sec"}</div>
-                <Button variant="secondary" type="submit" disabled={loading} onClick={compileCode} >
-                    Compile
-                </Button>
+                <br/>
+                <div className="d-flex justify-content-between">
+                    <Button variant="secondary" type="submit" disabled={loading} onClick={compileCode} >
+                        Compile
+                    </Button>
+                    <Button variant="secondary" disabled={loading} onClick={initTryCode}>
+                        초기화
+                    </Button>
+                </div>
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>유형</h3>
