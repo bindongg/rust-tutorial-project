@@ -4,6 +4,7 @@
  이 프로젝트는 입문자도 쉽게 **러스트 언어**를 공부할 수 있도록 지원하는 웹어플리케이션입니다. React와 SpringBoot를 사용하여 프론트엔드, 벡엔드로 구성되어 있습니다. 그리고 Docker를 사용하여 온라인 컴파일 기능을 지원하고, 데이터베이스는 Mysql을 사용하고 있습니다.
  
  ## Tools
+ 프로젝트를 사용하기 위해 기본적으로 다운로드 해야할 tools입니다.
  * SpringBoot - 백엔드입니다.
  * Java11
  * Docker - 온라인에서 유저의 코드를 받아 한정된 자원의 안전한 공간에서 코드를 실행시키기 위해 docker container를 사용합니다.
@@ -12,6 +13,12 @@
  * React - 프론트엔드입니다.
 
 # 시작하기
- 프로젝트는 
+ 프로젝트는 리눅스 환경에서 관리자 권한으로 실행해야 정상적으로 동작합니다. 툴들을 모두 다운로드 받으신 후, 아래의 단계를 진행하시면 프로젝트를 실행시킬 수 있습니다.
+ 1. 프로젝트 받기
+ ```
+ git clone https://github.com/bindongg/rust-tutorial-project.git
+ cd rust-tutorial-project
+ ```
+ 
 
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=footer)
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=F68400&height=200&section=footer)
