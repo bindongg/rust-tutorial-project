@@ -48,4 +48,4 @@ chmod +x mvnw
 ./mvnw spring-boot:run # mvnw SpringBoot 실행
 ```
 
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=F68400&height=200&section=footer&disabled=true)
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=F68400&height=200&section=footer)
