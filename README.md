@@ -5,15 +5,20 @@
  <br>
  
  ## 2. 팀 소개
- 1. 장덕진 - pay7845@naver.com
- 프론트엔드 개발, 백엔드 API 개발, SpringBoot Security 설계 및 구현
- 2. 정명진 - jmj2588547@naver.com
- 페이지 디자인, 프론트엔드 개발, 러스트 컨텐츠 제작
- 3. 황동민 - bindonggg@naver.com
- 프론트엔드 개발, 벡엔드 API 개발, DB 구현
-   <br>  
+ 1. 장덕진(pay7845@naver.com) - 프론트엔드 개발, 백엔드 API 개발, SpringBoot Security 설계 및 구현
+ 2. 정명진(jmj2588547@naver.com) - 페이지 디자인, 프론트엔드 개발, 러스트 컨텐츠 제작
+ 3. 황동민(bindonggg@naver.com) - 프론트엔드 개발, 벡엔드 API 개발, DB 구현
+ <br>  
  
- ## Tools
+ ## 3. 시스템 구성도
+ ![image](https://user-images.githubusercontent.com/64681410/193783821-4060f448-26c5-4124-b54e-6e4eecd74788.png)
+<br>  
+
+## 4. 시연 연상
+**추가예정**
+<br>  
+
+## 5. Tools
  프로젝트를 사용하기 위해 기본적으로 다운로드 해야할 tools입니다.
  * SpringBoot - 백엔드입니다.
  * Java11
@@ -23,7 +28,7 @@
  * React - 프론트엔드입니다.  
 <br>
 
-## 시작하기
+## 6. 프로젝트 실행
  본 프로젝트는 리눅스 환경에서 관리자 권한으로 실행해야 정상적으로 동작합니다. 툴들을 모두 다운로드 받으신 후, 아래의 단계를 진행하시면 프로젝트를 실행시킬 수 있습니다.   
  <br>
  1. 프로젝트 내려받기
