@@ -1,8 +1,17 @@
 ![header](https://capsule-render.vercel.app/api?type=waving&color=F68400&height=100&section=header&text=Rust%20Tutorial%20Web%20Application&fontSize=40)
 
-## 소개
- 이 프로젝트는 입문자도 쉽게 **러스트 언어**를 공부할 수 있도록 지원하는 웹어플리케이션입니다. React와 SpringBoot를 사용하여 프론트엔드, 벡엔드로 구성되어 있습니다. 그리고 Docker를 사용하여 온라인 컴파일 기능을 지원하고, 데이터베이스는 Mysql을 사용하고 있습니다.  
+## 1. 프로젝트 소개
+ **Rust-Tutorial-Project**는 입문자도 쉽게 **러스트 언어**를 공부할 수 있도록 지원하는 웹어플리케이션입니다. React와 SpringBoot를 사용하여 프론트엔드, 벡엔드로 구성되어 있습니다. 그리고 Docker를 사용하여 온라인 컴파일 기능을 지원하고, 데이터베이스는 Mysql을 사용하고 있습니다.  
  <br>
+ 
+ ## 2. 팀 소개
+ 1. 장덕진 - pay7845@naver.com
+ 프론트엔드 개발, 백엔드 API 개발, SpringBoot Security 설계 및 구현
+ 2. 정명진 - jmj2588547@naver.com
+ 페이지 디자인, 프론트엔드 개발, 러스트 컨텐츠 제작
+ 3. 황동민 - bindonggg@naver.com
+ 프론트엔드 개발, 벡엔드 API 개발, DB 구현
+   <br>  
  
  ## Tools
  프로젝트를 사용하기 위해 기본적으로 다운로드 해야할 tools입니다.
