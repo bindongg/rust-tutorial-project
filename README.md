@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=30&section=header&text=RustTutorialWebApplication&fontSize=20)
+![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=55&section=header&text=Rust%20Tutorial%20Web%20Application&fontSize=20)
 # rust-tutorial-project
 Rust tutorial website with react and spring-boot for beginner
 
