@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const customAxios = axios.create({
-    baseURL: "http://localhost:8080"
-    //baseURL: "http://54.180.10.223:8080",
+    // baseURL: "http://localhost:8080"
+    baseURL: "http://54.180.10.223:8080",
 })
 
 customAxios.interceptors.request.use(
@@ -29,7 +29,8 @@ customAxios.interceptors.response.use(
     },
     function (error) {
         if (error.response.status === 401 || error.response.status === 403) {
-            axios.post(`http://localhost:8080/logout`, null, {
+            // axios.post(`http://localhost:8080/logout`, null, {
+            axios.post(`http://54.180.10.223:8080/logout`, null, {
                 headers:
                     {
                         "Content-Type": "application/json; charset=utf-8",
