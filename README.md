@@ -17,15 +17,35 @@
  
  1. 프로젝트 내려받기
  ```
- git clone https://github.com/bindongg/rust-tutorial-project.git
+ git clone https://github.com/bindongg/rust-tutorial-project.git # 프로젝트 내려받기
  cd rust-tutorial-project
  ```
  
  2. 프론트엔드 실행
  ```
  cd frontend
- npm run start
+ npm install # module 다운로드
+ npm run start # react 실행
  ```
  
-
+ 3. 벡엔드 데이터베이스 설정
+ SpringBoot 실행을 위해 application.yml 파일에 Mysql의 엔드포인트와 유저이름, 비밀번호를 입력합니다. 필수는 아니지만, 회원가입의 인증 기능을 사용하려면 google mail의 아이디와 비밀번호를 입력합니다.
+ ```
+ cd ../backend
+ vi src/main/resources/application.yml # mysql, mail 설정
+ ```
+ 
+ 4. docker 이미지 빌드
+ 언어를 컴파일, 실행할 수 있는 컨테이너를 만들기 위해 각 언어별 이미지를 빌드합니다.
+ ```
+ cd docker
+ chmod +x init.sh
+ ./init.sh # rust, java, python, c++ image 빌드
+ ```
+ 
+ 5. 벡엔드 실행
+```
+cd ..
+./mvnw spring-boot:run
+```
 ![Footer](https://capsule-render.vercel.app/api?type=waving&color=F68400&height=200&section=footer)
