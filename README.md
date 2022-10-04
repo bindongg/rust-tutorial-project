@@ -12,12 +12,19 @@
  * Mysql - 데이터를 저장하기 위한 데이터베이스입니다.
  * React - 프론트엔드입니다.
 
-# 시작하기
+## 시작하기
  프로젝트는 리눅스 환경에서 관리자 권한으로 실행해야 정상적으로 동작합니다. 툴들을 모두 다운로드 받으신 후, 아래의 단계를 진행하시면 프로젝트를 실행시킬 수 있습니다.
- 1. 프로젝트 받기
+ 
+ 1. 프로젝트 내려받기
  ```
  git clone https://github.com/bindongg/rust-tutorial-project.git
  cd rust-tutorial-project
+ ```
+ 
+ 2. 프론트엔드 실행
+ ```
+ cd frontend
+ npm run start
  ```
  
 
