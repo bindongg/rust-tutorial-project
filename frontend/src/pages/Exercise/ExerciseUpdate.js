@@ -14,7 +14,13 @@ function ExerciseUpdate() {
     // const [exerciseTestCases, setExerciseTestCases ] = useState(exerciseDetail.exerciseTestcases);
     const testCaseForm = {id: "", number: "", input: "", output: ""}
     const [loading,setLoading] = useState(false);
-    const [testCodeExists, setTestCodeExists] = useState(false);
+
+    const [testCodeExists, setTestCodeExists] = useState(!(exerciseDetail.exerciseContent.testCode === null
+        || exerciseDetail.exerciseContent.testCode === ""
+        || exerciseDetail.exerciseContent.testCode === undefined));
+
+    const [testCode,setTestCode] = useState(testCodeExists === true ? exerciseDetail.exerciseContent.testCode : null);
+
     const { register, setValue, reset,handleSubmit } = useForm();
     const navigate = useNavigate();
 
@@ -25,8 +31,6 @@ function ExerciseUpdate() {
         })
     }
 
-    console.log(location)
-
     //"제출"을 했을 때 무슨일이 일어나는지 확인해봅시다.
     const onValid = (data) => console.log(data, "onValid");
     const onInvalid = (data) => console.log(data, "onInvalid");
@@ -34,10 +38,20 @@ function ExerciseUpdate() {
     const onSubmit = (data) => {
         setLoading(true);
         data.exerciseTestcases = data.exerciseTestcases.slice(0, testcaseNums.length);
+        data.exerciseContent.testCode = testCode;
         customAxios.patch(`/exercise/${id}`, {...data}
         ).then(function(response) {
-            alert(response.data.data);
-            navigate(-1);
+            if(response.data.code === 200)
+            {
+                alert(response.data.data);
+                navigate(-1);
+            }
+            else
+            {
+                alert("잘못된 입력입니다");
+            }
+        }).catch((error)=>{
+            alert("잘못된 입력입니다");
         })
         .finally(()=>{
             setLoading(false);
@@ -54,8 +68,18 @@ function ExerciseUpdate() {
         setTestcaseNums(testcaseNums.slice(0, testcaseNums.length - 1));
     }
 
+    const changeTestCode = (e) => {
+        setTestCode(e.target.value);
+    }
+
     const addTestCode = () => {
         setTestCodeExists(true);
+        setTestCode("fn main() {\n\n}");
+    }
+
+    const delTestCode = () => {
+        setTestCodeExists(false);
+        setTestCode(null);
     }
 
     const testcases = testcaseNums.map(function (testcasesNum, index){
@@ -178,14 +202,14 @@ function ExerciseUpdate() {
                             <input type="button" onClick={ removeTestcase } value="Test Case 삭제하기" />
                             <br/>
                             <br/>
-                            {
-                                exerciseDetail.testCode === null || exerciseDetail.testCode === ""
+                            {/*
+                                (exerciseDetail.exerciseContent.testCode === null || exerciseDetail.exerciseContent.testCode === "" || exerciseDetail.exerciseContent.testCode === undefined)
                                     ? (<></>)
                                     : (
                                         <Form.Group className="mb-3" controlId="exerciseExampleCode">
                                             <Form.Label>테스트 코드</Form.Label>
                                             <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={exerciseDetail.exerciseContent.testCode} {...register("exerciseContent.testCode")} />
-                                        </Form.Group>)
+                                        </Form.Group>)*/
                             }
                             {
                                 testCodeExists === false
@@ -193,13 +217,13 @@ function ExerciseUpdate() {
                                     : (
                                         <Form.Group className="mb-3" controlId="exerciseExampleCode">
                                             <Form.Label>테스트 코드</Form.Label>
-                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" defaultValue={"fn main() {\n\n}"} {...register("exerciseContent.testCode")} />
+                                            <Form.Control as="textarea" placeholder="테스트 코드를 입력하세요" onChange={changeTestCode} defaultValue={testCode} /*{...register("exerciseContent.testCode")}*/ />
                                         </Form.Group>)
                             }
                             {
-                                (exerciseDetail.testCode === null || exerciseDetail.testCode === "") && testCodeExists === false
+                                testCodeExists === false
                                     ? (<input type="button" onClick={ addTestCode } value="Test Code 추가하기" />)
-                                    : (<></>)
+                                    : (<input type="button" onClick={ delTestCode } value="Test Code 삭제하기" />)
                             }
                             <br/>
                             <br/>

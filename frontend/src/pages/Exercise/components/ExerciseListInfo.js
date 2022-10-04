@@ -15,15 +15,22 @@ function ExerciseListInfo ({ exercise}) {
     }else if(solved === EXERCISE_STATE[0]){
         solved = "성공";
         solvedStyle = {color: 'forestgreen'};
-        if(exercise.tryTime < exercise.time)
+        if(exercise.tryTime !== 0 && exercise.tryTime < exercise.time)
         {
             score = '/'+SCORE[0];
         }
-        else if(exercise.tryTime === exercise.time)
+        else if(exercise.tryTime !== 0 && exercise.tryTime === exercise.time)
         {
             score = '/'+SCORE[1];
         }
-        else score = '/'+SCORE[2];
+        else if(exercise.tryTime !== 0 && exercise.tryTime > exercise.time)
+        {
+            score = '/' + SCORE[2];
+        }
+        else if(exercise.tryTime === 0)
+        {
+            score = "";
+        }
     }else{
         solved = "오류";
     }
