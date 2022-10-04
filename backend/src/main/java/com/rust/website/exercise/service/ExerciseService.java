@@ -33,6 +33,7 @@ public class ExerciseService {
     private final CompileService compileService;
 
     private final ExerciseRepository exerciseRepository;
+
     private final ExerciseContentRepository exerciseContentRepository;
     private final ExerciseTryRepository exerciseTryRepository;
     private final ExerciseTestcaseRepository exerciseTestcaseRepository;
@@ -155,13 +156,12 @@ public class ExerciseService {
     @Transactional
     public ResponseDTO<String> addExercise(Exercise exercise)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
         exercise.getExerciseContent().setExercise(exercise);
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         IntStream.range(0, exerciseTestcases.size())
                         .forEach(i -> exerciseTestcases.get(i).setExercise(exercise));
         exerciseRepository.save(exercise);
-        return responseDTO;
+        return new ResponseDTO<>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
     }
 
     @Transactional
@@ -169,17 +169,6 @@ public class ExerciseService {
     {
         Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->{throw new IllegalArgumentException();});
         exercise.copy(newExercise);
-        //+ 테스트 케이스 바껴도 재채점
-        if(newExercise.getExerciseContent().getTestCode() != null)
-        {
-            updateTestCodeAndExecutionTime(exercise, newExercise);
-        }
-        else
-        {
-            exercise.getExerciseContent().setTestCode(null);
-            exercise.getExerciseContent().setTime(0);
-        }
-
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
 
         exerciseTestcaseRepository.deleteByExercise_id(id);
@@ -219,36 +208,17 @@ public class ExerciseService {
         return exerciseTryRepository.findByUser_idAndSolvedAndExerciseIn(userId,solved,exerciseList);
     }
 
-    void updateTestCodeAndExecutionTime(Exercise exercise, Exercise newExercise) //컴파일 할 때 newexercise의 테스트케이스 사용
+    @Transactional(readOnly = true)
+    public String getExerciseTryCode(int id, String username)
     {
-        CompileInputDTO compileInputDTO = CompileInputDTO.builder()
-                .code(newExercise.getExerciseContent().getTestCode())
-                .language(Language.RUST)
-                .build();
-        ExecutionConstraints constraints = ExecutionConstraints.builder()
-                .memoryLimit(200)
-                .timeLimit(10000)
-                .build();
-        long runTime = 0;
+        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username,id).orElseThrow(()->new IllegalArgumentException("No such entity"));
+        return exerciseTry.getSourceCode();
+    }
 
-        int idx = 0;
-        for(;idx < newExercise.getExerciseTestcases().size(); idx++)
-        {
-            compileInputDTO.setStdIn(newExercise.getExerciseTestcases().get(idx).getInput());
-            CompileOutputDTO temp = compileService.onlineCompile(compileInputDTO, constraints);
-            if(!temp.getStdOut().equals(newExercise.getExerciseTestcases().get(idx).getOutput()))
-            {
-                break;
-            }
-            runTime = Math.max(temp.getTime(), runTime);
-        }
-
-        if(idx != newExercise.getExerciseTestcases().size())
-        {
-            throw new IllegalArgumentException("wrong test code");
-        }
-
-        exercise.getExerciseContent().setTime(runTime);
-        exercise.getExerciseContent().setTestCode(newExercise.getExerciseContent().getTestCode());
+    @Transactional
+    public void initExerciseTryCode(int id, String username)
+    {
+        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username, id).orElseThrow(()->new IllegalArgumentException("No such entity"));
+        exerciseTry.setSourceCode("");
     }
 }

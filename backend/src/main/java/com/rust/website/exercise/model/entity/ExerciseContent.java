@@ -62,6 +62,8 @@ public class ExerciseContent implements Serializable {
         this.input_value = newExerciseContent.getInput_value();
         this.output_value = newExerciseContent.getOutput_value();
         this.code = newExerciseContent.getCode();
+        this.testCode = newExerciseContent.getTestCode();
+        this.time = newExerciseContent.getTime();
     }
 
     @Override
