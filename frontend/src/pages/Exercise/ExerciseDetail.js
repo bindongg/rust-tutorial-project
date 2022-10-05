@@ -7,7 +7,6 @@ import {EXERCISE_STATE} from "../../Common/Modules/Common";
 
 function ExerciseDetail() {
     const {id} = useParams();
-    const [tryCode, setTryCode] = useState("");
     const [exerciseDetail, setExerciseDetail] = useState({});
     const [code, setCode] = useState("");
     const [initCode, setInitCode] = useState("");
@@ -24,11 +23,11 @@ function ExerciseDetail() {
                 customAxios.get(`/exercise/exerciseTry/${id}`).then((response)=>{
                     if(response.data.code === 200)
                     {
-                        setTryCode(response.data.data);
+                        setCode(response.data.data);
                     }
                     else if(response.data.code === 204)
                     {
-                        setTryCode("");
+                        setCode("");
                     }
                     else alert("error");
                 }).catch((error)=>{
@@ -42,7 +41,7 @@ function ExerciseDetail() {
 
     return (
         <>
-            <ExerciseDetailInfo exerciseDetail={exerciseDetail} initCode={initCode} code={tryCode === "" ? code : tryCode} setCode={setCode}/>
+            <ExerciseDetailInfo exerciseDetail={exerciseDetail} initCode={initCode} code={code} setCode={setCode}/>
         </>
     );
 }

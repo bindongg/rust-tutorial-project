@@ -219,7 +219,8 @@ public class ExerciseService {
     @Transactional
     public void initExerciseTryCode(int id, String username)
     {
+        Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->new NoSuchEntityException("No such entity"));;
         ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username, id).orElseThrow(()->new NoSuchEntityException("No such entity"));
-        exerciseTry.setSourceCode("");
+        exerciseTry.setSourceCode(exercise.getExerciseContent().getCode());
     }
 }
