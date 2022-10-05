@@ -1,11 +1,11 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import {Link,useNavigate, useParams} from "react-router-dom";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button} from "react-bootstrap";
 import { decodeToken } from "react-jwt";
 import {customAxios} from "../../../Common/Modules/CustomAxios";
 
-function ExerciseDetailInfo({exerciseDetail, code, setCode, tryCode, setTryCode}) {
+function ExerciseDetailInfo({exerciseDetail, initCode, code, setCode}) {
     const {id} = useParams();
     const [time, setTime] = useState();
     const [loading,setLoading] = useState(false);
@@ -16,7 +16,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode, tryCode, setTryCode}
         "code": code
     }
 
-    const compileCode = (data) => {
+    const compileCode = () => {
         setLoading(true);
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
@@ -34,12 +34,8 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode, tryCode, setTryCode}
         if(window.confirm("초기화하시겠어요?")) {
             setLoading(true);
             customAxios.patch(`/exercise/exerciseTry/init/${id}`).then((response) => {
-                if (response.data.code === 200) {
-                    setTryCode("");
-                } else {
-                    alert("error");
-                }
             }).finally(() => {
+                setCode(initCode);
                 setLoading(false);
             })
         }
@@ -116,10 +112,10 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode, tryCode, setTryCode}
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <CodeEditor
-                    value={tryCode === "" ? code : tryCode} //if exerciseDetail.solve == null -> code else exerciseDetail.userCode
+                    value={code}
                     language="rust"
                     placeholder="Please enter RUST code."
-                    onChange={(event) => setCode(event.target.value)}
+                    onChange={(event) =>setCode(event.target.value)}
                     padding={15}
                     style={{
                         fontSize: 14,

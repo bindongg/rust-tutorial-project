@@ -16,6 +16,7 @@ import com.rust.website.compile.model.dto.CompileInputDTO;
 import com.rust.website.compile.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.compile.service.CompileService;
+import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.rust.website.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -105,7 +106,7 @@ public class ExerciseService {
         Optional<ExerciseTry> exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(userId, id);
         if (exerciseTry.isPresent())
         {
-            exercise.setSolved(exerciseTry.get().getSolved());
+            exercise.setSolved(exerciseTry.get().getSolved() == null ? ExerciseSolved.NO_TRY : exerciseTry.get().getSolved());
         }
         return exercise;
     }
@@ -211,14 +212,14 @@ public class ExerciseService {
     @Transactional(readOnly = true)
     public String getExerciseTryCode(int id, String username)
     {
-        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username,id).orElseThrow(()->new IllegalArgumentException("No such entity"));
+        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username,id).orElseThrow(()->new NoSuchEntityException("No such entity"));
         return exerciseTry.getSourceCode();
     }
 
     @Transactional
     public void initExerciseTryCode(int id, String username)
     {
-        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username, id).orElseThrow(()->new IllegalArgumentException("No such entity"));
+        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username, id).orElseThrow(()->new NoSuchEntityException("No such entity"));
         exerciseTry.setSourceCode("");
     }
 }
