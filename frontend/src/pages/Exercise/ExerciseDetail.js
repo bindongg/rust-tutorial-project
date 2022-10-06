@@ -17,9 +17,9 @@ function ExerciseDetail() {
             setExerciseDetail({...response.data.data});
             setCode(response.data.data.exerciseContent.code);
             setInitCode(response.data.data.exerciseContent.code);
-            console.log(response.data.data.exerciseContent.code);
-            if(response.data.data.solved !== EXERCISE_STATE[2])
+            if(response.data.data.solved)
             {
+                console.log(213);
                 customAxios.get(`/exercise/exerciseTry/${id}`).then((response)=>{
                     if(response.data.code === 200)
                     {
@@ -38,7 +38,7 @@ function ExerciseDetail() {
             alert(error.data.status);
         })
     }, [id]);
-
+    console.log("code", code);
     return (
         <>
             <ExerciseDetailInfo exerciseDetail={exerciseDetail} initCode={initCode} code={code} setCode={setCode}/>
