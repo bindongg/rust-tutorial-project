@@ -15,6 +15,7 @@ import com.rust.website.exercise.service.ExerciseService;
 import com.rust.website.compile.model.dto.CompileInputDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.compile.model.dto.CompileOutputDTO;
+import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.sun.xml.bind.v2.model.core.EnumConstant;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +61,10 @@ public class ExerciseController {
     @PostMapping("/exercise")
     public ResponseDTO<String> addExercise(@RequestBody Exercise exercise)
     {
+        if(exercise.getExerciseTestcases().size() == 0)
+        {
+            throw new IllegalArgumentException("0 testcases");
+        }
         if(exercise.getExerciseContent().getTestCode() == null || exercise.getExerciseContent().getTestCode().equals(""))
         {
             return exerciseService.addExercise(exercise);
@@ -203,5 +208,11 @@ public class ExerciseController {
     public ResponseDTO<String> illegalArgumentExceptionHandler()
     {
         return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), null);
+    }
+
+    @ExceptionHandler(NoSuchEntityException.class)
+    public ResponseDTO<String> noSuchEntityExceptionHandler()
+    {
+        return new ResponseDTO<>(HttpStatus.NO_CONTENT.value(), null);
     }
 }
