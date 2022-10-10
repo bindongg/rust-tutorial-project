@@ -12,5 +12,4 @@ public interface TutorialRepository extends JpaRepository<Tutorial, Integer> {
     public List<Tutorial> getTutorials(int tutorialNum);
     @Query(value = "select * from Tutorial order by number", nativeQuery = true)
     public List<Tutorial> getAllTutorials();
-    public Optional<Tutorial> findByNumber(int number);
 }
