@@ -116,7 +116,7 @@ public class ExerciseService {
     {
         CompileOutputDTO compileOutputDTO = new CompileOutputDTO();
         Exercise exercise = exerciseRepository.findById(id).get();
-        List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
+        List<ExerciseTestcase> exerciseTestcases = exerciseTestcaseRepository.findByExercise_idOrderByNumberAsc(id);
 
         HashMap<String, String> result = compileService.exerciseCompile(compileInputDTO, constraints, exerciseTestcases);
 
@@ -158,7 +158,7 @@ public class ExerciseService {
     public ResponseDTO<String> addExercise(Exercise exercise)
     {
         exercise.getExerciseContent().setExercise(exercise);
-        List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
+        List<ExerciseTestcase> exerciseTestcases = exerciseTestcaseRepository.findByExercise_idOrderByNumberAsc(exercise.getId());
         IntStream.range(0, exerciseTestcases.size())
                         .forEach(i -> exerciseTestcases.get(i).setExercise(exercise));
         exerciseRepository.save(exercise);

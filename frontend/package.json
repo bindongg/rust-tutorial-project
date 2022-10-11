@@ -33,6 +33,7 @@
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.13.4",
     "react-syntax-highlighter": "^15.5.0",
+    "react-vis": "^1.11.7",
     "remark-gfm": "^3.0.1",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
