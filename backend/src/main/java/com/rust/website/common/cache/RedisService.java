@@ -16,9 +16,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisService {
     private final StringRedisTemplate stringRedisTemplate;
-
-    private final RedisTemplate<String, Object> redisTemplate;
-
     public String getRedisStringValue(String key)
     {
         ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
@@ -31,17 +28,6 @@ public class RedisService {
         stringStringValueOperations.set(key, value);
         stringRedisTemplate.expire(key, JwtProperties.EXPIRATION_TIME_ACCESS/1000, TimeUnit.SECONDS);
     }
-
-    /*public Object getRedisRefreshObjectValue(String key)
-    {
-        return redisTemplate.opsForSet().members(key);
-    }*/
-
-    /*public void setRedisRefreshObjectValue(String key, Object value) {
-        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        setOperations.add(key, value);
-        stringRedisTemplate.expire(key, JwtProperties.EXPIRATION_TIME_REFRESH / 1000, TimeUnit.SECONDS);
-    }*/
 
     public void setRedisRefreshObjectValue(String key, String value) {
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();

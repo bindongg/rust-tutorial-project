@@ -5,6 +5,7 @@ import com.rust.website.common.dto.TupleResponseDTO;
 import com.rust.website.common.dto.ReplyDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.question.model.entity.Question;
+import com.rust.website.question.model.entity.Reply;
 import com.rust.website.question.model.entity.myEnum.QuestionType;
 import com.rust.website.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,6 @@ import java.util.Map;
 @RestController
 public class QuestionController { //delete 하는 메소드 경우 나중에 받은 토큰이랑 삭제하려는 게시물 작성자 id랑 비교해서 같으면 삭제하는 기능 추가
     private final QuestionService questionService;
-
-
-    /*@GetMapping("/question")
-    public TupleResponseDTO<List<Question>> getQuestion(Pageable pageable)
-    {
-        return new TupleResponseDTO<>(HttpStatus.OK.value(),questionService.getTotal(),questionService.getQuestionList(pageable));
-    }*/
 
     @GetMapping("/question/notice")
     public TupleResponseDTO<List<Question>> getQuestionNotice(Pageable pageable)

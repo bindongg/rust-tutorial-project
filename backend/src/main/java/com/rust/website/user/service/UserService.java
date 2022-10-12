@@ -246,17 +246,4 @@ public class UserService {
     {
         return exerciseTryRepository.findByUser_idAndSolved(userId,exerciseSolved).size();
     }
-
-    @Transactional
-    public void test(User user)
-    {
-        userRepository.save(user);
-    }
-
-    @Transactional
-    public void test2(ExerciseTry exerciseTry)
-    {
-        exerciseTryRepository.save(exerciseTry);
-    }
-
 }

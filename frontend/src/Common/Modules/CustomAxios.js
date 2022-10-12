@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const customAxios = axios.create({
-   //baseURL: "http://localhost:8080"
      baseURL: "http://54.180.10.223:8080",
 })
 
@@ -28,13 +27,13 @@ customAxios.interceptors.response.use(
         return response;
     },
     function (error) {
-        if (error.response.status === 401 || error.response.status === 403) {
+        if (error.response.request.status === 401 || error.response.request.status === 403) {
             axios.post(`http://localhost:8080/logout`, null, {
                 headers:
                     {
                         "Content-Type": "application/json; charset=utf-8",
                         "authorization": localStorage.getItem("jwt")}
-            }).then();
+            }).then(()=>{alert("권한이 없습니다")});
             localStorage.clear();
         }
         return Promise.reject(error);
