@@ -20,10 +20,18 @@ function ExerciseCreate() {
         setLoading(true);
         data.exerciseTestcases = data.exerciseTestcases.slice(0, testcaseNums.length);
         data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
+        console.log(data);
         customAxios.post(`/exercise`, {...data}
         ).then(function(response) {
-            alert(response.data.data);
-            navigate(-1);
+            if(response.data.code === 200)
+            {
+                alert(response.data.data);
+                navigate(-1);
+            }
+            else
+            {
+                alert("잘못된 입력입니다");
+            }
         })
         .finally(()=>{
             setLoading(false);

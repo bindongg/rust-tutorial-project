@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Row, Container, Col, Form, Button, NavLink} from "react-bootstrap";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function LoginForm() {
@@ -47,7 +47,7 @@ function LoginForm() {
                                 <Form.Label>아이디</Form.Label>
                                 <Form.Control type="id" placeholder="아이디를 입력하세요" onChange={onChangeId}/>
                                 <Form.Text className="text-muted">
-                                    <NavLink className={"nav-link"} to="/idForgot">아이디 찾기</NavLink>
+                                    <Link className={"nav-link"} to="/idForgot">아이디 찾기</Link>
                                 </Form.Text>
                             </Form.Group>
 
@@ -55,7 +55,7 @@ function LoginForm() {
                                 <Form.Label>비밀번호</Form.Label>
                                 <Form.Control type="password" placeholder="Password" onChange={onChangePwd} onKeyUp={(e)=>{if(e.key==='Enter'){logIn()}}}/>
                                 <Form.Text className="text-muted">
-                                    <NavLink className={"nav-link"} to="/pwdForgot">비밀번호 찾기</NavLink>
+                                    <Link className={"nav-link"} to="/pwdForgot">비밀번호 찾기</Link>
                                 </Form.Text>
                             </Form.Group>
                             <Button variant="info" type="button" disabled={loading} onClick={logIn}>

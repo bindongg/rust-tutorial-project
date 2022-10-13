@@ -16,10 +16,12 @@ import com.rust.website.compile.model.dto.CompileInputDTO;
 import com.rust.website.compile.model.dto.CompileOutputDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.compile.service.CompileService;
+import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.rust.website.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +35,12 @@ public class ExerciseService {
     private final CompileService compileService;
 
     private final ExerciseRepository exerciseRepository;
+
     private final ExerciseContentRepository exerciseContentRepository;
     private final ExerciseTryRepository exerciseTryRepository;
     private final ExerciseTestcaseRepository exerciseTestcaseRepository;
     private final UserRepository userRepository;
-
+    private final AsyncService asyncService;
 
     @Transactional(readOnly = true)
     public List<Exercise> getExercises(String user_id, Pageable pageable)
@@ -104,7 +107,7 @@ public class ExerciseService {
         Optional<ExerciseTry> exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(userId, id);
         if (exerciseTry.isPresent())
         {
-            exercise.setSolved(exerciseTry.get().getSolved());
+            exercise.setSolved(exerciseTry.get().getSolved() == null ? ExerciseSolved.NO_TRY : exerciseTry.get().getSolved());
         }
         return exercise;
     }
@@ -114,7 +117,7 @@ public class ExerciseService {
     {
         CompileOutputDTO compileOutputDTO = new CompileOutputDTO();
         Exercise exercise = exerciseRepository.findById(id).get();
-        List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
+        List<ExerciseTestcase> exerciseTestcases = exerciseTestcaseRepository.findByExercise_idOrderByNumberAsc(id);
 
         HashMap<String, String> result = compileService.exerciseCompile(compileInputDTO, constraints, exerciseTestcases);
 
@@ -155,43 +158,45 @@ public class ExerciseService {
     @Transactional
     public ResponseDTO<String> addExercise(Exercise exercise)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
         exercise.getExerciseContent().setExercise(exercise);
         List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         IntStream.range(0, exerciseTestcases.size())
                         .forEach(i -> exerciseTestcases.get(i).setExercise(exercise));
         exerciseRepository.save(exercise);
-        return responseDTO;
+        return new ResponseDTO<>(HttpStatus.OK.value(), "추가가 완료되었습니다.");
     }
 
     @Transactional
-    public ResponseDTO<String> updateExercise(Exercise newExercise, int id)
+    public ResponseDTO<String> updateExercise(Exercise newExercise, int id, ExecutionConstraints constraints)
     {
-        ResponseDTO<String> responseDTO = new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
-        Exercise exercise = exerciseRepository.findById(id).get();
+        Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->{throw new IllegalArgumentException();});
         exercise.copy(newExercise);
-        System.out.println(exercise.getExerciseTestcases());
-        //+ 테스트 케이스 바껴도 재채점
-        if(!exercise.getExerciseContent().getTestCode().equals(newExercise.getExerciseContent().getTestCode())
-                || !exercise.getExerciseTestcases().equals(newExercise.getExerciseTestcases()))
-        {
-            updateTestCodeAndExecutionTime(exercise, newExercise);
-        }
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
+        List<ExerciseTestcase> newExerciseTestcases = newExercise.getExerciseTestcases();
 
         exerciseTestcaseRepository.deleteByExercise_id(id);
         exerciseTestcaseRepository.flush();
-        List<ExerciseTestcase> exerciseTestcases = newExercise.getExerciseTestcases();
-        IntStream.range(0, exerciseTestcases.size())
+
+        IntStream.range(0, newExerciseTestcases.size())
                 .mapToObj(i -> ExerciseTestcase.builder()
                         .exercise(exercise)
-                        .input(exerciseTestcases.get(i).getInput())
-                        .output(exerciseTestcases.get(i).getOutput())
+                        .input(newExerciseTestcases.get(i).getInput())
+                        .output(newExerciseTestcases.get(i).getOutput())
                         .build()
                 )
                 .forEach(tc -> exerciseTestcaseRepository.save(tc));
 
-        return responseDTO;
+        List<ExerciseTry> exerciseTries = exerciseTryRepository.findByExercise_id(id);
+        exerciseTries.stream()
+                .forEach(tries -> asyncService.compileUserCodeAsync(
+                        CompileInputDTO.builder()
+                                .code(tries.getSourceCode())
+                                .language(Language.RUST)
+                                .build()
+                        , id, tries.getUser().getId(), constraints)
+                );
+
+        return new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
     }
 
     @Transactional
@@ -216,36 +221,18 @@ public class ExerciseService {
         return exerciseTryRepository.findByUser_idAndSolvedAndExerciseIn(userId,solved,exerciseList);
     }
 
-    void updateTestCodeAndExecutionTime(Exercise exercise, Exercise newExercise) //컴파일 할 때 newexercise의 테스트케이스 사용
+    @Transactional(readOnly = true)
+    public String getExerciseTryCode(int id, String username)
     {
-        CompileInputDTO compileInputDTO = CompileInputDTO.builder()
-                .code(newExercise.getExerciseContent().getTestCode())
-                .language(Language.RUST)
-                .build();
-        ExecutionConstraints constraints = ExecutionConstraints.builder()
-                .memoryLimit(200)
-                .timeLimit(10000)
-                .build();
-        long runTime = 0;
+        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username,id).orElseThrow(()->new NoSuchEntityException("No such entity"));
+        return exerciseTry.getSourceCode();
+    }
 
-        int idx = 0;
-        for(;idx < newExercise.getExerciseTestcases().size(); idx++)
-        {
-            compileInputDTO.setStdIn(newExercise.getExerciseTestcases().get(idx).getInput());
-            CompileOutputDTO temp = compileService.onlineCompile(compileInputDTO, constraints);
-            if(!temp.getStdOut().equals(newExercise.getExerciseTestcases().get(idx).getOutput()))
-            {
-                break;
-            }
-            runTime = Math.max(temp.getTime(), runTime);
-        }
-
-        if(idx != newExercise.getExerciseTestcases().size())
-        {
-            throw new IllegalArgumentException("wrong test code");
-        }
-
-        exercise.getExerciseContent().setTime(runTime);
-        exercise.getExerciseContent().setTestCode(newExercise.getExerciseContent().getTestCode());
+    @Transactional
+    public void initExerciseTryCode(int id, String username)
+    {
+        Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->new NoSuchEntityException("No such entity"));;
+        ExerciseTry exerciseTry = exerciseTryRepository.findByUser_idAndExercise_id(username, id).orElseThrow(()->new NoSuchEntityException("No such entity"));
+        exerciseTry.setSourceCode(exercise.getExerciseContent().getCode());
     }
 }

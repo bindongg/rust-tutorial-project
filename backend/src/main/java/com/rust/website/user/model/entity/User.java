@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rust.website.exercise.model.entity.ExerciseTry;
+import com.rust.website.question.model.entity.Question;
 import com.rust.website.tutorial.model.entity.TutorialDone;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import com.rust.website.user.model.myEnum.UserRoleType;
@@ -24,7 +25,6 @@ import java.util.List;
 @Builder
 @Entity
 
-//@JsonFilter("UserInfo")
 public class User {
 
     @Id

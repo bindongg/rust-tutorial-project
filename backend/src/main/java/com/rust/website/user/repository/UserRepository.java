@@ -3,6 +3,7 @@ package com.rust.website.user.repository;
 import com.rust.website.user.model.entity.User;
 import com.rust.website.user.model.myEnum.UserAuthState;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

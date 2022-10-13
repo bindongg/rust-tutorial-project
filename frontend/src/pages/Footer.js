@@ -9,7 +9,7 @@ function Footer(){
                         <p>Rust Education Service</p> 
                         <p>copyright &copy; PUSAN NATIONAL UNIVERSITY. All Rights Reserved.</p> 
                         <img
-                            src={"/pnu-logo.jpg"}
+                            src={"/pnu-logo.png"}
                             width="200"
                             height="60"
                             className="d-inline-block"

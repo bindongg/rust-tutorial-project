@@ -1,11 +1,11 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import {Link,useNavigate, useParams} from "react-router-dom";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button} from "react-bootstrap";
 import { decodeToken } from "react-jwt";
 import {customAxios} from "../../../Common/Modules/CustomAxios";
 
-function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
+function ExerciseDetailInfo({exerciseDetail, initCode, code, setCode}) {
     const {id} = useParams();
     const [time, setTime] = useState();
     const [loading,setLoading] = useState(false);
@@ -16,8 +16,7 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
         "code": code
     }
 
-    const compileCode = (data) => {
-        // console.log(jsonCode);
+    const compileCode = () => {
         setLoading(true);
         customAxios.post(`/exercise/compile/${id}`, jsonCode
         ).then(function(response) {
@@ -30,6 +29,16 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
     }
     const updateDetail = () => {
         navigate(`/exercise/${id}/update`, {state: {exerciseDetail: exerciseDetail}});
+    }
+    const initTryCode = () => {
+        if(window.confirm("초기화하시겠어요?")) {
+            setLoading(true);
+            customAxios.patch(`/exercise/exerciseTry/init/${id}`).then((response) => {
+            }).finally(() => {
+                setCode(initCode);
+                setLoading(false);
+            })
+        }
     }
 
     const deleteExercise = () => {
@@ -62,8 +71,6 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
         default:
             difficulty_emoji = 'etc';
     }
-
-    console.log(exerciseDetail)
 
     return (
         <>
@@ -105,10 +112,10 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
             </div>
             <div className="col-8 mx-auto border-top border-bottom m-3 p-2">
                 <CodeEditor
-                    value={code} //if exerciseDetail.solve == null -> code else exerciseDetail.userCode
+                    value={code}
                     language="rust"
                     placeholder="Please enter RUST code."
-                    onChange={(event) => setCode(event.target.value)}
+                    onChange={(event) =>setCode(event.target.value)}
                     padding={15}
                     style={{
                         fontSize: 14,
@@ -117,9 +124,15 @@ function ExerciseDetailInfo({exerciseDetail, code, setCode}) {
                       }}
                 />
                 <div className="nav justify-content-end" style={{fontSize: 15}}>time: {time ? time / 1000 + "sec" : "    sec"}</div>
-                <Button variant="secondary" type="submit" disabled={loading} onClick={compileCode} >
-                    Compile
-                </Button>
+                <br/>
+                <div className="d-flex justify-content-between">
+                    <Button variant="secondary" type="submit" disabled={loading} onClick={compileCode} >
+                        Compile
+                    </Button>
+                    <Button variant="secondary" disabled={loading} onClick={initTryCode}>
+                        초기화
+                    </Button>
+                </div>
             </div>
             <div className="col-8 mx-auto mt-5">
                 <h3>유형</h3>

@@ -3,31 +3,45 @@ import ExerciseDetailInfo from "./components/ExerciseDetailInfo";
 import {useParams} from "react-router-dom";
 import './Exercise.css';
 import {customAxios} from "../../Common/Modules/CustomAxios";
+import {EXERCISE_STATE} from "../../Common/Modules/Common";
 
 function ExerciseDetail() {
     const {id} = useParams();
     const [exerciseDetail, setExerciseDetail] = useState({});
-    const [code, setCode] = useState();    
+    const [code, setCode] = useState("");
+    const [initCode, setInitCode] = useState("");
 
     useEffect( () => {
-        // const getExerciseDetail = async () => {
-        //      let exerciseDetail = await customAxios.get(`/exercise/${id}`);
-        //     exerciseDetail = exerciseDetail.data.data;
-        //     setExerciseDetail({...exerciseDetail});
-        //     console.log({exerciseDetail});
-        // }
-        // // 실행함으로써 데이타를 fetching합니다.
-        // getExerciseDetail();
         customAxios.get(`/exercise/${id}`).then((response) =>
         {
             setExerciseDetail({...response.data.data});
-            setCode(response.data.data.exerciseContent.code)
+            setCode(response.data.data.exerciseContent.code);
+            setInitCode(response.data.data.exerciseContent.code);
+            if(response.data.data.solved)
+            {
+                console.log(213);
+                customAxios.get(`/exercise/exerciseTry/${id}`).then((response)=>{
+                    if(response.data.code === 200)
+                    {
+                        setCode(response.data.data);
+                    }
+                    else if(response.data.code === 204)
+                    {
+                        setCode("");
+                    }
+                    else alert("error");
+                }).catch((error)=>{
+                    alert(error.data.status);
+                })
+            }
+        }).catch((error)=>{
+            alert(error.data.status);
         })
     }, [id]);
-
+    console.log("code", code);
     return (
         <>
-            <ExerciseDetailInfo exerciseDetail={exerciseDetail} code={code} setCode={setCode}/>
+            <ExerciseDetailInfo exerciseDetail={exerciseDetail} initCode={initCode} code={code} setCode={setCode}/>
         </>
     );
 }

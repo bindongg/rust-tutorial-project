@@ -15,6 +15,7 @@ import com.rust.website.exercise.service.ExerciseService;
 import com.rust.website.compile.model.dto.CompileInputDTO;
 import com.rust.website.common.dto.ResponseDTO;
 import com.rust.website.compile.model.dto.CompileOutputDTO;
+import com.rust.website.user.model.exception.NoSuchEntityException;
 import com.sun.xml.bind.v2.model.core.EnumConstant;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +61,10 @@ public class ExerciseController {
     @PostMapping("/exercise")
     public ResponseDTO<String> addExercise(@RequestBody Exercise exercise)
     {
+        if(exercise.getExerciseTestcases().size() == 0)
+        {
+            throw new IllegalArgumentException("0 testcases");
+        }
         if(exercise.getExerciseContent().getTestCode() == null || exercise.getExerciseContent().getTestCode().equals(""))
         {
             return exerciseService.addExercise(exercise);
@@ -89,7 +94,33 @@ public class ExerciseController {
     @PatchMapping("/exercise/{id}")
     public ResponseDTO<String> updateExercise(@RequestBody Exercise exercise, @PathVariable int id)
     {
-        return exerciseService.updateExercise(exercise, id);
+        if(exercise.getExerciseTestcases().size() == 0)
+        {
+            throw new IllegalArgumentException("0 testcases");
+        }
+
+        ExecutionConstraints constraints = ExecutionConstraints.builder()
+                .memoryLimit(200)
+                .timeLimit(10000)
+                .build();
+        if(exercise.getExerciseContent().getTestCode() != null)
+        {
+            CompileInputDTO compileInputDTO = CompileInputDTO.builder()
+                    .code(exercise.getExerciseContent().getTestCode())
+                    .language(Language.RUST)
+                    .build();
+            HashMap<String, String> result = compileService.exerciseCompile(compileInputDTO, constraints, exercise.getExerciseTestcases());
+            int idx = Integer.parseInt(result.get("index"));
+            long runTime = Integer.valueOf(result.get("time"));
+
+            if(idx != exercise.getExerciseTestcases().size())
+            {
+                throw new IllegalArgumentException("wrong test code");
+            }
+            exercise.getExerciseContent().setTime(runTime);
+        }
+        else exercise.getExerciseContent().setTime(0);
+        return exerciseService.updateExercise(exercise, id, constraints);
     }
 
     @DeleteMapping("/exercise/{id}")
@@ -158,9 +189,30 @@ public class ExerciseController {
         return response;
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public Map<String,String> illegalArgumentExceptionHandler()
+    @GetMapping("/exercise/exerciseTry/{id}")
+    public ResponseDTO<String> getExerciseTry(@PathVariable int id, HttpServletRequest request)
     {
-        return null;
+        return new ResponseDTO<>(HttpStatus.OK.value(),
+                exerciseService.getExerciseTryCode(id,JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME)));
+    }
+
+    @PatchMapping("/exercise/exerciseTry/init/{id}")
+    public ResponseDTO<String> initExerciseTryCode(@PathVariable int id, HttpServletRequest request)
+    {
+        exerciseService.initExerciseTryCode(id,
+                JwtUtil.getClaim(request.getHeader(JwtProperties.HEADER_STRING),JwtProperties.CLAIM_NAME));
+        return new ResponseDTO<>(HttpStatus.OK.value(), null);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseDTO<String> illegalArgumentExceptionHandler()
+    {
+        return new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), null);
+    }
+
+    @ExceptionHandler(NoSuchEntityException.class)
+    public ResponseDTO<String> noSuchEntityExceptionHandler()
+    {
+        return new ResponseDTO<>(HttpStatus.NO_CONTENT.value(), null);
     }
 }

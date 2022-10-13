@@ -62,5 +62,22 @@ public class ExerciseContent implements Serializable {
         this.input_value = newExerciseContent.getInput_value();
         this.output_value = newExerciseContent.getOutput_value();
         this.code = newExerciseContent.getCode();
+        this.testCode = newExerciseContent.getTestCode();
+        this.time = newExerciseContent.getTime();
+    }
+
+    @Override
+    public String toString() {
+        return "ExerciseContent{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", input_description='" + input_description + '\'' +
+                ", output_description='" + output_description + '\'' +
+                ", input_value='" + input_value + '\'' +
+                ", output_value='" + output_value + '\'' +
+                ", code='" + code + '\'' +
+                ", testCode='" + testCode + '\'' +
+                ", time=" + time +
+                '}';
     }
 }

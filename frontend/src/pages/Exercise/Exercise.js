@@ -33,13 +33,12 @@ function Exercise(){
       request = '/exercise/difficulty'
       requestParams = {...requestParams, difficulty: difficulty}
     }
-    console.log(requestParams);
     customAxios.get(request, {params: {...requestParams}}).then((response) => {
       if (response.data.code === 200)  
       {
         setTotal(response.data.total);
         setExercises([...response.data.data]);
-
+        //console.log(response.data.data)
       }
       else 
       {

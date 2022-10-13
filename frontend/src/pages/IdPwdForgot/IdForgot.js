@@ -22,14 +22,14 @@ function IdForgot() {
     function send()
     {
         customAxios.post("/id",{email: email, password: password})
-            .then(()=>{
-                if(Response.data.data === null)
+            .then((response)=>{
+                if(response.data.data === null)
                 {
                     alert("이메일 또는 비밀번호가 일치하지 않습니다");
                 }
                 else
                 {
-                    alert("회원님의 아이디는 "+Response.data.data+"입니다");
+                    alert("회원님의 아이디는 "+response.data.data+"입니다");
                 }
             })
     }
