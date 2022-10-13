@@ -20,6 +20,7 @@ function ExerciseCreate() {
         setLoading(true);
         data.exerciseTestcases = data.exerciseTestcases.slice(0, testcaseNums.length);
         data.exerciseContent.description = data.exerciseContent.description.replaceAll("<br>", "\r\n");
+        console.log(data);
         customAxios.post(`/exercise`, {...data}
         ).then(function(response) {
             if(response.data.code === 200)

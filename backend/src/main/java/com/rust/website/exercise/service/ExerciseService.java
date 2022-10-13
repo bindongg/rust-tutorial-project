@@ -21,6 +21,7 @@ import com.rust.website.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,7 @@ public class ExerciseService {
     private final ExerciseTryRepository exerciseTryRepository;
     private final ExerciseTestcaseRepository exerciseTestcaseRepository;
     private final UserRepository userRepository;
-
+    private final AsyncService asyncService;
 
     @Transactional(readOnly = true)
     public List<Exercise> getExercises(String user_id, Pageable pageable)
@@ -158,7 +159,7 @@ public class ExerciseService {
     public ResponseDTO<String> addExercise(Exercise exercise)
     {
         exercise.getExerciseContent().setExercise(exercise);
-        List<ExerciseTestcase> exerciseTestcases = exerciseTestcaseRepository.findByExercise_idOrderByNumberAsc(exercise.getId());
+        List<ExerciseTestcase> exerciseTestcases = exercise.getExerciseTestcases();
         IntStream.range(0, exerciseTestcases.size())
                         .forEach(i -> exerciseTestcases.get(i).setExercise(exercise));
         exerciseRepository.save(exercise);
@@ -166,23 +167,34 @@ public class ExerciseService {
     }
 
     @Transactional
-    public ResponseDTO<String> updateExercise(Exercise newExercise, int id)
+    public ResponseDTO<String> updateExercise(Exercise newExercise, int id, ExecutionConstraints constraints)
     {
         Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->{throw new IllegalArgumentException();});
         exercise.copy(newExercise);
         exercise.getExerciseContent().copy(newExercise.getExerciseContent());
+        List<ExerciseTestcase> newExerciseTestcases = newExercise.getExerciseTestcases();
 
         exerciseTestcaseRepository.deleteByExercise_id(id);
         exerciseTestcaseRepository.flush();
-        List<ExerciseTestcase> exerciseTestcases = newExercise.getExerciseTestcases();
-        IntStream.range(0, exerciseTestcases.size())
+
+        IntStream.range(0, newExerciseTestcases.size())
                 .mapToObj(i -> ExerciseTestcase.builder()
                         .exercise(exercise)
-                        .input(exerciseTestcases.get(i).getInput())
-                        .output(exerciseTestcases.get(i).getOutput())
+                        .input(newExerciseTestcases.get(i).getInput())
+                        .output(newExerciseTestcases.get(i).getOutput())
                         .build()
                 )
                 .forEach(tc -> exerciseTestcaseRepository.save(tc));
+
+        List<ExerciseTry> exerciseTries = exerciseTryRepository.findByExercise_id(id);
+        exerciseTries.stream()
+                .forEach(tries -> asyncService.compileUserCodeAsync(
+                        CompileInputDTO.builder()
+                                .code(tries.getSourceCode())
+                                .language(Language.RUST)
+                                .build()
+                        , id, tries.getUser().getId(), constraints)
+                );
 
         return new ResponseDTO<>(HttpStatus.OK.value(), "수정이 완료되었습니다.");
     }
