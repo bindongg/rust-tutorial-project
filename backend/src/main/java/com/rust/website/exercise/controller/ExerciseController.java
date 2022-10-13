@@ -99,15 +99,15 @@ public class ExerciseController {
             throw new IllegalArgumentException("0 testcases");
         }
 
+        ExecutionConstraints constraints = ExecutionConstraints.builder()
+                .memoryLimit(200)
+                .timeLimit(10000)
+                .build();
         if(exercise.getExerciseContent().getTestCode() != null)
         {
             CompileInputDTO compileInputDTO = CompileInputDTO.builder()
                     .code(exercise.getExerciseContent().getTestCode())
                     .language(Language.RUST)
-                    .build();
-            ExecutionConstraints constraints = ExecutionConstraints.builder()
-                    .memoryLimit(200)
-                    .timeLimit(10000)
                     .build();
             HashMap<String, String> result = compileService.exerciseCompile(compileInputDTO, constraints, exercise.getExerciseTestcases());
             int idx = Integer.parseInt(result.get("index"));
@@ -120,7 +120,7 @@ public class ExerciseController {
             exercise.getExerciseContent().setTime(runTime);
         }
         else exercise.getExerciseContent().setTime(0);
-        return exerciseService.updateExercise(exercise, id);
+        return exerciseService.updateExercise(exercise, id, constraints);
     }
 
     @DeleteMapping("/exercise/{id}")
