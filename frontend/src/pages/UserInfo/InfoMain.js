@@ -1,8 +1,24 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Row, Container, Col, Form} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import {decodeToken} from "react-jwt";
+import {customAxios} from "../../Common/Modules/CustomAxios";
 
 function InfoMain() {
+    const username = localStorage.getItem("refresh") === null ? null : decodeToken(localStorage.getItem("refresh")).username;
+    const [email,setEmail] = useState("");
+    useEffect(()=>{
+        customAxios.get(`/user/email/${username}`)
+            .then((response)=>{
+                if(response.data.code === 200)
+                {
+                    setEmail(response.data.data);
+                }
+            })
+            .catch((error)=>{
+                alert("정보를 가져올 수 없습니다");
+            })
+    })
     return (
         <>
             <Container>
@@ -12,11 +28,11 @@ function InfoMain() {
                         <Form>
                             <Form.Group className="mb-3">
                                 <Form.Label>아이디</Form.Label>
-                                <Form.Control placeholder="Disabled input" disabled />
+                                <Form.Control placeholder="Disabled input" disabled value={username}/>
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>이메일</Form.Label>
-                                <Form.Control placeholder="Disabled input" disabled />
+                                <Form.Control placeholder="Disabled input" disabled value={email}/>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Text className="text-muted">

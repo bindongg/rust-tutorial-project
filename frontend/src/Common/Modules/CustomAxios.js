@@ -35,7 +35,7 @@ customAxios.interceptors.response.use(
                     {
                         "Content-Type": "application/json; charset=utf-8",
                         "authorization": localStorage.getItem("jwt")}
-            }).then();
+            }).then(()=>{alert("권한이 없습니다")});
             localStorage.clear();
         }
         return Promise.reject(error);

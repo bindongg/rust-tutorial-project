@@ -53,10 +53,6 @@ public class User {
     @JsonIgnoreProperties({"user"})
     private List<TutorialDone> tutorialDone;
 
-    /*@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"user"})
-    private List<Question> questions;*/
-
     @CreationTimestamp
     @JsonIgnore
     private Timestamp date;
