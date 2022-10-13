@@ -31,12 +31,12 @@ public class Tutorial implements Serializable {
     @CreationTimestamp
     private Timestamp date;
 
-    @OneToMany(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tutorial", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"tutorial", "content"})
     @OrderBy(value = "number ASC")
     private List<TutorialSub> tutorialSubs;
 
-    @OneToOne(mappedBy = "tutorial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "tutorial", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"tutorial", "tutorialQuizQuestions"})
     private TutorialQuiz tutorialQuiz;
 

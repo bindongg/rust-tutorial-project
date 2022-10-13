@@ -9,6 +9,7 @@ import {dark} from "react-syntax-highlighter/src/styles/hljs";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import React from "react";
 import { decodeToken } from "react-jwt";
+import { HorizontalGridLines, LabelSeries, VerticalBarSeries, VerticalGridLines, XAxis, XYPlot, YAxis } from "react-vis";
 
 function Performance(){
     const role = (localStorage.getItem("refresh") === null ? null : (decodeToken(localStorage.getItem("refresh")).role));
@@ -75,7 +76,6 @@ function Performance(){
                 {
                     let data = response.data.data
                     setAboutRust({...data});
-                    setOutput(null);
                 }
             })
             .catch((Error) =>
@@ -90,7 +90,22 @@ function Performance(){
         .then((response)=>{
           if (response.data.code === 200)
           {
-            setOutput(response.data.data);
+            if (aboutRust.aboutType === "RUST") 
+            {
+                setOutput({...output, rust: response.data.data});
+            }
+            else if (aboutRust.aboutType === "JAVA") 
+            {
+                setOutput({...output, java: response.data.data});
+            }
+            else if (aboutRust.aboutType === "PYTHON") 
+            {
+                setOutput({...output, python: response.data.data});
+            }
+            else 
+            {
+                setOutput({...output, cpp: response.data.data});
+            }
           }
         }).catch((Error) => 
         {
@@ -109,7 +124,30 @@ function Performance(){
         })
     }
 
+    const blueData = [
+        {x: 'Rust', y: output ? output.rust?.time : 0, color: 1}, 
+        {x: 'Java', y: output ? output.java?.time : 0, color: 2}, 
+        {x: 'Python', y: output ? output.python?.time : 0, color: 3}, 
+        {x: 'C++', y: output ? output.cpp?.time : 0, color: 4}];
+
     const tabs = language.map((language) => {
+        var temp = null;
+        if (language === "RUST")
+        {
+            temp = output?.rust;
+        }
+        else if (language === "JAVA")
+        {
+            temp = output?.java;
+        }
+        else if (language === "PYTHON")
+        {
+            temp = output?.python;
+        }
+        else 
+        {
+            temp = output?.cpp;
+        }
         return (
             <Tab eventKey={language} title={language}>
                 <Accordion defaultActiveKey={0}>
@@ -142,24 +180,38 @@ function Performance(){
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
-                <h4>Output</h4>
-                <CodeEditor
-                    disabled
-                    value={output?.stdOut}      
-                    padding={15}
-                    style={{
-                    fontSize: 12,
-                    backgroundColor: "#f5f5f5",
-                    fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                    }}
-                />   
-                <div className="nav justify-content-between">
-                <div><Button onClick={compileCode} disabled={loading}>Compile</Button></div>
-                <div  style={{fontSize: 20}}>time: {output ? output.time / 1000 + "sec" : "    sec"}</div>
+                <div>
+                    <h4>Output</h4>
+                    <CodeEditor
+                        disabled
+                        value={temp?.stdOut}      
+                        padding={15}
+                        style={{
+                        fontSize: 12,
+                        backgroundColor: "#f5f5f5",
+                        fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                        }}
+                    />   
+                    <div className="nav justify-content-between">
+                        <div><Button onClick={compileCode} disabled={loading}>Compile</Button></div>
+                        <div  style={{fontSize: 20}}>time: {temp ? temp.time / 1000 + "sec" : "    sec"}</div>
+                    </div>
+                </div>
+                <br/>
+                <div>
+                    <XYPlot xType="ordinal" width={300} height={300} xDistance={100}>
+                    <VerticalGridLines />
+                    <HorizontalGridLines />
+                    <XAxis />
+                    <YAxis />
+                    <VerticalBarSeries data={blueData} colorRange={['#EF5D28', '#223388']}/>
+                    </XYPlot>
                 </div>
             </Tab>
         )
     })
+
+    
 
     return(
         <>

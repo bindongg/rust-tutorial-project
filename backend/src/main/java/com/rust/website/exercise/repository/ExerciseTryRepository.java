@@ -24,4 +24,5 @@ public interface ExerciseTryRepository extends JpaRepository<ExerciseTry, Intege
     List<ExerciseTry> findByUser_idAndSolved(String user_id, ExerciseSolved exerciseSolved);
 
     Collection<ExerciseTry> findByUser_idAndSolvedAndExerciseIn(String user_id, ExerciseSolved solved, List<Exercise> exerciseList);
+    List<ExerciseTry> findByExercise_id(int id);
 }
