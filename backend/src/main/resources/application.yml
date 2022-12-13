@@ -8,9 +8,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://database-1.c6yezxqldllc.ap-northeast-2.rds.amazonaws.com:3306/rustDB?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Seoul&autoReconnection=ture
-    username: admin
-    password: shrtmfdjTwh
+    url: 
+    username: 
+    password: 
 
 
   jpa:
@@ -37,7 +37,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: rusttutorial@gmail.com
+    username: 
     password:
     properties:
       mail:
