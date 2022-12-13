@@ -63,21 +63,9 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public long getTotal()
-    {
-        return questionRepository.count();
-    }
-
-    @Transactional(readOnly = true)
     public long getTotalByType(QuestionType questionType)
     {
         return questionRepository.countByQuestionType(questionType);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Question> getQuestionList(Pageable pageable)
-    {
-        return questionRepository.findAllByOrderByIdDesc(pageable).getContent();
     }
 
     @Transactional(readOnly = true)

@@ -91,7 +91,6 @@ function App() {
                         <Route path="exercise/add" exact={true}  element={<ExerciseCreate/>}/>
                         <Route path="exercise/:id/update" exact={true}  element={<ExerciseUpdate/>}/>
                         {/*question*/}
-                        {/*<Route path="/question" exact={true} element={<QuestionMain/>}/>*/}
                         <Route path="/question/:id" exact={true} element={<QuestionDetail/>}/>
                         <Route path="/question/add" exact={true} element={<QuestionWrite/>}/>
                         <Route path="/question/update/:id" exact={true} element={<QuestionUpdate/>}/>

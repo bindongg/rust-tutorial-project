@@ -102,7 +102,7 @@ function Reply(props)
                         <span className="p-lg-2 text-muted" style={{cursor: "pointer", fontSize: "0.7rem"}} onClick={changeState}>대댓글</span>
                         {
                             props.reply.user.id === username
-                                ? (<span className="p-lg-2 text-muted" style={{cursor: "pointer", fontSize: "0.7rem"}} onClick={delReply}>삭제</span>)
+                                ? (<span className="p-lg-2 text-muted" style={{cursor: "pointer", fontSize: "0.7rem"}} onClick={delReply}>&nbsp;&nbsp;삭제</span>)
                                 : (<></>)
                         }
                     </span>

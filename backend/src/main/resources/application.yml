@@ -8,12 +8,10 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://database-1.c6yezxqldllc.ap-northeast-2.rds.amazonaws.com:3306/rustDB?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Seoul&autoReconnection=ture
-    username: admin
-    password: shrtmfdjTwh
-#    url: jdbc:mysql://localhost:3306/rust?serverTimezone=Asia/Seoul
-#    username: jin
-#    password: Deokjin7@
+    url: 
+    username: 
+    password: 
+
 
   jpa:
     open-in-view: true
@@ -22,10 +20,11 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: false
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
 
   redis:
     host: localhost
@@ -38,8 +37,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: rusttutorial@gmail.com
-    password: ysuayygxdbaoucpo
+    username: 
+    password:
     properties:
       mail:
         smtp:
